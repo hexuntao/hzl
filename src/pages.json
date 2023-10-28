@@ -131,20 +131,6 @@
       }
     },
     {
-      "path": "pages/ptmoney/index",
-      "style": {
-        "navigationBarTitleText": "积分中心",
-        "enablePullDownRefresh": true
-      }
-    },
-    {
-      "path": "pages/ptmoney/red",
-      "style": {
-        "navigationBarTitleText": "月度分红",
-        "enablePullDownRefresh": false
-      }
-    },
-    {
       "path": "pages/integral/index",
       "style": {
         // #ifdef H5
