@@ -1,14 +1,14 @@
 {
   "extEnable": true,
   "ext": {
-    "project_name": "花之流-东盟店",
+    "project_name": "花之流-世纪城店",
     "auth_key": "P6l0Gx9p7Qsijklz",
-    "domain": "https://hzldm.sandyp.cn",
-    "domain_wap": "https://hzldm.sandyp.cn",
+    "domain": "https://hzlsjc.sandyp.cn",
+    "domain_wap": "https://hzlsjc.sandyp.cn",
     "website_id": 1
   },
   "requiredPrivateInfos": ["getLocation", "chooseLocation"],
-  "extAppid": "wx756005dc8908f18a",
+  "extAppid": "wx85eb05ad87f754b6",
   "tabBar": {
     "list": [
       {

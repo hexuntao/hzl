@@ -1,5 +1,5 @@
 {
-  "name": "花之流-东盟店",
+  "name": "花之流-世纪城店",
   "appid": "",
   "description": "",
   "versionName": "3.8.17",
@@ -24,7 +24,7 @@
       "port": 3000,
       "proxy": {
         "/api": {
-          "target": "https://hzldm.sandyp.cn/wapapi",
+          "target": "https://hzlsjc.sandyp.cn/wapapi",
           "changeOrigin": true,
           "secure": false,
           "pathRewrite": {
@@ -43,7 +43,7 @@
     }
   },
   "mp-weixin": {
-    "appid": "wx756005dc8908f18a",
+    "appid": "wx85eb05ad87f754b6",
     "libVersion": "2.16.0",
     "setting": {
       "urlCheck": true,
