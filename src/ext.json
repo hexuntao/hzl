@@ -1,14 +1,14 @@
 {
   "extEnable": true,
   "ext": {
-    "project_name": "LHT女性轻创业",
+    "project_name": "花之流-东盟店",
     "auth_key": "P6l0Gx9p7Qsijklz",
-    "domain": "https://lhtcs.sandyp.cn",
-    "domain_wap": "https://lhtcs.sandyp.cn",
+    "domain": "https://hzldm.sandyp.cn",
+    "domain_wap": "https://hzldm.sandyp.cn",
     "website_id": 1
   },
   "requiredPrivateInfos": ["getLocation", "chooseLocation"],
-  "extAppid": "wx1b7f04d4125ba8ea",
+  "extAppid": "wx756005dc8908f18a",
   "tabBar": {
     "list": [
       {

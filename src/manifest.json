@@ -1,6 +1,6 @@
 {
-  "name": "LHT女性轻创业",
-  "appid": "__UNI__E0E3D61",
+  "name": "花之流-东盟店",
+  "appid": "",
   "description": "",
   "versionName": "3.8.17",
   "versionCode": 1,
@@ -24,7 +24,7 @@
       "port": 3000,
       "proxy": {
         "/api": {
-          "target": "https://lhtcs.sandyp.cn/wapapi",
+          "target": "https://hzldm.sandyp.cn/wapapi",
           "changeOrigin": true,
           "secure": false,
           "pathRewrite": {
@@ -43,7 +43,7 @@
     }
   },
   "mp-weixin": {
-    "appid": "wx1b7f04d4125ba8ea",
+    "appid": "wx756005dc8908f18a",
     "libVersion": "2.16.0",
     "setting": {
       "urlCheck": true,
