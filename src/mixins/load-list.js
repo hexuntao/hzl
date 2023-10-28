@@ -1,0 +1,102 @@
+// mescroll-body 和 mescroll-uni 通用
+
+// import MescrollUni from "./mescroll-uni.vue";
+// import MescrollBody from "./mescroll-body.vue";
+import { mapGetters } from "vuex";
+const loadMixin = {
+  // components: { // 非H5端无法通过mixin注册组件, 只能在main.js中注册全局组件或具体界面中注册
+  // 	MescrollUni,
+  // 	MescrollBody
+  // },
+  data() {
+    return {
+      $load: null, //mescroll实例对象
+      downOption: {
+        use: false,
+        native: true
+      },
+      upOption: {
+        empty: {
+          tip: "暂无数据"
+        }
+      },
+      // 加载列表所需参数
+      loadParams: {
+        page_index: 1,
+        page_size: 20
+      },
+      list: [] //列表数据
+    };
+  },
+  // 注册系统自带的下拉刷新 (配置down.native为true时生效, 还需在pages配置enablePullDownRefresh:true;详请参考mescroll-native的案例)
+  onPullDownRefresh() {
+    if (this.params&&this.params.recommend_goods_ids) {
+      this.params.recommend_goods_ids=''
+    }
+    this.$load && this.$load.onPullDownRefresh();
+  },
+  // 注册列表滚动事件,用于判定在顶部可下拉刷新,在指定位置可显示隐藏回到顶部按钮 (此方法为页面生命周期,无法在子组件中触发, 仅在mescroll-body生效)
+  onPageScroll(e) {
+    this.$load && this.$load.onPageScroll(e);
+  },
+  // 注册滚动到底部的事件,用于上拉加载 (此方法为页面生命周期,无法在子组件中触发, 仅在mescroll-body生效)
+  onReachBottom() {
+    this.$load && this.$load.onReachBottom();
+  },
+  methods: {
+    // mescroll组件初始化的回调,可获取到mescroll对象
+    loadInit(mescroll) {
+      this.$load = mescroll;
+      this.loadInitByRef(); // 兼容字节跳动小程序
+      this.loadInitEnd(mescroll);
+    },
+    // 初始化完成 (一般用于手动触发上拉加载时用到)
+    loadInitEnd(mescroll) {},
+    // 以ref的方式初始化mescroll对象 (兼容字节跳动小程序: http://www.mescroll.com/qa.html?v=20200107#q26)
+    loadInitByRef() {
+      if (!this.$load || !this.$load.resetUpScroll) {
+        let mescrollRef = this.$refs.mescrollRef;
+        if (mescrollRef) this.$load = mescrollRef.mescroll;
+      }
+    },
+    // 下拉刷新的回调
+    downCallback() {
+      // mixin默认resetUpScroll
+      this.$load.resetUpScroll();
+    },
+    // 上拉加载的回调
+    upCallback() {
+      // mixin默认延时500自动结束加载
+      setTimeout(() => {
+        this.$load.endErr();
+      }, 500);
+    },
+    emptyClick(e) {
+      console.log(e);
+    },
+    /**
+     * 合并列表数据
+     * pageList  当前页数据
+     * totalSize 列表的总数据量
+     */
+    concatList(pageList = [], totalSize) {
+      this.$load.endBySize(pageList.length, totalSize);
+      if (this.$load.num == 1) {
+        this.list = [];
+      }
+      this.list = this.list.concat(pageList);
+    },
+    /**
+     * 重置列表
+     */
+    resetList() {
+      this.list = [];
+      this.$load && this.$load.resetUpScroll();
+    }
+  },
+  mounted() {
+    this.loadInitByRef(); // 兼容字节跳动小程序, 避免未设置@init或@init此时未能取到ref的情况
+  }
+};
+
+export default loadMixin;

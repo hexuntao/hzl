@@ -1,0 +1,97 @@
+<template>
+	<view class="anchor-top-bar">
+		<view class="left-icon">
+			<!-- <text @click="back" class="icons icons-arrow-left">\F008</text> -->
+		</view>
+		<view class="bar-box" v-if="showInfo">
+			<view class="info">
+				<image class="avatar" :src="avatar" mode="aspectFit" />
+				<view class="text">
+					<text class="name">{{ name }}</text>
+					<text class="label">{{ label }}</text>
+				</view>
+				<slot name="infoRight" />
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		props: {
+			avatar: String,
+			name: String,
+			label: String,
+			showInfo: {
+				type: Boolean,
+				default: true
+			}
+		},
+		methods: {
+			back() {
+				this.$Navigate.back();
+			}
+		}
+	};
+</script>
+
+<style lang="scss" scoped>
+	.anchor-top-bar {
+		position: fixed;
+		z-index: 998;
+		top: 30rpx;
+		left: 20rpx;
+		flex-direction: row;
+		align-items: center;
+		font-size: $font-size-sm;
+	}
+
+	.bar-box {
+		background-color: rgba(0, 0, 0, 0.5);
+		padding: 8rpx;
+		align-items: center;
+		border-radius: 99999rpx;
+		flex-direction: row;
+		line-height: 48rpx;
+	}
+
+	.left-icon {
+		width: 60rpx;
+		height: 76rpx;
+		align-items: center;
+	}
+
+	.info {
+		color: #ffffff;
+		font-size: $font-size-sm;
+		align-items: center;
+		flex-direction: row;
+		color: white;
+	}
+
+	.avatar {
+		border-radius: 60rpx;
+		overflow: hidden;
+		width: 60rpx;
+		height: 60rpx;
+	}
+
+	.text {
+		padding: 0 10rpx;
+	}
+
+	.name {
+		width: 200rpx;
+		font-size: $font-size-sm;
+		color: #FFFFFF;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.label {
+		color: #ffffff;
+		font-size: $font-size-xs;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+</style>

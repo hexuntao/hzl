@@ -1,0 +1,140 @@
+<template>
+	<view class="send-popup">
+		<view class="mask" @click="close" :class="show?'mask-show':''">
+		</view>
+
+		<view class="send-box" :class="show?'send-box-show':''">
+			<input class="input" :value="content" :focus="show" fixed :maxlength="-1" disable-default-padding :show-confirm-bar="false" :cursor-spacing="10" confirm-type="发送" placeholder="说点什么..." @input="onContent" @confirm="onSend" />
+			<view class="btn" @click="onSend">
+				<text class="btn-text">发送</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import {
+		mapState
+	} from "vuex";
+	import $Prompt from "@/api/prompt";
+	let sendFlag = true;
+	export default {
+		data() {
+			return {
+				checked: false,
+				content: ""
+			};
+		},
+		props: {
+			value: Boolean
+		},
+		computed: {
+			...mapState({
+				memberInfo: ({
+					member
+				}) => member.info
+			}),
+			show: {
+				get() {
+					return this.value;
+				},
+				set(e) {
+					this.$emit("input", e);
+				}
+			},
+			isShowClass() {
+				return this.show ? 'show' : ''
+			}
+		},
+		created() {
+
+			this.$Prompt = $Prompt
+		},
+		methods: {
+			close() {
+				this.$emit("input", false);
+			},
+			onContent({
+				detail
+			}) {
+				this.content = String(detail.value).trim();
+			},
+			onSend() {
+				if (!sendFlag) {
+					return;
+				}
+				if (!this.content) {
+					return this.$Prompt.toast("没有什么想说的吗");
+				}
+				this.$emit("send", {
+					text: this.content || "",
+					name: this.memberInfo.name,
+					uid: this.memberInfo.uid
+				});
+				this.content = "";
+				this.close();
+			}
+		},
+	}
+</script>
+
+<style lang="scss" scoped>
+	.send-box {
+		flex-direction: row;
+		align-items: center;
+		flex: 1;
+		height: 100rpx;
+		padding: 0 30rpx;
+		background-color: #ffffff;
+		position: fixed;
+		// top: 0;
+		bottom: -100rpx;
+		left: 0;
+		right: 0;
+		z-index: 1000;
+		// transition-property: top,bottom;
+		// transition-duration: 0.3s;
+		// transition-delay: 0s;
+	}
+
+	.mask {
+		position: fixed;
+		width: 0;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 999;
+		background-color: rgba(0, 0, 0, .5);
+	}
+
+	.send-box-show {
+		bottom: 0;
+	}
+
+	.mask-show {
+		width: 750rpx;
+	}
+
+	.input {
+		background-color: #ffffff;
+		border-radius: 1000rpx;
+		border-width: 1rpx;
+		border-style: solid;
+		border-color: #ebedf0;
+		flex: 1;
+		font-size: $font-size;
+		padding: 0 30rpx;
+		line-height: 48rpx;
+		height: 60rpx;
+	}
+
+	.btn {
+		margin-left: 20rpx;
+	}
+
+	.btn-text {
+		font-size: $font-size;
+		color: $blue;
+	}
+</style>

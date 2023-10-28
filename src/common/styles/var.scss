@@ -1,0 +1,40 @@
+/* color variables */
+$black: #000;
+$white: #fff;
+$red: #f44; // 红色
+$blue: #38f; //蓝色
+$orange: #f60; // 橘色
+$green: #06bf04; // 绿色
+
+$gray-light: #e5e5e5;
+$gray-darker: #606266;
+$gray-dark: #909399;
+
+/* default colors */
+$text-color: #323233; // 文字基本色调
+$text-gray: #606266; // 文字浅色
+$text-light: #909399; // 文字浅色(更浅)
+$border-color: #ebedf0; // 边框颜色
+$hover-color: #e8e8e8; // 点击触发反馈颜色
+$background-color: #f8f8f8; // 基本页面背景颜色
+$background-mask: rgba(0, 0, 0, 0.7); // 遮罩背景颜色
+$image-background: #f5f9ff;
+
+/* default size */
+$font-size-xs: 20rpx;
+$font-size-sm: 24rpx;
+$font-size: 28rpx;
+$font-size-lg: 32rpx;
+
+/* border Radius */
+$border-radius-xs: 4rpx;
+$border-radius-sm: 8rpx;
+$border-radius: 16rpx;
+$border-radius-lg: 20rpx;
+$border-radius-circle: 100%;
+
+/* opacity */
+$opacity-disabled: 0.3; // 组件禁用态的透明度
+
+/* cell padding */
+$cell-padding: 20rpx 30rpx;

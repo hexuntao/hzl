@@ -1,0 +1,70 @@
+<template>
+  <iframe style="width:100%;height: 100%;border: none;" :src="iframeSrc">
+  </iframe>
+</template>
+
+<script>
+import { mapState } from "vuex";
+export default {
+  data() {
+    return {};
+  },
+  props: {
+    poster: String,
+    src: String,
+    controls: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    ...mapState(["domain"]),
+    iframeSrc() {
+      console.log(
+        `${
+          this.domain
+        }/wap/hybrid/html/player-video.html?src=${encodeURIComponent(
+          this.src
+        )}&poster=${encodeURIComponent(this.poster || "")}`
+      );
+      return `${
+        this.domain
+      }/wap/hybrid/html/player-video.html?src=${encodeURIComponent(
+        this.src
+      )}&poster=${encodeURIComponent(this.poster || "")}`;
+    }
+  },
+  mounted() {
+    // this.ctx = uni.createVideoContext("player-video", this)
+    // console.log(this.ctx)
+  },
+  methods: {
+    play(e) {
+      console.log("play", e);
+    },
+    pause(e) {
+      console.log("pause", e);
+    },
+    ended(e) {
+      console.log("ended", e);
+    },
+    timeupdate(e) {
+      console.log("timeupdate", e);
+    },
+    waiting(e) {
+      console.log("waiting", e);
+    },
+    progress(e) {
+      console.log("progress", e);
+    },
+    loadedmetadata(e) {
+      console.log("loadedmetadata", e);
+    },
+    videoerror(e) {
+      console.log("videoerror", e);
+    }
+  }
+};
+</script>
+
+<style></style>

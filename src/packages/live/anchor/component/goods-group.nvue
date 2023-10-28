@@ -1,0 +1,237 @@
+<template>
+	<view class="goods-group">
+		<view class="goods-title">
+			<text class="goods-title_text">推荐商品</text>
+			<text class="right-text" @click="toAddGoods">添加商品</text>
+		</view>
+		<scroll-view scroll-y scroll-with-animation class="goods-list">
+			<view class="goods-item" v-for="(item, index) in list" :key="index">
+				<view class="goods-item_img">
+					<image class="goods-item_img--img" mode="aspectFill" :src="item.pic_cover" />
+				</view>
+				<view class="goods-item_info">
+					<view class="goods-item_name">
+						<text class="goods-item_name--text">{{item.goods_name}}</text>
+					</view>
+					<view class="goods-item_bottom">
+						<view class="goods-item_price-group">
+							<text class="goods-item_price">{{item.price | yuan}}</text>
+							<text class="goods-item_market_price">{{item.market_price | yuan}}</text>
+						</view>
+						<view class="goods-item_btn-group">
+							<text class="goods-item_btn-group--btn" @click="recommend(index)">{{ item.is_recommend ? "取消主推" : "设为主推" }}</text>
+							<text class="goods-item_btn-group--btn goods-item_btn-group--btn-del" @click="cancle(index)">移除</text>
+						</view>
+					</view>
+				</view>
+			</view>
+
+		</scroll-view>
+	</view>
+</template>
+
+<script>
+	import {
+		SET_LIVEANCHORGOODSCANCLE,
+		SET_LIVEANCHORGOODSRECOMMEND
+	} from "../../interface";
+	import $Prompt from "@/api/prompt";
+	import $Navigate from "@/api/navigate";
+	import {
+		yuan
+	} from '@/common/utils'
+	let cancelFlag = 1;
+	export default {
+		data() {
+			return {};
+		},
+		props: {
+			anchor_id: [String, Number],
+			list: Array
+		},
+		filters: {
+			yuan(val) {
+				return yuan(val)
+			}
+		},
+		created() {
+			this.$Prompt = $Prompt
+			this.$Navigate = $Navigate
+		},
+		methods: {
+			toAddGoods() {
+				uni.navigateTo({
+					url: "/packages/live/anchor/goods?anchor_id=" + this.anchor_id
+				})
+				// this.$Navigate.push({
+				// 	path: "/packages/live/anchor/goods",
+				// 	query: {
+				// 		anchor_id: this.anchor_id
+				// 	}
+				// });
+			},
+			recommend(index) {
+				const item = this.list[index];
+				item.btnLoading = true;
+				let params = {
+					anchor_id: this.anchor_id,
+					goods_id: item.goods_id,
+					is_recommend: item.is_recommend ? 0 : 1
+				};
+				SET_LIVEANCHORGOODSRECOMMEND(params)
+					.then(({
+						message
+					}) => {
+						item.btnLoading = false;
+						this.$Prompt.toast({
+							title: message,
+							icon: "success"
+						});
+						this.$emit("refresh", {
+							goods_id: item.goods_id,
+							is_recommend: item.is_recommend ? 0 : 1
+						});
+					})
+					.catch(() => {
+						item.btnLoading = false;
+					});
+			},
+			cancle(index) {
+				const item = this.list[index];
+				if (!cancelFlag) {
+					return;
+				}
+				cancelFlag = 0;
+				let params = {
+					anchor_id: this.anchor_id,
+					goods_id: item.goods_id,
+					is_add: item.is_add ? 0 : 1
+				};
+				SET_LIVEANCHORGOODSCANCLE(params)
+					.then(({
+						message
+					}) => {
+						cancelFlag = 1;
+						this.$Prompt.toast({
+							title: message,
+							icon: "success"
+						});
+						this.$emit("refresh");
+					})
+					.catch(() => {
+						cancelFlag = 1;
+					});
+			}
+		}
+	};
+</script>
+
+<style lang="scss" scoped>
+	.goods-group {
+		width: 710rpx;
+		background-color: #ffffff;
+		margin: 20rpx;
+		border-radius: 20rpx;
+	}
+
+	.goods-list {
+		width: 750rpx;
+		height: 480rpx;
+
+	}
+
+	.goods-title {
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.goods-title_text {
+		padding: $cell-padding;
+		font-size: 36rpx;
+		color: $text-color;
+	}
+
+	.right-text {
+		font-size: $font-size-sm;
+		color: $red;
+		padding-right: 30rpx;
+	}
+
+	.goods-item {
+		flex-direction: row;
+		padding: 20rpx 30rpx;
+	}
+
+	.goods-item_img {
+		flex: 0;
+		margin-right: 20rpx;
+	}
+
+	.goods-item_img--img {
+		height: 120rpx;
+		width: 120rpx;
+		border-radius: 10rpx;
+	}
+
+	.goods-item_info {
+		flex: 1;
+		height: 120rpx;
+		justify-content: space-between;
+	}
+
+	.goods-item_name {
+		margin-bottom: 10rpx;
+	}
+
+	.goods-item_name--text {
+		lines: 2;
+		font-size: $font-size-sm;
+		color: $text-color;
+	}
+
+	.goods-item_bottom {
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.goods-item_price-group {
+		flex-direction: row;
+	}
+
+	.goods-item_price {
+		font-size: $font-size-sm;
+		margin-left: 20rpx;
+		margin-right: 30rpx;
+	}
+
+	.goods-item_market_price {
+		font-size: $font-size-sm;
+		text-decoration: line-through;
+	}
+
+	.goods-item_btn-group {
+		flex-direction: row;
+		padding-right: 20rpx;
+	}
+
+	.goods-item_btn-group--btn {
+		font-size: $font-size-sm;
+		margin-right: 20rpx;
+		color: #FFFFFF;
+		font-size: $font-size-sm;
+		line-height: 40rpx;
+		width: 100rpx;
+		height: 40rpx;
+		background-color: $red;
+		font-style: normal;
+		border-radius: 40rpx;
+		text-align: center;
+	}
+
+	.goods-item_btn-group--btn-del {
+		background-color: #F8F8F8;
+		color: #666;
+	}
+</style>

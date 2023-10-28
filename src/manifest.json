@@ -1,0 +1,207 @@
+{
+  "name": "LHT女性轻创业",
+  "appid": "__UNI__E0E3D61",
+  "description": "",
+  "versionName": "3.8.17",
+  "versionCode": 1,
+  "transformPx": true,
+  "debug": false,
+  "networkTimeout": {
+    "request": 30000,
+    "connectSocket": 10000,
+    "uploadFile": 10000,
+    "downloadFile": 10000
+  },
+  "h5": {
+    "title": "",
+    "router": {
+      "mode": "history",
+      "base": "/wap/"
+    },
+    "publicPath": "/wap/",
+    "devServer": {
+      "https": false,
+      "port": 3000,
+      "proxy": {
+        "/api": {
+          "target": "https://lhtcs.sandyp.cn/wapapi",
+          "changeOrigin": true,
+          "secure": false,
+          "pathRewrite": {
+            "^/api": ""
+          }
+        },
+        "/qlapi": {
+          "target": "https://qlkefu.com",
+          "changeOrigin": true,
+          "secure": false,
+          "pathRewrite": {
+            "^/qlapi": ""
+          }
+        }
+      }
+    }
+  },
+  "mp-weixin": {
+    "appid": "wx1b7f04d4125ba8ea",
+    "libVersion": "2.16.0",
+    "setting": {
+      "urlCheck": true,
+      "es6": true,
+      "postcss": true,
+      "preloadBackgroundData": false,
+      "minified": true,
+      "newFeature": true,
+      "coverView": true,
+      "autoAudits": false,
+      "showShadowRootInWxmlPanel": true,
+      "scopeDataCheck": false,
+      "uglifyFileName": true,
+      "checkInvalidKey": true,
+      "checkSiteMap": true,
+      "uploadWithSourceMap": true
+    },
+    "usingComponents": true,
+    "optimization": {
+      "subPackages": true
+    },
+    "permission": {
+      "scope.userLocation": {
+        "desc": "你的位置信息将用于小程序位置接口的效果展示"
+      }
+    },
+    "plugins": {
+      "chooseLocation": {
+        "version": "1.0.9",
+        "provider": "wx76a9a06e5b4e693e"
+      }
+    }
+  },
+  "app-plus": {
+    "nvueCompiler": "uni-app",
+    "usingComponents": true,
+    "compilerVersion": 3,
+    "compatible": {
+      "ignoreVersion": true
+    },
+    "splashscreen": {
+      "alwaysShowBeforeRender": true,
+      "waiting": true,
+      "autoclose": true,
+      "delay": 0
+    },
+    "safearea": {
+      "background": "#FFFFFF",
+      "bottom": {
+        "offset": "auto"
+      }
+    },
+    "privacy": {
+      "prompt": "template",
+      "template": {
+        "title": "服务协议和隐私政策",
+        "message": "请你务必审慎阅读、充分理解“服务协议”和“隐私政策”各条款，包括但不限于：为了更好的向你提供服务，我们需要收集你的设备标识、操作日志等信息用于分析、优化应用性能。<br/>　　你可阅读<a href='https://app.vslai.com.cn/wap/hybrid/html/contract/service.html'>《服务协议》</a>和<a href='https://app.vslai.com.cn/wap/hybrid/html/contract/policy.html'>《隐私政策》</a>了解详细信息。如果你同意，请点击下面按钮开始接受我们的服务。",
+        "buttonAccept": "我知道了",
+        "buttonRefuse": "暂不同意"
+      }
+    },
+    "modules": {
+      "OAuth": {},
+      "Payment": {},
+      "Share": {},
+      "VideoPlayer": {},
+      "Webview-x5": {},
+      "LivePusher": {},
+      "Geolocation": {},
+      "Push": {}
+    },
+    "distribute": {
+      "android": {
+        "permissions": [
+          "<uses-feature android:name=\"android.hardware.camera\"/>",
+          "<uses-feature android:name=\"android.hardware.camera.autofocus\"/>",
+          "<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>",
+          "<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>",
+          "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
+          "<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>",
+          "<uses-permission android:name=\"android.permission.CALL_PHONE\"/>",
+          "<uses-permission android:name=\"android.permission.CAMERA\"/>",
+          "<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
+          "<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
+          "<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
+          "<uses-permission android:name=\"android.permission.GET_ACCOUNTS\"/>",
+          "<uses-permission android:name=\"android.permission.INTERNET\"/>",
+          "<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>",
+          "<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
+          "<uses-permission android:name=\"android.permission.READ_CONTACTS\"/>",
+          "<uses-permission android:name=\"android.permission.READ_LOGS\"/>",
+          "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
+          "<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>",
+          "<uses-permission android:name=\"android.permission.VIBRATE\"/>",
+          "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
+          "<uses-permission android:name=\"android.permission.WRITE_CONTACTS\"/>",
+          "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>",
+          "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
+        ]
+      },
+      "ios": {},
+      "sdkConfigs": {
+        "oauth": {
+          "weixin": {
+            "appid": "",
+            "appsecret": "",
+            "UniversalLinks": "xxx/wap/pages/mall/index"
+          }
+        },
+        "payment": {
+          "alipay": {},
+          "weixin": {
+            "appid": "",
+            "UniversalLinks": "xxx/wap/pages/mall/index"
+          }
+        },
+        "share": {
+          "weixin": {
+            "appid": "",
+            "UniversalLinks": "xxx/wap/pages/mall/index"
+          }
+        },
+        "ad": {},
+        "geolocation": {
+          "baidu": {
+            "__platform__": ["ios", "android"],
+            "appkey_ios": "",
+            "appkey_android": ""
+          }
+        },
+        "push": {}
+      },
+      "splashscreen": {
+        "androidStyle": "common"
+      }
+    }
+  },
+  "quickapp": {},
+  "mp-alipay": {
+    "usingComponents": true
+  },
+  "mp-baidu": {
+    "usingComponents": true
+  },
+  "mp-toutiao": {
+    "usingComponents": true,
+    "setting": {
+      "es6": true,
+      "postcss": true,
+      "minified": true
+    }
+  },
+  "mp-qq": {
+    "usingComponents": true,
+    "setting": {
+      "es6": true,
+      "postcss": true,
+      "minified": true
+    }
+  }
+}

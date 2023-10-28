@@ -1,0 +1,36 @@
+{
+  "extEnable": true,
+  "ext": {
+    "project_name": "LHT女性轻创业",
+    "auth_key": "P6l0Gx9p7Qsijklz",
+    "domain": "https://lhtcs.sandyp.cn",
+    "domain_wap": "https://lhtcs.sandyp.cn",
+    "website_id": 1
+  },
+  "requiredPrivateInfos": ["getLocation", "chooseLocation"],
+  "extAppid": "wx1b7f04d4125ba8ea",
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/mall/index",
+        "text": ""
+      },
+      {
+        "pagePath": "pages/goods/category",
+        "text": ""
+      },
+      {
+        "pagePath": "pages/distribute/index",
+        "text": ""
+      },
+      {
+        "pagePath": "pages/mall/cart",
+        "text": ""
+      },
+      {
+        "pagePath": "pages/member/index",
+        "text": ""
+      }
+    ]
+  }
+}

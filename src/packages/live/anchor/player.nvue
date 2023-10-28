@@ -1,0 +1,589 @@
+<template>
+	<div class="pages" :style="{
+      width: width,
+      height: height
+    }">
+		<anchor-top-bar :avatar="info.user_headimg" :name="info.uname" :label="topBarLabel">
+			<text slot="infoRight" class="anchor-top-bar-btn" @click="clickClose">结束</text>
+		</anchor-top-bar>
+		<view class="footer-warp">
+			<view class="gift-view">
+				<gift-barrage ref="giftBarrage" :list="giftBarrageList" />
+			</view>
+			<view class="goods-view" :class="toggleBarActive == 'goods'?'show':'hide'">
+				<goods-group :list="goodsList" :anchor_id="anchor_id" @refresh="refreshGoodsList" />
+			</view>
+			<view class="notice-msg-view" :class="toggleBarActive == 'msg'?'show':'hide'">
+				<notice-group :list="noticeList" />
+				<msg-group :list="msgList" />
+			</view>
+			<view class="tool-group-view" :class="toggleBarActive == 'tool'?'show':'hide'">
+				<tool-group v-model="toolParams" />
+			</view>
+		</view>
+		<bottom-bar :value="bottomBarActive" @action="onAction" />
+		<send-write-group v-model="showSendWrite" @send="onSend" />
+		<luxury-gift-group ref="luxuryGiftList" :list="luxuryGiftList" />
+		<live-pusher :style="{
+		    width: width,
+		    height: height
+		  }" id="livePusher" ref="livePusher" class="live-pusher"
+		 :url="livePusherUrl" :mode="toolParams.mode" :device-position="toolParams.devicePosition" :enable-mic="toolParams.enableMic"
+		 :beauty="toolParams.beauty" object-fit="fillCrop" :whiteness="toolParams.whiteness" aspect="9:16" @statechange="onStatechange" @netstatus="onNetstatus"
+		 @error="onPushererror" @bgmstart="onBgmstart" @bgmprogress="onBgmprogress" @bgmcomplete="onBgmcomplete"></live-pusher>
+	</div>
+</template>
+
+<script>
+	import {
+		GET_LIVEPLAYERURL,
+		GET_LIVEANCHORINFO,
+		GET_LIVEANCHOREND,
+		SET_LIVEANCHORENDSTATISTIC,
+		GET_LIVEGOODSLIST,
+		SET_LIVEDISCONNECTTIME,
+		GET_LIVEROOMSTATUS,
+		DEL_LIVEDISCONNECTTIME
+	} from "../interface";
+	import {
+		encodeUriParams,
+		wan
+	} from "@/common/utils";
+	import noticeGroup from "../component/notice-group.nvue";
+	import msgGroup from "../component/msg-group.nvue";
+	import toolGroup from "./component/tool-group.nvue";
+	import goodsGroup from "./component/goods-group.nvue";
+	import anchorTopBar from "../component/anchor-top-bar.nvue";
+	import giftBarrage from "../component/gift-barrage.nvue";
+	import luxuryGiftGroup from "../component/luxury-gift-group.nvue";
+	import bottomBar from "./component/bottom-bar.nvue";
+	import sendWriteGroup from "../component/send-write-group.nvue";
+	import tls from "../mixin/tls";
+	import $Prompt from "@/api/prompt";
+	import $Navigate from "@/api/navigate";
+
+let isSconnect = false; //推流是否断开
+
+	export default {
+		name: "packages-live-anchor-player",
+		data() {
+			return {
+				anchor_id: 0,
+				info: {},
+
+				livePusherUrl: "",
+
+				msgList: [], //消息列表
+				noticeList: [], //通告列表
+				goodsList: [], //推荐商品列表
+				giftBarrageList: [], //礼物弹幕列表
+				luxuryGiftList: [], //豪华礼物列表
+
+				bottomBarActive: "msg",
+				toggleBarActive: "msg",
+
+				showSendWrite: false,
+
+				// 工具参数
+				toolParams: {
+					mode: "SD", //视频模式 SD（标清）, HD（高清）, FHD（超清）
+					beauty: 5, //美颜
+					whiteness: 5, //美白
+					devicePosition: "front", //前置front或后置back
+					enableMic: true //麦克风
+				},
+
+				width: uni.getSystemInfoSync().windowWidth + "px",
+				height: uni.getSystemInfoSync().windowHeight + "px"
+			};
+		},
+		watch: {
+			toggleBarActive(e) {
+				if (e == "goods") {
+					this.getRecGoodsList();
+				}
+			},
+			"toolParams.devicePosition"(e) {
+				this.ctx.switchCamera();
+			}
+		},
+		mixins: [tls],
+		computed: {
+			topBarLabel() {
+				return wan(this.memberNum) + "观看";
+			}
+		},
+		onLoad(query) {
+			this.anchor_id = query.anchor_id || 0;
+			this.live_id = query.live_id || 0;
+			this.getData();
+			if (this.timer) {
+				clearInterval(this.timer);
+			}
+			this.$Prompt = $Prompt
+			this.$Navigate = $Navigate
+		},
+		onShow() {
+			if (this.toggleBarActive == "goods") {
+				this.getRecGoodsList();
+			}
+
+			// 定时获取直播间状态
+			this.timer = setInterval(() => {
+			  this.getLiveStatus();
+			}, 5000);
+
+			this.leavedEnterLiveRoom();
+
+			if (isSconnect) {
+				// 上次存在断开连接状态，重新进入时，去除 断开连接时的时间
+				this.delSconnectTime();
+			}
+
+			// ios环境 分享页面重新进入时，会黑屏，重新执行start
+			if (this.ctx && this.isHangUp) {
+				this.ctx.start({
+					success: res => {
+						console.log("start success");
+						this.isHangUp = false;
+					},
+					fail: res => {
+						console.log("start fail");
+					}
+				});
+			}
+		},
+		onReady() {
+			// 注意：需要在onReady中 或 onLoad 延时
+			this.ctx = uni.createLivePusherContext("livePusher", this);
+			if (!this.ctx) {
+				return;
+			}
+			this.ctx.start({
+				success: res => {
+					console.log("start success");
+				},
+				fail: res => {
+					console.log("start fail");
+				}
+			});
+		},
+		onHide() {
+			clearInterval(this.timer);
+			// this.leaveLiveRoom();
+		},
+		onUnload() {
+			clearInterval(this.timer);
+			this.leaveLiveRoom();
+			this.setSconnectTime();
+			setTimeout(() => {
+				this.destroyTLS();
+			});
+		},
+		methods: {
+			getData() {
+				GET_LIVEANCHORINFO({
+					anchor_id: this.anchor_id
+				}).then(({
+					data
+				}) => {
+					this.info = data || {};
+					this.live_id = this.info.live_id;
+					if (data.tool_options) {
+						this.toolParams = data.tool_options || {};
+					}
+					this.pushMsgList({
+						type: "system",
+						name: "公告",
+						content: data.room_notice
+					});
+					this.getUrl()
+					this.initTLS(this.info);
+					this.setWxShare({
+						title: data.live_title,
+						imgUrl: data.live_img,
+						path: "packages/live/player",
+						query: {
+							live_id: this.live_id,
+							anchor_id: this.anchor_id
+						},
+						desc: "赶紧过来观看我的直播~"
+					});
+				});
+			},
+			getLiveStatus() {
+				if (!this.isInitTLSed) {
+					return false;
+				}
+				GET_LIVEROOMSTATUS({
+					anchor_id: this.anchor_id
+				}).then(({
+					data
+				}) => {
+					console.log("直播状态：", data.live_status);
+					if (data.live_status == 0) {
+						// 已禁播
+						this.sendCustomMessage({
+							name: "banned"
+						});
+						this.$Prompt
+							.modal({
+								title: "提示",
+								showCancel: false,
+								content: "抱歉，您已被禁播"
+							})
+							.then(() => {
+								this.endLive().then(() => {
+									// this.$Navigate.replace("/pages/live/index");
+									uni.redirectTo({
+										url: `/pages/live/index`
+									})
+								});
+							});
+						if (this.timer) {
+							clearInterval(this.timer);
+						}
+					}
+					if (data.live_status == -1) {
+						// 异常
+						this.sendCustomMessage({
+							name: "abnormal"
+						});
+						this.$Prompt
+							.modal({
+								title: "提示",
+								showCancel: false,
+								content: "抱歉，您的直播间异常"
+							})
+							.then(() => {
+								this.endLive().then(() => {
+									// this.$Navigate.replace("/pages/live/index");
+									uni.redirectTo({
+										url: `/pages/live/index`
+									})
+								});
+							});
+						if (this.timer) {
+							clearInterval(this.timer);
+						}
+					}
+					if (data.live_status == 4) {
+						// 已下播
+						this.sendCustomMessage({
+							name: "end"
+						});
+						// return this.$Navigate.replace({
+						// 	path: "/packages/live/anchor/end",
+						// 	query: {
+						// 		anchor_id: this.anchor_id,
+						// 		live_id: this.live_id
+						// 	}
+						// });
+						if (this.timer) {
+							clearInterval(this.timer);
+						}
+						uni.redirectTo({
+							url: `/packages/live/anchor/end?anchor_id=${this.anchor_id}&live_id=${this.live_id}`
+						})
+						return
+					}
+				});
+			},
+			// 获取推流地址
+			getUrl() {
+				GET_LIVEPLAYERURL({
+					live_id: this.live_id
+				}).then(({
+					data
+				}) => {
+					this.livePusherUrl = data.push_url;
+					console.log(this.livePusherUrl)
+					this.$nextTick(() => {
+						this.ctx = uni.createLivePusherContext("livePusher", this);
+						if (!this.ctx) {
+							return;
+						}
+						this.ctx.start({
+							success: res => {
+								console.log("start success");
+							},
+							fail: res => {
+								console.log("start fail");
+							}
+						});
+					})
+				});
+			},
+			// 监听tls初始化完成
+			onTLSReady() {
+      	this.isInitTLSed = true;
+				if (this.info.group_id) {
+					this.joinGroup(this.info.group_id);
+				} else {
+					this.createGroup(); // 主播创建群聊
+				}
+			},
+			// 加入消息列表
+			pushMsgList(obj) {
+				this.msgList.push(obj);
+			},
+			// 加入通告列表
+			pushNoticeList(obj) {
+				this.noticeList.push(obj);
+			},
+			// 加入礼物弹幕队列列表
+			pushGiftList(obj) {
+      	this.$refs.giftBarrage.push(obj);
+				// this.giftBarrageList.push(obj);
+				// 豪华礼物类型
+				if (obj.type == 2) {
+      		this.$refs.luxuryGiftList.push(obj);
+					// this.luxuryGiftList.push(obj);
+				}
+			},
+			onAction(e) {
+				console.log(e)
+				this.bottomBarActive = e;
+				if (e == "goods" || e == "msg" || e == "tool") {
+					this.toggleBarActive = e;
+				}
+				if (e == "msg") {}
+				if (e == "mute") {
+					// 全体禁言
+					this.sendCustomMessage({
+						name: "mute",
+						query: {
+							is_muting: !this.isMute ? 1 : 0
+						}
+					}).then(() => {
+						this.isMute = !this.isMute;
+						this.pushMsgList({
+							type: "system",
+							name: "公告",
+							content: this.muteText
+						});
+					});
+				}
+				if (e == "write") {
+					this.showSendWrite = true;
+				}
+			},
+			// 关闭直播间
+			clickClose() {
+				this.$Prompt
+					.modal({
+						title: "提示",
+						content: "是否结束当前直播?"
+					})
+					.then(() => {
+						this.endLive().then(message => {
+							// this.$Navigate
+							// 	.replace({
+							// 		path: "/packages/live/anchor/end",
+							// 		query: {
+							// 			anchor_id: this.anchor_id,
+							// 			live_id: this.live_id
+							// 		}
+							// 	})
+							// 	.then(() => {
+							// 		this.$Prompt.toast({
+							// 			title: message,
+							// 			icon: "success"
+							// 		});
+							// 	});
+							uni.redirectTo({
+								url: `/packages/live/anchor/end?anchor_id=${this.anchor_id}&live_id=${this.live_id}`
+							})
+							setTimeout(() => {
+								this.$Prompt.toast({
+									title: message,
+									icon: "success"
+								});
+							}, 200)
+						});
+					});
+			},
+			// 下播
+			endLive() {
+				return new Promise((resolve, reject) => {
+					let params = {
+						live_id: this.live_id,
+						end_time: Math.round(new Date() / 1000)
+					};
+					GET_LIVEANCHOREND(params).then(({
+						message
+					}) => {
+						// 解散群聊
+						this.dismissGroup().then(() => {
+							resolve(message);
+						});
+					});
+				});
+			},
+			//获取推荐商品列表
+			getRecGoodsList() {
+				GET_LIVEGOODSLIST({
+					anchor_id: this.anchor_id
+				}).then(({
+					data
+				}) => {
+					const list = data.live_goods_list || [];
+					list.forEach(e => {
+						e.btnLoading = false;
+					});
+					this.goodsList = list;
+				});
+			},
+			// 刷新商品
+			refreshGoodsList(item) {
+				this.getRecGoodsList();
+				// 主播重新设置主推商品
+				this.sendCustomMessage({
+					name: "recommendgoods",
+					query: {
+						goods_id: item.goods_id,
+						is_recommend: item.is_recommend
+					}
+				});
+			},
+			// 发送内容
+			onSend(e) {
+				this.sendMessage({
+					text: e.text
+				});
+			},
+			onStatechange(e) {
+				const {
+					code
+				} = e.detail;
+				console.log("onStatechange", e.detail.code, e.detail.message);
+				if (code === 5000) {
+					// 推流被挂起
+					this.isHangUp = true;
+				}
+				if (code == -1307) {
+					this.setSconnectTime();
+				}
+			},
+			// 设置失去连接时间
+			setSconnectTime() {
+				SET_LIVEDISCONNECTTIME({
+					live_id: this.live_id,
+					disconnect_time: Math.round(new Date() / 1000)
+				}).then(res => {
+					console.log(res);
+				});
+			},
+			// 删除 断开连接时间
+			delSconnectTime() {
+				DEL_LIVEDISCONNECTTIME({
+					live_id: this.live_id
+				})
+					.then(res => {
+						isSconnect = false;
+						console.log(res, "删除断开连接时间");
+					})
+					.catch(() => {
+						isSconnect = false;
+					});
+			},
+			onNetstatus(e) {
+				// console.log("onNetstatus", e);
+			},
+			onPushererror(e) {
+				console.log("onPushererror", e);
+			},
+			onBgmstart(e) {
+				console.log("onBgmstart", e);
+			},
+			onBgmprogress(e) {
+				console.log("onBgmprogress", e);
+			},
+			onBgmcomplete(e) {
+				console.log("onBgmcomplete", e);
+			}
+		},
+		components: {
+			anchorTopBar,
+			noticeGroup,
+			msgGroup,
+			bottomBar,
+			toolGroup,
+			goodsGroup,
+			giftBarrage,
+			luxuryGiftGroup,
+			sendWriteGroup
+		}
+	};
+</script>
+
+<style lang="scss" scoped>
+	.pages {
+		position: relative;
+	}
+
+	.live-pusher {
+		position: absolute;
+		// top: 0;
+		// left: 0;
+		// right: 0;
+		// bottom: 0;
+		z-index: 1;
+	}
+
+	.anchor-top-bar-btn {
+		color: #FFFFFF;
+		font-size: $font-size-sm;
+		line-height: 40rpx;
+		width: 100rpx;
+		height: 40rpx;
+		align-items: flex-start;
+		justify-content: flex-start;
+		background-color: $red;
+		font-style: normal;
+		border-radius: 40rpx;
+		text-align: center;
+	}
+
+	.footer-warp {
+		position: fixed;
+		width: 750rpx;
+		left: 0;
+		bottom: 120rpx;
+		z-index: 20;
+	}
+
+	.goods-view {
+		width: 750rpx;
+		height: 648rpx;
+		position: fixed;
+		left: -750rpx;
+		bottom: 120rpx;
+	}
+
+	.notice-msg-view {
+		width: 750rpx;
+		height: 648rpx;
+		position: fixed;
+		justify-content: flex-end;
+		left: 0;
+		bottom: 120rpx;
+	}
+
+	.tool-view {
+		width: 750rpx;
+		height: 648rpx;
+		position: fixed;
+		left: -750rpx;
+		bottom: 120rpx;
+		background-color: rgba(0, 0, 0, .3);
+	}
+
+	.show {
+		left: 0;
+	}
+
+	.hide {
+		left: -750rpx;
+	}
+</style>

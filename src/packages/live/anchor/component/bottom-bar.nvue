@@ -1,0 +1,137 @@
+<template>
+	<view class="bottom-bar">
+		<view class="items items-left">
+			<view class="icon-item" @click="action('write')">
+				<text class="icon-item-text">输入</text>
+			</view>
+		</view>
+		<view class="items items-center">
+			<view class="items-center-flex">
+				<view class="icon-item icon-item-goods no-background" :class="value == 'goods' ? 'active' : ''" @click="action('goods')">
+					<text class="icon-item-text">商品</text>
+				</view>
+				<view class="icon-item icon-item-msg no-background" :class="value == 'msg' ? 'active' : ''" @click="action('msg')">
+					<text class="icon-item-text">消息</text>
+				</view>
+				<view class="icon-item icon-item-tool no-background" :class="value == 'tool' ? 'active' : ''" @click="action('tool')">
+					<text class="icon-item-text">工具</text>
+				</view>
+			</view>
+		</view>
+		<view class="items items-right">
+			<view class="icon-item" @click="action('mute')">
+				<text class="icon-item-text">禁言</text>
+			</view>
+			<!-- <view class="icon-item" @click="action('share')">
+				<text>1</text>
+			</view> -->
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				value: "msg"
+			};
+		},
+		props: {},
+		computed: {
+			goodsIconStyle() {
+				return this.value == "goods" ? {
+					"background-image": "-webkit-linear-gradient(bottom, #ED4F25, #EA2053)",
+					"-webkit-background-clip": "text",
+					"-webkit-text-fill-color": "transparent"
+				} : {};
+			},
+			msgIconStyle() {
+				return this.value == "msg" ? {
+					"background-image": "-webkit-linear-gradient(bottom, #9059F5, #5AB1F8)",
+					"-webkit-background-clip": "text",
+					"-webkit-text-fill-color": "transparent"
+				} : {};
+			}
+		},
+		methods: {
+			action(e) {
+				if (e == "goods" || e == "msg" || e == "tool") {
+					this.value = e;
+				}
+				this.$emit("action", e);
+			}
+		}
+	};
+</script>
+
+<style lang="scss" scoped>
+	.bottom-bar {
+		position: fixed;
+		width: 750rpx;
+		padding: 20rpx 0;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		z-index: 10;
+		bottom: 0;
+	}
+
+	.items {
+		align-items: center;
+		justify-content: center;
+	}
+
+	.icon-item {
+		width: 70rpx;
+		height: 70rpx;
+		margin: 0 10rpx;
+		justify-content: center;
+		align-items: center;
+		border-radius: 99999rpx;
+		background-color: rgba(0, 0, 0, 0.5);
+		color: #ffffff;
+	}
+
+	.items-left {
+		flex: 1;
+		justify-content: center;
+	}
+
+	.items-right {
+		flex: 1;
+		flex-direction: row;
+		justify-content: center;
+	}
+
+	.items-center {
+		flex: 2;
+		padding: 0 40rpx;
+	}
+
+	.items-center-flex {
+		flex-direction: row;
+		border-radius: 99999rpx;
+		justify-content: space-between;
+		background-color: rgba(0, 0, 0, 0.5);
+	}
+
+	.no-background {
+		background-color: transparent;
+	}
+
+	.active {
+		background-color: #ffffff;
+	}
+
+	.tool {
+		font-size: 36rpx;
+		width: 60rpx;
+		height: 60rpx;
+		color: #FFFFFF;
+	}
+
+	.icon-item-text {
+		font-size: $font-size-sm;
+		color: #FFFFFF;
+	}
+</style>

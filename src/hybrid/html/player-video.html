@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+  <title></title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    .web-player {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1;
+    }
+
+    .controls {
+      width: 100vw;
+      height: 100vw;
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1020;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="webPlayer" class="web-player" ref="webPlayer">
+    <div class="controls">
+      <!-- <lk-icon name="play-circle-o" size="60" color="#ffffff" /> -->
+    </div>
+  </div>
+  <script src="https://cloudcache.tencent-cloud.com/open/qcloud/video/vcplayer/TcPlayer-2.3.3.js"
+    charset="utf-8"></script>
+  <script>
+    function getUrlKey(name) {
+      let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i')
+      let s = decodeURIComponent(window.location.search)
+      let r = s.substr(1).match(reg)
+      if (r != null) {
+        return unescape(r[2])
+      }
+      return null
+    }
+    let url = window.location.href
+    var flv = getUrlKey('src', url)
+    if (flv) {
+      var poster = getUrlKey('poster', url)
+      var m3u8 = flv.replace('flv', 'm3u8')
+      var player = new TcPlayer('webPlayer', {
+        flv: flv,
+        m3u8: m3u8,
+        SDKAppID: '',
+        autoplay: false,
+        x5_type: "h5",
+        width: "100%",
+        height: "100%",
+        poster: { style: "cover", src: poster },
+        pausePosterEnabled: true,
+        controls: "none",
+        x5_player: true,
+        live: true,
+        objectFit: "fill",
+        wording: {
+          1: "网络错误，请检查网络配置或者播放链接是否正确~ ",
+          2: "网络错误，请检查网络配置或者播放链接是否正确~ ",
+          3: "视频解码错误~ ",
+          4: "当前系统环境不支持播放该视频格式~ ",
+          5: "当前系统环境不支持播放该视频格式~ ",
+          13: "您观看的直播已结束",
+          1002: "获取视频失败，请检查播放链接是否有效",
+          2032: "请求视频失败，请检查网络",
+          2048: "请求m3u8文件失败，可能是网络错误或者跨域问题"
+        }
+      });
+      console.log(player)
+      setTimeout(() => {
+        player.play()
+      }, 500)
+    }
+  </script>
+</body>
+
+</html>

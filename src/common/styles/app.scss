@@ -1,0 +1,422 @@
+@import "./reset";
+@import "./iconfont";
+@import "./v-iconfont";
+
+.lk-ellipsis {
+  overflow: hidden;
+  /* #ifndef APP-PLUS-NVUE */
+  white-space: nowrap;
+  /* #endif */
+  text-overflow: ellipsis;
+}
+.lk-multi-ellipsis--l2 {
+  /* #ifndef APP-PLUS-NVUE */
+  -webkit-line-clamp: 2;
+  /* #endif */
+}
+.lk-multi-ellipsis--l2,
+.lk-multi-ellipsis--l3 {
+  /* #ifndef APP-PLUS-NVUE */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  /* #endif */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.lk-multi-ellipsis--l3 {
+  /* #ifndef APP-PLUS-NVUE */
+  -webkit-line-clamp: 3;
+  /* #endif */
+}
+.lk-clearfix:after {
+  /* #ifndef APP-PLUS-NVUE */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  content: "";
+  clear: both;
+  /* #endif */
+}
+.lk-hairline,
+.lk-hairline--bottom,
+.lk-hairline--left,
+.lk-hairline--right,
+.lk-hairline--surround,
+.lk-hairline--top,
+.lk-hairline--top-bottom {
+  position: relative;
+}
+.lk-hairline--bottom:after,
+.lk-hairline--left:after,
+.lk-hairline--right:after,
+.lk-hairline--surround:after,
+.lk-hairline--top-bottom:after,
+.lk-hairline--top:after,
+.lk-hairline:after {
+  position: absolute;
+  transform-origin: center;
+  top: -50%;
+  right: -50%;
+  bottom: -50%;
+  left: -50%;
+  border: 0 solid #eee;
+  transform: scale(0.5);
+  /* #ifndef APP-PLUS-NVUE */
+  box-sizing: border-box;
+  -webkit-transform-origin: center;
+  -webkit-transform: scale(0.5);
+  pointer-events: none;
+  content: "";
+  /* #endif */
+}
+.lk-hairline--top:after {
+  border-top-width: 2rpx;
+}
+.lk-hairline--left:after {
+  border-left-width: 2rpx;
+}
+.lk-hairline--right:after {
+  border-right-width: 2rpx;
+}
+.lk-hairline--bottom:after {
+  border-bottom-width: 2rpx;
+}
+.lk-hairline--top-bottom:after {
+  border-width: 2rpx 0;
+}
+.lk-hairline--surround:after {
+  border-width: 2rpx;
+}
+
+.pages {
+  /* #ifndef APP-PLUS-NVUE */
+  background-color: inherit;
+  /* #endif */
+}
+
+// 字体大小
+.font-size-xs {
+  font-size: $font-size-xs;
+}
+
+.font-size-sm {
+  font-size: $font-size-sm;
+}
+
+.font-size {
+  font-size: $font-size;
+}
+
+.font-size-lg {
+  font-size: $font-size-lg;
+}
+
+//文本颜色
+.text-color {
+  color: $text-color;
+}
+
+.text-gray {
+  color: $text-gray;
+}
+
+.text-light {
+  color: $text-light;
+}
+
+.text-white {
+  color: $white;
+}
+
+.text-red {
+  color: $red;
+}
+
+.text-blue {
+  color: $blue;
+}
+
+.text-orange {
+  color: $orange;
+}
+
+.text-green {
+  color: $green;
+}
+
+// 背景颜色
+.bg-gray {
+  background-color: $background-color;
+}
+
+.bg-white {
+  background-color: $white;
+}
+
+.bg-red {
+  background-color: $red;
+}
+
+.bg-blue {
+  background-color: $blue;
+}
+
+.bg-orange {
+  background-color: $orange;
+}
+
+.bg-green {
+  background-color: $green;
+}
+
+.text-nowrap {
+  /* #ifndef APP-PLUS-NVUE */
+  white-space: nowrap;
+  /* #endif */
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+// 宽度百分百
+.full-width {
+  width: 100%;
+}
+
+// 高度百分百
+.full-height {
+  height: 100%;
+}
+
+.full {
+  width: 100%;
+  height: 100%;
+}
+
+// 圆
+.round {
+  border-radius: 5000rpx;
+}
+
+// 方形
+.square {
+  border-radius: 0;
+}
+
+// 单元内边距
+.cell-padding {
+  padding: 20rpx 30rpx;
+}
+
+// 组合外边距
+.cell-group-margin {
+  margin: 20rpx 0;
+}
+
+.price-color {
+  color: $red;
+}
+
+// 文本链接颜色
+.text-link {
+  color: $blue;
+}
+
+// 卡片圆角
+.card-group-box {
+  margin: 20rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 0 20rpx 0 rgba(0, 0, 0, 0.05);
+}
+
+// 底部按钮组合
+.foot-btn-group {
+  padding: 30rpx;
+}
+
+// 底部按钮组合 (固定)
+.foot-btn-group.fixed {
+  position: fixed;
+  z-index: 1;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: inherit;
+}
+
+// 空布局样式
+.empty {
+  /* #ifndef APP-PLUS-NVUE */
+  display: flex;
+  /* #endif */
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40rpx;
+  color: $gray-darker;
+}
+
+// 第一个字符显小
+.first-letter::first-letter {
+  /* #ifndef APP-PLUS-NVUE */
+  display: block;
+  /* #endif */
+  font-size: 0.75em;
+}
+
+.reform-group {
+  overflow: hidden;
+}
+
+// 富文本
+/* #ifndef APP-PLUS-NVUE */
+.richtext {
+  position: relative;
+  div,
+  view,
+  p,
+  text,
+  img {
+    max-width: 100% !important;
+    overflow: hidden;
+    word-wrap: break-word;
+  }
+  img,
+  image {
+    max-width: 100% !important;
+    vertical-align: top;
+    width: 100%;
+    height: auto;
+    min-height: 20rpx;
+  }
+}
+
+/* #endif */
+// 浮层按钮
+.floater-btn-icon {
+  border-radius: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  width: 60rpx;
+  height: 60rpx;
+  position: absolute;
+  z-index: 100;
+  color: #fff;
+  /* #ifndef APP-PLUS-NVUE */
+  display: flex;
+  /* #endif */
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  font-weight: 800;
+}
+
+// 分割线
+/* #ifndef APP-PLUS-NVUE */
+.divider {
+  /* #ifndef APP-PLUS-NVUE */
+  display: flex;
+  /* #endif */
+  align-items: center;
+  margin: 30rpx 0;
+  color: $gray-darker;
+  font-size: $font-size;
+  line-height: 48rpx;
+  border-color: $border-color;
+  border-style: solid;
+  border-width: 0;
+  padding: 20rpx 30rpx;
+  &::before,
+  &::after {
+    /* #ifndef APP-NVUE */
+    display: flex;
+    /* #endif */
+    flex: 1;
+    height: 2rpx;
+    /* #ifndef APP-NVUE */
+    border-color: inherit;
+    border-style: inherit;
+    /* #endif */
+    border-width: 2rpx 0 0;
+    transform: scaleY(0.5);
+    content: "";
+  }
+  &::before {
+    margin-right: 30rpx;
+  }
+  &::after {
+    margin-left: 30rpx;
+  }
+}
+/* #endif */
+
+// sku
+/* #ifndef APP-PLUS-NVUE */
+lk-sku-actions {
+  width: 100%;
+}
+/* #endif */
+
+/* #ifndef APP-PLUS-NVUE */
+.sku-action-group {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  flex: 1;
+  width: 100%;
+  height: 100rpx;
+  padding: 0 20rpx;
+  .action-btn {
+    flex: 1;
+    overflow: hidden;
+    /* #ifndef APP-PLUS-NVUE */
+    display: flex;
+    /* #endif */
+    align-items: center;
+    lk-button {
+      width: 100%;
+    }
+    button {
+      font-size: $font-size;
+      width: 100%;
+      height: 80rpx;
+      flex: 1;
+      border: none;
+      border-radius: 0;
+      overflow: hidden;
+      line-height: 80rpx;
+    }
+  }
+  .action-btn .lk-button--warning {
+    background: linear-gradient(to right, #ffd01e, #ff8917);
+  }
+  .action-btn .lk-button--danger {
+    background: linear-gradient(to right, #ff6034, #ee0a24);
+  }
+  .action-btn:first-child button {
+    border-top-left-radius: 50rpx;
+    border-bottom-left-radius: 50rpx;
+  }
+  .action-btn:last-child button {
+    border-top-right-radius: 50rpx;
+    border-bottom-right-radius: 50rpx;
+  }
+}
+/* #endif */
+
+/* #ifndef APP-PLUS-NVUE */
+.status-bar {
+  width: 100%;
+  height: var(--status-bar-height);
+}
+/* #endif */
+
+/* 装修加载视图样式 */
+.reform-loading-box {
+  width: 100%;
+  height: 300rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .text {
+    padding: 0 20rpx;
+  }
+}

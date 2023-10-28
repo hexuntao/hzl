@@ -1,0 +1,56 @@
+page {
+  background-color: $background-color;
+  line-height: 1.2;
+  font-size: $font-size;
+  color: $text-color;
+  /* #ifndef APP-PLUS-NVUE */
+  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
+  /* #endif */
+  font-family: Helvetica Neue, Helvetica, sans-serif;
+}
+
+/* #ifdef H5 */
+* {
+  -webkit-user-select: auto;
+  margin: 0;
+  padding: 0;
+}
+/* #endif */
+
+/**
+  * nvue文件flex布局默认flex-direction:column 
+  * 所有vue文件flex布局 默认布局方式也跟nvue一致 
+*/
+view {
+  font-size: inherit;
+  color: inherit;
+  /* #ifndef APP-PLUS-NVUE */
+  box-sizing: border-box;
+  /* #endif */
+}
+
+/* #ifndef APP-PLUS-NVUE */
+view,
+scroll-view,
+swiper,
+button,
+input,
+textarea,
+label,
+navigator,
+image {
+  box-sizing: border-box;
+}
+
+image {
+  will-change: transform;
+}
+
+// 处理富文本内容图片之间的空格
+.richtext image,
+.richtext img {
+  vertical-align: top;
+  display: inline-flex;
+}
+/* #endif */
