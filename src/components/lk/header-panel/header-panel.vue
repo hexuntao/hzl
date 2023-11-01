@@ -20,7 +20,7 @@
     </view>
 
     <view>
-      <picker
+      <!-- <picker
         mode="selector"
         :range="getShopList"
         range-key="shop_name"
@@ -28,7 +28,7 @@
         style="margin: -10rpx 0rpx; text-align: right"
       >
         切换商户
-      </picker>
+      </picker> -->
     </view>
 
     <view style="font-size: 24rpx; margin-top: 30rpx">
