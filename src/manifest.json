@@ -24,7 +24,7 @@
       "port": 3000,
       "proxy": {
         "/api": {
-          "target": "https://hzldm.sandyp.cn/wapapi",
+          "target": "https://hzlqc.sandyp.cn/wapapi",
           "changeOrigin": true,
           "secure": false,
           "pathRewrite": {
@@ -43,7 +43,7 @@
     }
   },
   "mp-weixin": {
-    "appid": "wx756005dc8908f18a",
+    "appid": "wx93e7511a8e7d755d",
     "libVersion": "2.16.0",
     "setting": {
       "urlCheck": true,

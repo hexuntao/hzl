@@ -3,12 +3,12 @@
   "ext": {
     "project_name": "花之流-东盟店",
     "auth_key": "P6l0Gx9p7Qsijklz",
-    "domain": "https://hzldm.sandyp.cn",
-    "domain_wap": "https://hzldm.sandyp.cn",
+    "domain": "https://hzlqc.sandyp.cn",
+    "domain_wap": "https://hzlqc.sandyp.cn",
     "website_id": 1
   },
   "requiredPrivateInfos": ["getLocation", "chooseLocation"],
-  "extAppid": "wx756005dc8908f18a",
+  "extAppid": "wx93e7511a8e7d755d",
   "tabBar": {
     "list": [
       {

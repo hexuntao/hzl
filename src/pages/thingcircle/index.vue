@@ -1,49 +1,51 @@
 <template>
-  <view class="pages"  >
-	  <view>
-		  <header-tab @change="onTabSearch" />
-		  <lk-load-list
-		    ref="load"
-		    top="200"
-		    bottom="200"
-		    @init="loadInit"
-		    :down="downOption"
-		    @down="downCallback"
-		    :up="upOption"
-		    @up="upCallback"
-			
-		  >
-		    <view class="list">
-		      <block v-if="showType == 1">
-		        <single-column
-		          v-for="(items, index) in list"
-		          :key="index"
-		          :items="items"
-		        />
-		      </block>
-		      <block v-if="showType == 2">
-		        <lk-waterfall v-model="list" ref="waterfallList" @get-list="getList">
-		          <view class="left-list" slot="left">
-		            <diallel-column
-		              v-for="(items, index) in leftList"
-		              :key="index"
-		              :items="items"
-		            />
-		          </view>
-		          <view class="right-list" slot="right">
-		            <diallel-column
-		              v-for="(items, index) in rightList"
-		              :key="index"
-		              :items="items"
-		            />
-		          </view>
-		        </lk-waterfall>
-		      </block>
-		    </view>
-		  </lk-load-list>
-		  
-	  </view>
-    
+  <view class="pages">
+    <view>
+      <header-tab @change="onTabSearch" />
+      <lk-load-list
+        ref="load"
+        top="240"
+        bottom="200"
+        @init="loadInit"
+        :down="downOption"
+        @down="downCallback"
+        :up="upOption"
+        @up="upCallback"
+      >
+        <view class="list">
+          <block v-if="showType == 1">
+            <single-column
+              v-for="(items, index) in list"
+              :key="index"
+              :items="items"
+            />
+          </block>
+          <block v-if="showType == 2">
+            <lk-waterfall
+              v-model="list"
+              ref="waterfallList"
+              @get-list="getList"
+            >
+              <view class="left-list" slot="left">
+                <diallel-column
+                  v-for="(items, index) in leftList"
+                  :key="index"
+                  :items="items"
+                />
+              </view>
+              <view class="right-list" slot="right">
+                <diallel-column
+                  v-for="(items, index) in rightList"
+                  :key="index"
+                  :items="items"
+                />
+              </view>
+            </lk-waterfall>
+          </block>
+        </view>
+      </lk-load-list>
+    </view>
+
     <footer-tab :active="0" />
     <lk-shortcut-entry />
     <!-- #ifndef MP-WEIXIN -->
@@ -53,51 +55,54 @@
 </template>
 
 <script>
-	import { mapGetters, mapActions } from "vuex";
-import loadMixin from "@/mixins/load-list";
-import waterfall from "@/mixins/waterfall";
-import thingcircleMixin from "@/mixins/thingcircle";
-import headerTab from "./component/header-tab";
-import singleColumn from "./component/single-column";
-import diallelColumn from "./component/diallel-column";
-import { formatStyle } from "@/common/utils/stringify";
-import footerTab from "./component/footer-tab";
-import { GET_THINGCIRCLELIST } from "@/common/interface/thingcircle";
+import { mapGetters, mapActions } from 'vuex';
+import loadMixin from '@/mixins/load-list';
+import waterfall from '@/mixins/waterfall';
+import thingcircleMixin from '@/mixins/thingcircle';
+import headerTab from './component/header-tab';
+import singleColumn from './component/single-column';
+import diallelColumn from './component/diallel-column';
+import { formatStyle } from '@/common/utils/stringify';
+import footerTab from './component/footer-tab';
+import { GET_THINGCIRCLELIST } from '@/common/interface/thingcircle';
 // 获取系统状态栏
 let systemInfo = uni.getSystemInfoSync();
 export default {
-  name: "pages-thingcircle-index",
+  name: 'pages-thingcircle-index',
   data() {
     return {
       showType: 1, //显示类型，1单排，2两列
       params: {
         page_index: 1,
         page_size: 12,
-        search_text: "",
-        lng: "",
-        lat: "",
-        follow: ""
+        search_text: '',
+        lng: '',
+        lat: '',
+        follow: '',
       },
-	  tabs2:[],
-	  
-	  
+      tabs2: [],
     };
   },
-  mixins: [loadMixin, thingcircleMixin,waterfall],
+  mixins: [loadMixin, thingcircleMixin, waterfall],
   onLoad() {
-this.$refs.waterfallList.clear();
+    if (this.$refs.waterfallList) {
+      this.$refs.waterfallList.clear();
+    }
     this.upCallback(1);
   },
   onShow() {
-  this.$refs.waterfallList.clear();
-      this.upCallback(1);
-    },
+    if (this.$refs.waterfallList) {
+      this.$refs.waterfallList.clear();
+    }
+    this.upCallback(1);
+  },
   onPullDownRefresh() {
-	 this.$refs.waterfallList.clear();
+    if (this.$refs.waterfallList) {
+      this.$refs.waterfallList.clear();
+    }
     this.upCallback(1);
   },
   methods: {
-
     upCallback(page) {
       this.params.page_index = page.num;
 
@@ -122,20 +127,18 @@ this.$refs.waterfallList.clear();
       }
       this.resetList();
     },
-	
   },
-  
+
   components: {
     headerTab,
     singleColumn,
     diallelColumn,
-    footerTab
-  }
+    footerTab,
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-
 .list {
   margin: 20rpx 0;
 }
