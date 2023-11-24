@@ -3,8 +3,8 @@
     <block v-if="isShowShipping">
       <lk-cell field title="配送方式" v-if="!noExpress && isPickup">
         <lk-radio-group v-model="shipping_type" :active-color="theme.color">
-          <lk-radio :name="1">快递配送</lk-radio>
           <lk-radio :name="2">线下自提</lk-radio>
+          <lk-radio :name="1">快递配送</lk-radio>
         </lk-radio-group>
       </lk-cell>
       <view class="shipping-tip" v-if="shippingTip">{{ shippingTip }}</view>
@@ -13,13 +13,11 @@
       </view>
     </block>
 
-
-    <block v-if="orderType=='zhihuan'">
-      <view >
+    <block v-if="orderType == 'zhihuan'">
+      <view>
         <lk-zhihuan-goods :info="zhihuan" @select="onZhihuan" />
       </view>
     </block>
-
 
     <cell-pay-type-group v-if="isDpay" v-model="payType" />
 
@@ -38,9 +36,7 @@
           cell-padding
           :title="child.goods_name"
           :desc="child.spec"
-		  
-		  :ptmoney="child.ptmoney"
-		  
+          :ptmoney="child.ptmoney"
           :price="child.discount_price"
           :image="child.goods_pic"
         >
@@ -48,9 +44,9 @@
             <lk-stepper
               v-if="
                 orderType === 'buy_now' &&
-                  params.goodsType != 4 &&
-                  params.goodsType != 6 &&
-                  !params.luckyspell_id
+                params.goodsType != 4 &&
+                params.goodsType != 6 &&
+                !params.luckyspell_id
               "
               integer
               v-model="params.sku_list[0].num"
@@ -128,12 +124,15 @@
             <text>件商品，小计：</text>
             <view class="price first-letter">
               {{ item.shop_amount_show | yuan }}
-              <text v-if="item.shop_ptmoney_show!='' && item.shop_ptmoney_show!=null">+{{item.shop_ptmoney_show}}积分</text>
+              <text
+                v-if="
+                  item.shop_ptmoney_show != '' && item.shop_ptmoney_show != null
+                "
+                >+{{ item.shop_ptmoney_show }}积分</text
+              >
             </view>
           </view>
         </lk-cell>
-
-
       </view>
       <cell-point-deduct
         :is-point-deduct="isPointDeduct"
@@ -148,42 +147,51 @@
         @load-data="onMembercard"
       />
 
-        <view class="card-group-box" >
-          <lk-cell slot="icon">
-              <lk-checkbox-group v-model="pay_money_change" >
-                  <view style="display: block;width:100%;height:60rpx;" v-for="(item, g) in moneyTypeBuyArr" :key="g">
-                      <view style="float:left;text-align:left;width:50%;">
-                        {{item.name}}：{{item.my_money}}
-                      </view>
-                      <view style="float:right;text-align:right;width:50%;position:relative;">
-                          <view style="position:absolute;right:60rpx;">可抵扣：{{item.usermax}} </view>
-                          <lk-checkbox
-                              style="position:absolute;right:0rpx;"
-                            :name="item.key"
-                            v-model="item.checked"
-                            @click="changeMoney(g)"
-                          >
-                          </lk-checkbox>
-                      </view>
-                  </view>
-              </lk-checkbox-group>
+      <view class="card-group-box">
+        <lk-cell slot="icon">
+          <lk-checkbox-group v-model="pay_money_change">
+            <view
+              style="display: block; width: 100%; height: 60rpx"
+              v-for="(item, g) in moneyTypeBuyArr"
+              :key="g"
+            >
+              <view style="float: left; text-align: left; width: 50%">
+                {{ item.name }}：{{ item.my_money }}
+              </view>
+              <view
+                style="
+                  float: right;
+                  text-align: right;
+                  width: 50%;
+                  position: relative;
+                "
+              >
+                <view style="position: absolute; right: 60rpx"
+                  >可抵扣：{{ item.usermax }}
+                </view>
+                <lk-checkbox
+                  style="position: absolute; right: 0rpx"
+                  :name="item.key"
+                  v-model="item.checked"
+                  @click="changeMoney(g)"
+                >
+                </lk-checkbox>
+              </view>
+            </view>
+          </lk-checkbox-group>
         </lk-cell>
       </view>
 
       <lk-cell-info-list :list="cellInfoGroup" card align="right" />
-</view>
-
-
+    </view>
 
     <cell-purrule-group v-model="isPurruleChecked" />
- 
+
     <view>
       <lk-submit-bar
         :showsubscribe="true"
         :price="order_data.total_amount"
-		
-		:ptmoney="order_data.total_ptmoney"
-		
+        :ptmoney="order_data.total_ptmoney"
         button-text="提交订单"
         :disabled="isDisabled"
         :loading="isLoading"
@@ -194,61 +202,61 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from "vuex";
+import { mapState, mapGetters, mapActions } from 'vuex';
 import {
   GET_ORDERINFO,
   CREATE_ORDER,
-  PAY_DPAY
-} from "@/common/interface/order";
-import { yuan, isEmpty } from "@/common/utils";
-import formGroup from "@/components/custom/form-group";
+  PAY_DPAY,
+} from '@/common/interface/order';
+import { yuan, isEmpty } from '@/common/utils';
+import formGroup from '@/components/custom/form-group';
 
-import cellPayTypeGroup from "./component/cell-pay-type-group";
-import cellPresell from "./component/cell-presell";
-import cellInvoiceGroup from "./component/cell-invoice-group";
-import cellPointDeduct from "./component/cell-point-deduct";
-import cellCouponGroup from "./component/cell-coupon-group";
-import cellStoreGroup from "./component/cell-store-group";
-import cellMembercard from "./component/cell-membercard";
-import cellCargoGroup from "./component/cell-cargo-group";
-import cellPurruleGroup from "./component/cell-purrule-group";
+import cellPayTypeGroup from './component/cell-pay-type-group';
+import cellPresell from './component/cell-presell';
+import cellInvoiceGroup from './component/cell-invoice-group';
+import cellPointDeduct from './component/cell-point-deduct';
+import cellCouponGroup from './component/cell-coupon-group';
+import cellStoreGroup from './component/cell-store-group';
+import cellMembercard from './component/cell-membercard';
+import cellCargoGroup from './component/cell-cargo-group';
+import cellPurruleGroup from './component/cell-purrule-group';
 
 // 计算店铺商品数量总和
 function shopGoodsAmount(item) {
-	console.log('123456897');
-	console.log(item);
-	
+  console.log('123456897');
+  console.log(item);
+
   const arr = item.map(({ num }) => num);
   console.log('a');
   return arr.reduce((x, y) => x + y);
 }
 // 过滤规格数组
 function filterSpec(value) {
-  if (isEmpty(value)) return "";
+  if (isEmpty(value)) return '';
   let newArr = [];
   value.forEach(e => {
-    let str = e.spec_name + " " + e.spec_value_name;
+    let str = e.spec_name + ' ' + e.spec_value_name;
     newArr.push(str);
   });
-  return newArr.join(" , ");
+  return newArr.join(' , ');
 }
 export default {
-  name: "packages-order-confirm",
+  name: 'packages-order-confirm',
   data() {
     return {
       params: {},
-      orderType: "", //提交类型 cart ==> 购物车 /  buy_now ==> 立即购买
-      pay_money_change:'',
-      pay_money_arr:[],
+      orderType: '', //提交类型 cart ==> 购物车 /  buy_now ==> 立即购买
+      pay_money_change: '',
+      pay_money_arr: [],
       address: {},
-      zhihuan:{
-        order_no:'请选择置换的商品'
+      zhihuan: {
+        order_no: '请选择置换的商品',
       },
-      zhihuan_order_goods_id:0,
+      zhihuan_order_goods_id: 0,
       items: null,
-      moneyTypeBuyArr:[],
+      moneyTypeBuyArr: [],
       goods_amount: 0, // 总商品小计
-      zhihuan_money:0,
+      zhihuan_money: 0,
       promotion_amount: 0, // 总优惠券金额
       total_shipping: 0, // 总运费
       total_amount: 0, // 结算金额
@@ -276,15 +284,15 @@ export default {
       shop_id_list: [],
       shop_invoice_list: [],
       membercard_info: {}, //会员卡
-      total_memebrcard_deduction: "", //会员卡抵扣金额
+      total_memebrcard_deduction: '', //会员卡抵扣金额
       show_receive_use: [], //领货码 展示使用情况
 
       isPurruleChecked: false, // 购买等级协议
 
       isreceivegoodscodeused: [], //后台返回的领货码
-      cleararrcode: "", //商品数量+- 清空领货码
+      cleararrcode: '', //商品数量+- 清空领货码
 
-      ws_token: "" //提交订单 socket 标识
+      ws_token: '', //提交订单 socket 标识
     };
   },
   watch: {
@@ -301,16 +309,16 @@ export default {
         }
         this.getData(true);
       }
-    }
+    },
   },
   computed: {
     ...mapState({
       mallConfig: ({ config }) => config,
       addons: ({ config }) => config.addons,
       payConfig: ({ config }) => config.payConfig,
-      member: ({ member }) => member
+      member: ({ member }) => member,
     }),
-    ...mapGetters(["orderFrom"]),
+    ...mapGetters(['orderFrom']),
 
     cellInfoGroup() {
       const {
@@ -321,64 +329,63 @@ export default {
         isGivePoint,
         givePoint,
         receive_goods_code_deduct,
-          moneyTypeBuyArr
+        moneyTypeBuyArr,
       } = this.$data;
       let arr = [];
       if (isGivePoint && givePoint > 0) {
         arr.push({
-          title: "获得" + this.member.texts.point_style,
+          title: '获得' + this.member.texts.point_style,
           value: givePoint,
-          color: "#ff454e"
+          color: '#ff454e',
         });
       }
       arr.push({
-        title: "商品小计",
+        title: '商品小计',
         value: yuan(goods_amount),
-        color: "#ff454e"
+        color: '#ff454e',
       });
-
 
       if (!this.params.presell_id && !this.isVirtualGoods) {
         arr.push({
-          title: "运费",
+          title: '运费',
           value: yuan(total_shipping),
-          color: "#ff454e"
+          color: '#ff454e',
         });
       }
       if (receive_goods_code_deduct > 0) {
         arr.push({
-          title: this.member.info.receivegoodscode.copy_writing + "优惠",
+          title: this.member.info.receivegoodscode.copy_writing + '优惠',
           value: yuan(receive_goods_code_deduct),
-          color: "#ff454e"
+          color: '#ff454e',
         });
       }
       arr.push({
-        title: "优惠金额",
+        title: '优惠金额',
         value: yuan(promotion_amount),
-        color: "#ff454e"
+        color: '#ff454e',
       });
       if (this.is_tax_fee) {
         arr.push({
-          title: "税费",
+          title: '税费',
           value: yuan(this.total_tax),
-          color: "#ff454e"
+          color: '#ff454e',
         });
       }
-      if (zhihuan_money>0) {
+      if (zhihuan_money > 0) {
         arr.push({
-          title: "置换抵扣",
+          title: '置换抵扣',
           value: yuan(zhihuan_money),
-          color: "#ff454e"
+          color: '#ff454e',
         });
       }
 
       var x = '';
-      for(x in moneyTypeBuyArr){
-        if(moneyTypeBuyArr[x]['use_money']>0){
+      for (x in moneyTypeBuyArr) {
+        if (moneyTypeBuyArr[x]['use_money'] > 0) {
           arr.push({
             title: moneyTypeBuyArr[x]['name'],
-            value: '抵扣'+moneyTypeBuyArr[x]['use_money'],
-            color: "#ff454e"
+            value: '抵扣' + moneyTypeBuyArr[x]['use_money'],
+            color: '#ff454e',
           });
         }
       }
@@ -388,18 +395,18 @@ export default {
     order_data() {
       const items = this.items;
       const obj = {};
-      obj.custom_order = "";
+      obj.custom_order = '';
       obj.order_from = this.orderFrom;
       obj.is_deduction = this.params.is_deduction ? 1 : 0;
       obj.is_membercard_deduction = this.params.is_membercard_deduction ? 1 : 0;
       obj.total_amount = this.total_amount > 0 ? this.total_amount : 0;
-	  
-obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
+
+      obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
 
       if (this.ws_token) {
         obj.ws_token = this.ws_token;
       }
-      if (this.orderType === "cart") {
+      if (this.orderType === 'cart') {
         obj.cart_from = this.params.cart_from || 1;
       }
       if (this.shipping_type !== 0) {
@@ -427,7 +434,7 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
 
         shop_obj.leave_message = e.leave_message;
         shop_obj.shop_id = e.shop_id;
-        shop_obj.rule_id = e.full_cut.rule_id ? e.full_cut.rule_id : "";
+        shop_obj.rule_id = e.full_cut.rule_id ? e.full_cut.rule_id : '';
         shop_obj.coupon_id = e.coupon_id;
 
         shop_obj.shop_amount =
@@ -472,12 +479,12 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
           goods_obj.price = g.price;
           goods_obj.num = g.num;
           goods_obj.discount_price = g.discount_price;
-          goods_obj.seckill_id = g.seckill_id || "";
-          goods_obj.channel_id = g.channel_id || "";
+          goods_obj.seckill_id = g.seckill_id || '';
+          goods_obj.channel_id = g.channel_id || '';
           goods_obj.discount_id = g.discount_id;
-          goods_obj.bargain_id = g.bargain_id || "";
-          goods_obj.presell_id = this.params.presell_id || "";
-          goods_obj.anchor_id = g.anchor_id || "";
+          goods_obj.bargain_id = g.bargain_id || '';
+          goods_obj.presell_id = this.params.presell_id || '';
+          goods_obj.anchor_id = g.anchor_id || '';
           shop_obj.goods_list.push(goods_obj);
           if (g.custom_id) {
             obj.custom_id = g.custom_id;
@@ -485,9 +492,8 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
         });
         obj.shop_list.push(shop_obj);
       });
-       //console.log("order_data==", obj);
-	  
-	  
+      //console.log("order_data==", obj);
+
       return obj;
     },
     isDisabled() {
@@ -529,13 +535,13 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
       let text = null;
       if (this.noExpress) {
         // 该单不可快递配送文案提示
-        text = "由于部分商品商城缺货，只能通过线下自提下单取货。";
+        text = '由于部分商品商城缺货，只能通过线下自提下单取货。';
       } else {
         if (this.shipping_type == 2 && this.items) {
           // 线下自提时，多店铺情况下，部分店铺不支持自提文案提示
           if (!this.items.every(({ has_store }) => parseInt(has_store))) {
             text =
-              "由于部分商家不支持线下自提，请为不支持线下自提的订单商品选择收货地址";
+              '由于部分商家不支持线下自提，请为不支持线下自提的订单商品选择收货地址';
           }
         }
       }
@@ -545,7 +551,7 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
     isVirtualGoods() {
       let flag = false;
       if (
-        this.orderType === "buy_now" &&
+        this.orderType === 'buy_now' &&
         (this.params.goodsType == 3 || this.params.goodsType == 6)
       ) {
         flag = true;
@@ -555,7 +561,7 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
     // 是否线下商品(计时/次商品)
     isOfflineGoods() {
       let flag = false;
-      if (this.orderType === "buy_now" && this.params.goodsType == 0) {
+      if (this.orderType === 'buy_now' && this.params.goodsType == 0) {
         flag = true;
       }
       return flag;
@@ -563,7 +569,7 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
     // 是否知识付费商品
     isCourseGoods() {
       let flag = false;
-      if (this.orderType === "buy_now" && this.params.goodsType == 4) {
+      if (this.orderType === 'buy_now' && this.params.goodsType == 4) {
         flag = true;
       }
       return flag;
@@ -571,7 +577,7 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
     // 是否电子卡密商品
     isCardPasswordGoods() {
       let flag = false;
-      if (this.orderType === "buy_now" && this.params.goodsType == 5) {
+      if (this.orderType === 'buy_now' && this.params.goodsType == 5) {
         flag = true;
       }
       return flag;
@@ -590,14 +596,14 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
     // 门店购物车订单
     isStoreCartOrder() {
       return this.params.cart_from == 2;
-    }
+    },
   },
   onLoad(options) {
     const params = JSON.parse(decodeURIComponent(options.params));
     // cart_from  购物车来源 1=>平台购物车 2=>门店购物车
     // goodsType 商品类型 1==> 普通商品  0 ==> 线下商品（计时计次） 3 ==> 虚拟商品
     let shipping_type = 1; // 配送方式 1==> 快递  2==> 自提  0 ==> 虚拟（无）
-    if (params.order_tag == "buy_now") {
+    if (params.order_tag == 'buy_now') {
       if (
         params.goodsType == 3 ||
         params.goodsType == 4 ||
@@ -623,7 +629,7 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
     }
   },
   methods: {
-    ...mapActions(["getLocation", "setSubscribe"]),
+    ...mapActions(['getLocation', 'setSubscribe']),
     onAddress(address) {
       this.address = address;
       console.log(address);
@@ -651,26 +657,26 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
       // has_store  是否可以选择门店，为1可以选择门店则否
       const $this = this;
       if ($this.isOfflineGoods) {
-        return store_name || "请选择门店";
+        return store_name || '请选择门店';
       }
-      let text = "";
+      let text = '';
       if ($this.shipping_type == 1) {
         fnText();
       }
       if ($this.shipping_type == 2) {
         if (has_store) {
-          text = store_name || "请选择自提门店";
+          text = store_name || '请选择自提门店';
         } else {
           fnText();
         }
       }
       function fnText() {
-        text = "快递 ¥" + shipping_fee;
+        text = '快递 ¥' + shipping_fee;
         if (parseFloat(shipping_fee) == 0) {
-          text = $this.params.presell_id ? "快递" : "快递 包邮";
+          text = $this.params.presell_id ? '快递' : '快递 包邮';
         }
         if (!$this.address.id) {
-          text = "未选择收货地址";
+          text = '未选择收货地址';
         }
       }
       return text;
@@ -683,11 +689,11 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
     },
     onPopupStore(index) {
       const item = this.items[index];
-      this.$refs["store-group"][index].show = this.isSelectStore(item);
+      this.$refs['store-group'][index].show = this.isSelectStore(item);
       item.store_show = this.isSelectStore(item);
     },
     onStepperChange(value) {
-      if (this.orderType === "buy_now") {
+      if (this.orderType === 'buy_now') {
         this.disabledStepper = true;
         this.params.sku_list.forEach(e => {
           e.receive_goods_code = [];
@@ -698,10 +704,10 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
       }
     },
     onStepperLimit(action) {
-      if (action === "plus") {
-        this.$Prompt.toast("已超出最大购买数！");
+      if (action === 'plus') {
+        this.$Prompt.toast('已超出最大购买数！');
       } else {
-        this.$Prompt.toast("至少选择一件！");
+        this.$Prompt.toast('至少选择一件！');
       }
     },
     onPointDeduct(checked) {
@@ -732,7 +738,7 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
       }
       this.socketTask = uni.connectSocket({
         ...options,
-        complete: e => {}
+        complete: e => {},
       });
       this.socketTask.onMessage(res => {
         const taskData = res.data ? JSON.parse(res.data) : {};
@@ -745,10 +751,10 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
               this.clearDetailForm();
               if (this.payType) {
                 this.$Navigate.replace({
-                  path: "/pay/payment",
+                  path: '/pay/payment',
                   query: {
-                    out_trade_no: taskData.data.out_trade_no
-                  }
+                    out_trade_no: taskData.data.out_trade_no,
+                  },
                 });
               } else {
                 this.onDpay(taskData.data.out_trade_no);
@@ -760,8 +766,8 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
           } else {
             this.$Prompt
               .modal({
-                content: taskData.message || "message为空",
-                showCancel: false
+                content: taskData.message || 'message为空',
+                showCancel: false,
               })
               .then(() => {
                 this.$Navigate.back();
@@ -778,27 +784,26 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
         // console.log("socket:close", e);
       });
       this.socketTask.onError(e => {
-        console.log("socket:error", e);
+        console.log('socket:error', e);
       });
     },
     getData(isShowLoading) {
       const $this = this;
       this.getDataLocation().then(() => {
-
         var this_pay_money_arr = $this.pay_money_arr;
         var pay_money_arr = '';
         var x = '';
         for (x in this_pay_money_arr) {
-          pay_money_arr += x+":"+this_pay_money_arr[x]+";";
+          pay_money_arr += x + ':' + this_pay_money_arr[x] + ';';
         }
-       $this.params.pay_money_arr = pay_money_arr;
+        $this.params.pay_money_arr = pay_money_arr;
         GET_ORDERINFO($this.params, { isShowLoading })
           .then(({ data, message, code }) => {
             if (message) $this.$Prompt.toast(message);
 
             if (data.websorket_url) {
               this.connectSocket({
-                url: data.websorket_url
+                url: data.websorket_url,
               });
             }
 
@@ -815,15 +820,13 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
               });
             });
 
-
-
             $this.goods_amount = data.goods_amount;
             $this.zhihuan_money = data.zhihuan_money;
             $this.promotion_amount = data.promotion_amount;
             $this.total_shipping = data.total_shipping;
             $this.total_amount = data.amount;
-			
-			$this.total_ptmoney = data.ptmoney;
+
+            $this.total_ptmoney = data.ptmoney;
 
             $this.membercard_info = data.membercard_info || {};
             $this.total_memebrcard_deduction = data.total_memebrcard_deduction;
@@ -843,7 +846,7 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
             $this.pay_money_arr = pay_money_arr;
 
             if (!isEmpty(data.address)) {
-              let addressDetail = "";
+              let addressDetail = '';
               if (data.address.type == 1) {
                 // 国际地址
                 addressDetail =
@@ -860,15 +863,13 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
                 name: data.address.consigner,
                 tel: data.address.mobile,
                 id: data.address.address_id,
-                address: addressDetail
+                address: addressDetail,
               };
               console.log($this.address);
             }
-			
-			
-			
+
             $this.items = data.shop.map((e, i) => {
-              e.leave_message = $this.items ? $this.items[i].leave_message : "";
+              e.leave_message = $this.items ? $this.items[i].leave_message : '';
               e.shop_amount = e.total_amount;
               e.goods_num = shopGoodsAmount(e.goods_list);
               e.goods_list.forEach(g => {
@@ -891,14 +892,14 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
                 e.receive_goods_code_used[0].base64_has_key_code
               ) {
                 e.code_show = false;
-                e.code_id = "";
+                e.code_id = '';
 
                 e.receive_goods_code_used.forEach(e1 => {
                   if (e1.discount_type == 1) {
-                    e1.code_name = "优惠金额:全额满减。" + e1.goods_name;
+                    e1.code_name = '优惠金额:全额满减。' + e1.goods_name;
                   } else {
                     e1.code_name =
-                      "优惠金额:" + e1.discount_price + "￥。" + e1.goods_name;
+                      '优惠金额:' + e1.discount_price + '￥。' + e1.goods_name;
                   }
 
                   e.receive_goods_code.data.forEach(c => {
@@ -914,8 +915,8 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
               // 优惠券相关
               let current_coupon_id = e.goods_list[0].coupon_id;
               e.coupon_show = false;
-              e.coupon_id = "";
-              e.coupon_name = "";
+              e.coupon_id = '';
+              e.coupon_name = '';
               e.coupon_list.forEach(c => {
                 c.shop_id = e.shop_id;
                 c.selected = false;
@@ -939,11 +940,11 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
 
               // 门店相关
               e.store_show = false;
-              e.store_id = e.store_id || "";
-              e.store_name = e.store_name || "";
+              e.store_id = e.store_id || '';
+              e.store_name = e.store_name || '';
               e.cellShippingText = this.isOfflineGoods
-                ? "使用门店"
-                : "配送方式";
+                ? '使用门店'
+                : '配送方式';
               e.cellShippingValue = this.cellShippingValue(e);
               e.isSelectStore = this.isSelectStore(e);
 
@@ -957,7 +958,7 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
                     e.presell_info.final_real_money
                   ); // 计算尾款
                   e.presell_info.tailText =
-                    "(含运费" + (e.tax_fee ? "税费" : "") + ")";
+                    '(含运费' + (e.tax_fee ? '税费' : '') + ')';
                   g.stock = e.presell_info.presellnum;
                   g.max_buy = e.presell_info.maxbuy;
                 });
@@ -976,7 +977,7 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
             $this.isGivePoint = parseInt(data.is_point) ? true : false;
             $this.givePoint = data.total_give_point;
 
-            if ($this.orderType === "buy_now") {
+            if ($this.orderType === 'buy_now') {
               $this.disabledStepper = false;
             }
             $this.formList = !isEmpty(data.customform) ? data.customform : [];
@@ -989,7 +990,7 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
                   $this.$Navigate.back();
                 }
                 if (code == -2) {
-                  $this.$Navigate.replace("/pages/mall/cart");
+                  $this.$Navigate.replace('/pages/mall/cart');
                 }
               });
           });
@@ -1043,7 +1044,7 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
     onUseCoupon(item) {
       const flag = this.items.some(({ coupon_id }) => {
         if (coupon_id == item.coupon_id) {
-          this.$Prompt.toast("该优惠券只能使用一次！");
+          this.$Prompt.toast('该优惠券只能使用一次！');
           return true;
         }
       });
@@ -1073,37 +1074,37 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
     clearDetailForm() {
       let pages = getCurrentPages(); //当前页
       let beforePage = pages[pages.length - 2]; //上个页面
-      if(beforePage){
-      // #ifdef H5
-      if (isEmpty(beforePage.formList)) return;
-      // #endif
-      // #ifndef H5
-      if (isEmpty(beforePage.$vm.formList)) return;
-      // #endif
-      uni.$emit("clearDetailForm", { msg: "提交订单成功！" });
+      if (beforePage) {
+        // #ifdef H5
+        if (isEmpty(beforePage.formList)) return;
+        // #endif
+        // #ifndef H5
+        if (isEmpty(beforePage.$vm.formList)) return;
+        // #endif
+        uni.$emit('clearDetailForm', { msg: '提交订单成功！' });
       }
     },
     onSubmit() {
       this.setSubscribe({ node_id: 8 }).then(res => {
         const $this = this;
         let orderData1 = {
-          ...$this.order_data
+          ...$this.order_data,
         };
-		//新赋值
-		let orderData = $this.params;
-		orderData.address_id = orderData1.address_id;
-		orderData.custom_order = orderData1.custom_order;
-		
+        //新赋值
+        let orderData = $this.params;
+        orderData.address_id = orderData1.address_id;
+        orderData.custom_order = orderData1.custom_order;
+
         var this_pay_money_arr = $this.pay_money_arr;
         var pay_money_arr = '';
         var x = '';
         for (x in this_pay_money_arr) {
-          pay_money_arr += x+":"+this_pay_money_arr[x]+";";
+          pay_money_arr += x + ':' + this_pay_money_arr[x] + ';';
         }
         orderData.pay_money_arr = pay_money_arr;
 
-		orderData.shop_list = orderData1.shop_list;
-		orderData.shop_list.forEach(e => {
+        orderData.shop_list = orderData1.shop_list;
+        orderData.shop_list.forEach(e => {
           e.receive_goods_code = [];
           this.isreceivegoodscodeused.forEach(i => {
             if (e.shop_id == i.shop_id) {
@@ -1114,7 +1115,7 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
               }
             }
           });
-        });		
+        });
 
         /* orderData.shop_list.forEach(e => {
           e.receive_goods_code = [];
@@ -1128,22 +1129,22 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
             }
           });
         }); */
-        const form_data = $this.$refs["formGroup"]
-          ? $this.$refs["formGroup"].getFormData()
-          : "";
+        const form_data = $this.$refs['formGroup']
+          ? $this.$refs['formGroup'].getFormData()
+          : '';
 
         if ($this.isForm) {
           if (!form_data) return false;
 
           // 预约商品，需提交预约日期
           if (orderData.custom_id) {
-            let day_time = "";
-            let hours_time = "";
+            let day_time = '';
+            let hours_time = '';
             form_data.forEach(e => {
-              if (e.tag == "schedule") {
-                let val = e.value.split(",");
-                day_time = val[0] || "";
-                hours_time = val[1] || "";
+              if (e.tag == 'schedule') {
+                let val = e.value.split(',');
+                day_time = val[0] || '';
+                hours_time = val[1] || '';
               }
             });
             if (day_time) {
@@ -1158,7 +1159,7 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
 
         if ($this.shipping_type == 1) {
           if (!orderData.address_id)
-            return $this.$Prompt.toast("请选择收货地址！");
+            return $this.$Prompt.toast('请选择收货地址！');
         }
         /* if ($this.shipping_type == 2) {
           if ($this.isOfflineGoods) {
@@ -1190,38 +1191,31 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
         // return console.log(orderData);
 
         $this.isLoading = true;
-		
-		
-		
-        CREATE_ORDER(
-          orderData,
-          {
-            isStoreOrder: orderData.shipping_type == 2,
-            loadingText: "提交中"
-          }
-        )
+
+        CREATE_ORDER(orderData, {
+          isStoreOrder: orderData.shipping_type == 2,
+          loadingText: '提交中',
+        })
           .then(({ code, data, message }) => {
             if (code === 1 && this.socketTask) {
               // 订单创建中,监听socket返回的状态
-              this.$Prompt.loading(message || "创建中");
+              this.$Prompt.loading(message || '创建中');
               return;
             }
             this.clearDetailForm();
-            if(data.amount==0){
-
+            if (data.amount == 0) {
               $this.$Navigate.replace({
-                path: "/packages/pay/result",
+                path: '/packages/pay/result',
                 query: {
-                  out_trade_no: data.out_trade_no
-                }
+                  out_trade_no: data.out_trade_no,
+                },
               });
-            }else if ($this.payType) {
-
+            } else if ($this.payType) {
               $this.$Navigate.replace({
-                path: "/pay/payment",
+                path: '/pay/payment',
                 query: {
-                  out_trade_no: data.out_trade_no
-                }
+                  out_trade_no: data.out_trade_no,
+                },
               });
             } else {
               $this.onDpay(data.out_trade_no);
@@ -1239,11 +1233,11 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
       PAY_DPAY({ out_trade_no })
         .then(() => {
           this.$Navigate.replace({
-            path: "/packages/pay/result",
+            path: '/packages/pay/result',
             query: {
               out_trade_no,
-              dpay_order: 1
-            }
+              dpay_order: 1,
+            },
           });
         })
         .catch(() => {
@@ -1280,7 +1274,7 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
       }
       $this.params.invoice_list = $this.invoice_list;
       $this.getData(true);
-    }
+    },
   },
   components: {
     formGroup,
@@ -1292,8 +1286,8 @@ obj.total_ptmoney = this.total_ptmoney > 0 ? this.total_ptmoney : 0;
     cellStoreGroup,
     cellMembercard,
     cellCargoGroup,
-    cellPurruleGroup
-  }
+    cellPurruleGroup,
+  },
 };
 </script>
 

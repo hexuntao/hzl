@@ -24,7 +24,7 @@
               v-if="tab.icon"
               :style="{
                 transform:
-                  tab.sort_type == 'DESC' ? 'rotate(180deg)' : 'rotate(0deg)'
+                  tab.sort_type == 'DESC' ? 'rotate(180deg)' : 'rotate(0deg)',
               }"
             >
               <lk-icon :name="tab.icon" class-prefix="v-icon" />
@@ -53,8 +53,8 @@
           :distance="item.distance"
           :desc="item.desc"
           :goods="item.goods"
-		  :time="item.time"
-		  :tel="item.store_tel"
+          :time="item.time"
+          :tel="item.store_tel"
         >
         </panel-group>
       </view>
@@ -67,51 +67,51 @@
 </template>
 
 <script>
-import { GET_STORELIST } from "@/common/interface/store";
-import loadMixin from "@/mixins/load-list";
-import { mapActions } from "vuex";
-import panelGroup from "./component/panel-group";
+import { GET_STORELIST } from '@/common/interface/store';
+import loadMixin from '@/mixins/load-list';
+import { mapActions } from 'vuex';
+import panelGroup from './component/panel-group';
 export default {
-  name: "pages-store-list",
+  name: 'pages-store-list',
   data() {
     return {
       isShopStore: false, //是否店铺的门店
       params: {
         page_index: 1,
         page_size: 20,
-        order: "distance",
-        sort: "ASC",
-        lng: "",
-        lat: "",
-        search_text: ""
+        order: 'distance',
+        sort: 'ASC',
+        lng: '',
+        lat: '',
+        search_text: '',
       },
       upOption: {
         auto: false,
         empty: {
-          type: "shop",
-          tip: "暂无门店"
-        }
+          type: 'shop',
+          tip: '暂无门店',
+        },
       },
       tabs: [
         {
-          name: "距离",
-          icon: "v-icon-sort2",
-          sort: "distance",
-          sort_type: "DESC"
+          name: '距离',
+          icon: 'v-icon-sort2',
+          sort: 'distance',
+          sort_type: 'DESC',
         },
         {
-          name: "销售量",
-          icon: "v-icon-sort2",
-          sort: "sales",
-          sort_type: "DESC"
+          name: '销售量',
+          icon: 'v-icon-sort2',
+          sort: 'sales',
+          sort_type: 'DESC',
         },
         {
-          name: "人气",
-          icon: "v-icon-sort2",
-          sort: "score",
-          sort_type: "DESC"
-        }
-      ]
+          name: '人气',
+          icon: 'v-icon-sort2',
+          sort: 'score',
+          sort_type: 'DESC',
+        },
+      ],
     };
   },
   mixins: [loadMixin],
@@ -122,10 +122,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["getLocation"]),
+    ...mapActions(['getLocation']),
     loadInitEnd() {
       this.getLocation({ showLoading: true }).then(res => {
-        console.log("经纬度：", res);
+        console.log('经纬度：', res);
         this.params.lat = res.lat;
         this.params.lng = res.lng;
         this.$load.triggerUpScroll();
@@ -138,26 +138,25 @@ export default {
           let list = [];
           data.store_list.forEach(e => {
             let goods = [];
-            e.goods.forEach(g => {
-              goods.push({
-                goods_id: g.goods_id,
-                image: g.goods_img,
-                price: g.price
+            if (e.goods) {
+              e.goods.forEach(g => {
+                goods.push({
+                  goods_id: g.goods_id,
+                  image: g.goods_img,
+                  price: g.price,
+                });
               });
-            });
-		
+            }
             list.push({
-              to: "/packages/store/home?store_id=" + e.store_id,
-              title: e.shop_name + "(" + e.store_name + ")",
+              to: '/packages/store/home?store_id=' + e.store_id,
+              title: e.shop_name + '(' + e.store_name + ')',
               logo: e.store_img,
               score: e.score,
-			  
-			  store_tel: e.store_tel,
-			  time: e.time,
-			  
+              store_tel: e.store_tel,
+              time: e.time,
               goods: goods,
               desc: `${e.province_name}${e.city_name}${e.dictrict_name}${e.address}`,
-              distance: e.distance ? e.distance + "km" : ""
+              distance: e.distance ? e.distance + 'km' : '',
             });
           });
           this.concatList(list, data.total_count);
@@ -172,14 +171,14 @@ export default {
       if (this.tabs[index].sort_type) {
         //升序降序
         params.sort = this.tabs[index].sort_type;
-        if (this.tabs[index].sort_type == "DESC") {
-          this.tabs[index].sort_type = "ASC";
+        if (this.tabs[index].sort_type == 'DESC') {
+          this.tabs[index].sort_type = 'ASC';
         } else {
-          this.tabs[index].sort_type = "DESC";
+          this.tabs[index].sort_type = 'DESC';
         }
       } else {
         // 默认
-        params.sort = "";
+        params.sort = '';
       }
       params.page_index = 1;
       this.params = Object.assign({ ...this.params }, { ...params });
@@ -187,20 +186,20 @@ export default {
     },
     toLink() {
       let query = {
-        type: "store"
+        type: 'store',
       };
       if (this.params.shop_id) {
         query.shop_id = this.params.shop_id;
       }
       this.$Navigate.push({
-        path: "/packages/mall/search",
-        query
+        path: '/packages/mall/search',
+        query,
       });
-    }
+    },
   },
   components: {
-    panelGroup
-  }
+    panelGroup,
+  },
 };
 </script>
 
