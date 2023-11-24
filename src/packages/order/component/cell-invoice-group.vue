@@ -228,68 +228,68 @@
 <script>
 import {
   GET_USERINVOICELIST,
-  GET_USERINVOICEINFO
-} from "@/common/interface/member";
+  GET_USERINVOICEINFO,
+} from '@/common/interface/member';
 
 function delSpace(value) {
-  return value.replace(/\s*/g, "");
+  return value.replace(/\s*/g, '');
 }
 export default {
   data() {
     return {
-      defaultId: "",
+      defaultId: '',
       invoiceshow: false,
       invoicelist: [], //发票抬头列表
 
-      title: "发票",
+      title: '发票',
       show: false,
-      value: "",
+      value: '',
 
-      headername: "",
-      head_taxpayer_no: "",
+      headername: '',
+      head_taxpayer_no: '',
 
-      company_name: "",
-      com_taxpayer_no: "",
-      logon_addr: "",
-      logon_phone: "",
-      bank: "",
-      card_no: "",
+      company_name: '',
+      com_taxpayer_no: '',
+      logon_addr: '',
+      logon_phone: '',
+      bank: '',
+      card_no: '',
 
       is_bill_type_active: 1, // 1=>电子普通发票,2 =>增值税专用发票
 
       is_bill_head_active: 0,
       bill_head_list: [
         {
-          title: "个人"
+          title: '个人',
         },
         {
-          title: "公司"
-        }
+          title: '公司',
+        },
       ],
 
       is_bill_content_active: 0,
       bill_content_list: [
         {
-          title: "商品明细",
+          title: '商品明细',
           content:
-            "发票内容将显示商品名称与价格信息，发票金额为实际支付金额，不含优惠抵扣金额与运费。"
+            '发票内容将显示商品名称与价格信息，发票金额为实际支付金额，不含优惠抵扣金额与运费。',
         },
         {
-          title: "商品分类",
+          title: '商品分类',
           content:
-            "发票内容将显示分类名称（例：服装/女装/T恤）与价格信息，发票金额为实际支付金额，不含优惠抵扣金额。"
-        }
+            '发票内容将显示分类名称（例：服装/女装/T恤）与价格信息，发票金额为实际支付金额，不含优惠抵扣金额。',
+        },
       ],
 
       invoice: {},
-      is_tax: 1 // 1 =>可以开具发票，2=>不可以开具发票
+      is_tax: 1, // 1 =>可以开具发票，2=>不可以开具发票
     };
   },
 
   props: {
     tax_fee: [Object],
     shop_id: [String, Number],
-    price: [Number]
+    price: [Number, String],
   },
   mounted() {
     this.isBillType();
@@ -326,7 +326,7 @@ export default {
       }
     },
     goinvoice() {
-      this.$Navigate.push("/packages/member/invoice/post");
+      this.$Navigate.push('/packages/member/invoice/post');
       this.invoiceshow = false;
     },
     showinvoicelist() {
@@ -340,43 +340,43 @@ export default {
         const obj = data.data.filter(e => {
           return e.is_default == 1;
         })[0];
-        this.defaultId = obj ? obj.user_invoice_id : "";
+        this.defaultId = obj ? obj.user_invoice_id : '';
       });
     },
     isBillType() {
       if (this.tax_fee) {
         if (this.tax_fee.is_pt_show && !this.tax_fee.is_zy_show) {
           this.is_bill_type_active = 1;
-          this.value = "不开具发票";
+          this.value = '不开具发票';
         } else if (!this.tax_fee.is_pt_show && this.tax_fee.is_zy_show) {
           this.is_bill_type_active = 2;
-          this.value = "不开具发票";
+          this.value = '不开具发票';
         } else if (this.tax_fee.is_pt_show && this.tax_fee.is_zy_show) {
           this.is_bill_type_active = 1;
-          this.value = "不开具发票";
+          this.value = '不开具发票';
         }
       }
     },
     onCancel() {
       this.show = false;
-      this.value = "不开具发票";
-      this.headername = "";
-      this.head_taxpayer_no = "";
-      this.company_name = "";
-      this.com_taxpayer_no = "";
-      this.logon_addr = "";
-      this.logon_phone = "";
-      this.bank = "";
-      this.card_no = "";
+      this.value = '不开具发票';
+      this.headername = '';
+      this.head_taxpayer_no = '';
+      this.company_name = '';
+      this.com_taxpayer_no = '';
+      this.logon_addr = '';
+      this.logon_phone = '';
+      this.bank = '';
+      this.card_no = '';
       this.is_tax = 2;
-      this.$emit("get-invoice", this.invoice, this.shop_id, this.is_tax);
+      this.$emit('get-invoice', this.invoice, this.shop_id, this.is_tax);
     },
     onSure() {
       if (this.is_bill_type_active == 1) {
-        this.value = "电子普通发票";
+        this.value = '电子普通发票';
         this.invoice.type = 1;
         if (!delSpace(this.headername)) {
-          this.$Prompt.toast("请输入抬头名称");
+          this.$Prompt.toast('请输入抬头名称');
           return false;
         }
         this.invoice.title_name = this.headername;
@@ -385,34 +385,34 @@ export default {
         } else {
           this.invoice.title = 2;
           if (!delSpace(this.head_taxpayer_no)) {
-            this.$Prompt.toast("请输入纳税人识别号");
+            this.$Prompt.toast('请输入纳税人识别号');
             return false;
           }
           this.invoice.taxpayer_no = this.head_taxpayer_no;
         }
-        this.invoice.invoice_tax_key = "pt";
+        this.invoice.invoice_tax_key = 'pt';
         this.invoice.price = this.price;
         this.is_tax = 1;
       } else if (this.is_bill_type_active == 2) {
-        this.value = "增值税专用发票";
+        this.value = '增值税专用发票';
         this.invoice.type = 2;
         if (!delSpace(this.company_name)) {
-          this.$Prompt.toast("请输入公司名称");
+          this.$Prompt.toast('请输入公司名称');
           return false;
         } else if (!delSpace(this.com_taxpayer_no)) {
-          this.$Prompt.toast("请输入纳税人识别号");
+          this.$Prompt.toast('请输入纳税人识别号');
           return false;
         } else if (!delSpace(this.logon_phone)) {
-          this.$Prompt.toast("请输入注册电话");
+          this.$Prompt.toast('请输入注册电话');
           return false;
         } else if (!delSpace(this.logon_addr)) {
-          this.$Prompt.toast("请输入注册地址");
+          this.$Prompt.toast('请输入注册地址');
           return false;
         } else if (!delSpace(this.bank)) {
-          this.$Prompt.toast("请输入开户银行");
+          this.$Prompt.toast('请输入开户银行');
           return false;
         } else if (!delSpace(this.card_no)) {
-          this.$Prompt.toast("请输入银行账户");
+          this.$Prompt.toast('请输入银行账户');
           return false;
         }
         this.invoice.company_name = this.company_name;
@@ -421,11 +421,11 @@ export default {
         this.invoice.mobile = this.logon_phone;
         this.invoice.bank = this.bank;
         this.invoice.card_no = this.card_no;
-        this.invoice.invoice_tax_key = "zy";
+        this.invoice.invoice_tax_key = 'zy';
         this.invoice.price = this.price;
         this.is_tax = 1;
       } else {
-        this.value = "不开具发票";
+        this.value = '不开具发票';
         this.is_tax = 2;
       }
       if (this.is_bill_content_active == 0) {
@@ -434,7 +434,7 @@ export default {
         this.invoice.content_type = 2;
       }
       this.show = false;
-      this.$emit("get-invoice", this.invoice, this.shop_id, this.is_tax);
+      this.$emit('get-invoice', this.invoice, this.shop_id, this.is_tax);
     },
     checkBillType(index) {
       this.is_bill_type_active = index;
@@ -444,8 +444,8 @@ export default {
     },
     checkGoodsTilte(index) {
       this.is_bill_content_active = index;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -464,7 +464,7 @@ export default {
   position: relative;
 }
 .cell:not(:last-child)::before {
-  content: " ";
+  content: ' ';
   position: absolute;
   pointer-events: none;
   -webkit-box-sizing: border-box;

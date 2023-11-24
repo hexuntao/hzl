@@ -43,7 +43,7 @@
     }
   },
   "mp-weixin": {
-    "appid": "wx93e7511a8e7d755d",
+    "appid": "wx1ac0ffa85bb0759b",
     "libVersion": "2.16.0",
     "setting": {
       "urlCheck": true,
@@ -72,7 +72,7 @@
     },
     "plugins": {
       "chooseLocation": {
-        "version": "1.0.9",
+        "version": "1.0.10",
         "provider": "wx76a9a06e5b4e693e"
       }
     }

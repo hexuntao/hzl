@@ -223,11 +223,7 @@ import cellPurruleGroup from './component/cell-purrule-group';
 
 // 计算店铺商品数量总和
 function shopGoodsAmount(item) {
-  console.log('123456897');
-  console.log(item);
-
   const arr = item.map(({ num }) => num);
-  console.log('a');
   return arr.reduce((x, y) => x + y);
 }
 // 过滤规格数组
@@ -621,7 +617,11 @@ export default {
     this.orderType = params.order_tag;
     this.shipping_type = shipping_type;
 
-    this.getData(true);
+    this.getData(true).then(data => {
+      if (!this.noExpress && this.isPickup) {
+        this.shipping_type = 2;
+      }
+    });
   },
   onUnload() {
     if (this.socketTask) {
@@ -632,14 +632,11 @@ export default {
     ...mapActions(['getLocation', 'setSubscribe']),
     onAddress(address) {
       this.address = address;
-      console.log(address);
       this.params.address_id = address.id;
       this.getData(true);
     },
     onZhihuan(zhihuan) {
       this.zhihuan = zhihuan;
-      console.log('aaabbbccc');
-      console.log(zhihuan);
       this.params.zhihuan_order_goods_id = zhihuan.order_goods_id;
       this.getData(true);
     },
@@ -788,212 +785,222 @@ export default {
       });
     },
     getData(isShowLoading) {
-      const $this = this;
-      this.getDataLocation().then(() => {
-        var this_pay_money_arr = $this.pay_money_arr;
-        var pay_money_arr = '';
-        var x = '';
-        for (x in this_pay_money_arr) {
-          pay_money_arr += x + ':' + this_pay_money_arr[x] + ';';
-        }
-        $this.params.pay_money_arr = pay_money_arr;
-        GET_ORDERINFO($this.params, { isShowLoading })
-          .then(({ data, message, code }) => {
-            if (message) $this.$Prompt.toast(message);
+      return new Promise(resolve => {
+        const $this = this;
+        this.getDataLocation().then(() => {
+          var this_pay_money_arr = $this.pay_money_arr;
+          var pay_money_arr = '';
+          var x = '';
+          for (x in this_pay_money_arr) {
+            pay_money_arr += x + ':' + this_pay_money_arr[x] + ';';
+          }
+          $this.params.pay_money_arr = pay_money_arr;
+          GET_ORDERINFO($this.params, { isShowLoading })
+            .then(({ data, message, code }) => {
+              if (message) $this.$Prompt.toast(message);
 
-            if (data.websorket_url) {
-              this.connectSocket({
-                url: data.websorket_url,
-              });
-            }
+              if (data.websorket_url) {
+                this.connectSocket({
+                  url: data.websorket_url,
+                });
+              }
 
-            this.params.sku_list.forEach(e => {
-              e.receive_goods_code = [];
-              data.shop.forEach(i => {
-                if (e.shop_id == i.shop_id) {
-                  if (i.receive_goods_code_used) {
-                    i.receive_goods_code_used.forEach(b => {
-                      e.receive_goods_code.push(b.base64_has_key_code);
-                    });
+              this.params.sku_list.forEach(e => {
+                e.receive_goods_code = [];
+                data.shop.forEach(i => {
+                  if (e.shop_id == i.shop_id) {
+                    if (i.receive_goods_code_used) {
+                      i.receive_goods_code_used.forEach(b => {
+                        e.receive_goods_code.push(b.base64_has_key_code);
+                      });
+                    }
                   }
+                });
+              });
+
+              $this.goods_amount = data.goods_amount;
+              $this.zhihuan_money = data.zhihuan_money;
+              $this.promotion_amount = data.promotion_amount;
+              $this.total_shipping = data.total_shipping;
+              $this.total_amount = data.amount;
+
+              $this.total_ptmoney = data.ptmoney;
+
+              $this.membercard_info = data.membercard_info || {};
+              $this.total_memebrcard_deduction =
+                data.total_memebrcard_deduction;
+              $this.isPickup = parseInt(data.has_store);
+              $this.noExpress = data.noExpress;
+              $this.receive_goods_code_deduct = data.receive_goods_code_deduct;
+              if ($this.noExpress) {
+                $this.shipping_type = 2;
+              }
+
+              $this.moneyTypeBuyArr = data.moneyTypeBuyArr;
+              var x = '';
+              var pay_money_arr = [];
+              for (x in data.moneyTypeBuyArr) {
+                pay_money_arr[x] = data.moneyTypeBuyArr[x].checked;
+              }
+              $this.pay_money_arr = pay_money_arr;
+
+              if (!isEmpty(data.address)) {
+                let addressDetail = '';
+                if (data.address.type == 1) {
+                  // 国际地址
+                  addressDetail =
+                    data.address.chinese_country_name +
+                    data.address.address_detail;
+                } else {
+                  addressDetail =
+                    data.address.province_name +
+                    data.address.city_name +
+                    data.address.district_name +
+                    data.address.address_detail;
                 }
-              });
-            });
-
-            $this.goods_amount = data.goods_amount;
-            $this.zhihuan_money = data.zhihuan_money;
-            $this.promotion_amount = data.promotion_amount;
-            $this.total_shipping = data.total_shipping;
-            $this.total_amount = data.amount;
-
-            $this.total_ptmoney = data.ptmoney;
-
-            $this.membercard_info = data.membercard_info || {};
-            $this.total_memebrcard_deduction = data.total_memebrcard_deduction;
-            $this.isPickup = parseInt(data.has_store);
-            $this.noExpress = data.noExpress;
-            $this.receive_goods_code_deduct = data.receive_goods_code_deduct;
-            if ($this.noExpress) {
-              $this.shipping_type = 2;
-            }
-
-            $this.moneyTypeBuyArr = data.moneyTypeBuyArr;
-            var x = '';
-            var pay_money_arr = [];
-            for (x in data.moneyTypeBuyArr) {
-              pay_money_arr[x] = data.moneyTypeBuyArr[x].checked;
-            }
-            $this.pay_money_arr = pay_money_arr;
-
-            if (!isEmpty(data.address)) {
-              let addressDetail = '';
-              if (data.address.type == 1) {
-                // 国际地址
-                addressDetail =
-                  data.address.chinese_country_name +
-                  data.address.address_detail;
-              } else {
-                addressDetail =
-                  data.address.province_name +
-                  data.address.city_name +
-                  data.address.district_name +
-                  data.address.address_detail;
-              }
-              $this.address = {
-                name: data.address.consigner,
-                tel: data.address.mobile,
-                id: data.address.address_id,
-                address: addressDetail,
-              };
-              console.log($this.address);
-            }
-
-            $this.items = data.shop.map((e, i) => {
-              e.leave_message = $this.items ? $this.items[i].leave_message : '';
-              e.shop_amount = e.total_amount;
-              e.goods_num = shopGoodsAmount(e.goods_list);
-              e.goods_list.forEach(g => {
-                g.spec = filterSpec(g.spec);
-                g.stock = g.stock || 0;
-                g.num = g.num < g.least ? g.least : g.num;
-                g.quota =
-                  g.max_buy === 0
-                    ? g.stock
-                    : g.stock > g.max_buy
-                    ? g.max_buy
-                    : g.stock;
-                g.least = g.least_buy || 1;
-              });
-              //领货码相关
-              if (
-                e.receive_goods_code &&
-                e.receive_goods_code_used &&
-                e.receive_goods_code_used.length &&
-                e.receive_goods_code_used[0].base64_has_key_code
-              ) {
-                e.code_show = false;
-                e.code_id = '';
-
-                e.receive_goods_code_used.forEach(e1 => {
-                  if (e1.discount_type == 1) {
-                    e1.code_name = '优惠金额:全额满减。' + e1.goods_name;
-                  } else {
-                    e1.code_name =
-                      '优惠金额:' + e1.discount_price + '￥。' + e1.goods_name;
-                  }
-
-                  e.receive_goods_code.data.forEach(c => {
-                    c.shop_id = e.shop_id;
-                    c.selected = false;
-                    c.loading = false;
-                  });
-                });
-
-                this.show_receive_use = e.receive_goods_code_used;
+                $this.address = {
+                  name: data.address.consigner,
+                  tel: data.address.mobile,
+                  id: data.address.address_id,
+                  address: addressDetail,
+                };
+                console.log($this.address);
               }
 
-              // 优惠券相关
-              let current_coupon_id = e.goods_list[0].coupon_id;
-              e.coupon_show = false;
-              e.coupon_id = '';
-              e.coupon_name = '';
-              e.coupon_list.forEach(c => {
-                c.shop_id = e.shop_id;
-                c.selected = false;
-                c.loading = false;
-              });
-              if (current_coupon_id) {
-                e.coupon_list.forEach(c => {
-                  if (c.coupon_id == current_coupon_id) {
-                    e.coupon_id = c.coupon_id;
-                    e.coupon_name = c.coupon_name;
-                    c.selected = true;
-                    c.loading = !c.selected;
-                  }
-                });
-              }
-
-              if (e.tax_fee) {
-                $this.is_tax_fee = 1;
-                $this.total_tax = data.total_tax;
-              }
-
-              // 门店相关
-              e.store_show = false;
-              e.store_id = e.store_id || '';
-              e.store_name = e.store_name || '';
-              e.cellShippingText = this.isOfflineGoods
-                ? '使用门店'
-                : '配送方式';
-              e.cellShippingValue = this.cellShippingValue(e);
-              e.isSelectStore = this.isSelectStore(e);
-
-              // 预售相关
-              if ($this.params.presell_id) {
+              $this.items = data.shop.map((e, i) => {
+                e.leave_message = $this.items
+                  ? $this.items[i].leave_message
+                  : '';
+                e.shop_amount = e.total_amount;
+                e.goods_num = shopGoodsAmount(e.goods_list);
                 e.goods_list.forEach(g => {
-                  g.presell_price = e.presell_info.allmoney;
-                  e.presell_info.frontMoney =
-                    parseFloat(e.presell_info.firstmoney) * parseInt(g.num); // 计算定金
-                  e.presell_info.tailMoney = parseFloat(
-                    e.presell_info.final_real_money
-                  ); // 计算尾款
-                  e.presell_info.tailText =
-                    '(含运费' + (e.tax_fee ? '税费' : '') + ')';
-                  g.stock = e.presell_info.presellnum;
-                  g.max_buy = e.presell_info.maxbuy;
+                  g.spec = filterSpec(g.spec);
+                  g.stock = g.stock || 0;
+                  g.num = g.num < g.least ? g.least : g.num;
+                  g.quota =
+                    g.max_buy === 0
+                      ? g.stock
+                      : g.stock > g.max_buy
+                      ? g.max_buy
+                      : g.stock;
+                  g.least = g.least_buy || 1;
                 });
-              }
-              return e;
-            });
+                //领货码相关
+                if (
+                  e.receive_goods_code &&
+                  e.receive_goods_code_used &&
+                  e.receive_goods_code_used.length &&
+                  e.receive_goods_code_used[0].base64_has_key_code
+                ) {
+                  e.code_show = false;
+                  e.code_id = '';
 
-            this.isreceivegoodscodeused = $this.items;
+                  e.receive_goods_code_used.forEach(e1 => {
+                    if (e1.discount_type == 1) {
+                      e1.code_name = '优惠金额:全额满减。' + e1.goods_name;
+                    } else {
+                      e1.code_name =
+                        '优惠金额:' +
+                        e1.discount_price +
+                        '￥。' +
+                        e1.goods_name;
+                    }
 
-            // 是否开启积分抵扣
-            $this.isPointDeduct = parseInt(data.is_point_deduction)
-              ? true
-              : false;
-            $this.pointInfo = data.deduction_point;
-            // 是否开启购物返积分
-            $this.isGivePoint = parseInt(data.is_point) ? true : false;
-            $this.givePoint = data.total_give_point;
+                    e.receive_goods_code.data.forEach(c => {
+                      c.shop_id = e.shop_id;
+                      c.selected = false;
+                      c.loading = false;
+                    });
+                  });
 
-            if ($this.orderType === 'buy_now') {
-              $this.disabledStepper = false;
-            }
-            $this.formList = !isEmpty(data.customform) ? data.customform : [];
-          })
-          .catch(({ code, message }) => {
-            $this.$Prompt
-              .modal({ content: message, showCancel: false })
-              .then(() => {
-                if (code == -1) {
-                  $this.$Navigate.back();
+                  this.show_receive_use = e.receive_goods_code_used;
                 }
-                if (code == -2) {
-                  $this.$Navigate.replace('/pages/mall/cart');
+
+                // 优惠券相关
+                let current_coupon_id = e.goods_list[0].coupon_id;
+                e.coupon_show = false;
+                e.coupon_id = '';
+                e.coupon_name = '';
+                e.coupon_list.forEach(c => {
+                  c.shop_id = e.shop_id;
+                  c.selected = false;
+                  c.loading = false;
+                });
+                if (current_coupon_id) {
+                  e.coupon_list.forEach(c => {
+                    if (c.coupon_id == current_coupon_id) {
+                      e.coupon_id = c.coupon_id;
+                      e.coupon_name = c.coupon_name;
+                      c.selected = true;
+                      c.loading = !c.selected;
+                    }
+                  });
                 }
+
+                if (e.tax_fee) {
+                  $this.is_tax_fee = 1;
+                  $this.total_tax = data.total_tax;
+                }
+
+                // 门店相关
+                e.store_show = false;
+                e.store_id = e.store_id || '';
+                e.store_name = e.store_name || '';
+                e.cellShippingText = this.isOfflineGoods
+                  ? '使用门店'
+                  : '配送方式';
+                e.cellShippingValue = this.cellShippingValue(e);
+                e.isSelectStore = this.isSelectStore(e);
+
+                // 预售相关
+                if ($this.params.presell_id) {
+                  e.goods_list.forEach(g => {
+                    g.presell_price = e.presell_info.allmoney;
+                    e.presell_info.frontMoney =
+                      parseFloat(e.presell_info.firstmoney) * parseInt(g.num); // 计算定金
+                    e.presell_info.tailMoney = parseFloat(
+                      e.presell_info.final_real_money
+                    ); // 计算尾款
+                    e.presell_info.tailText =
+                      '(含运费' + (e.tax_fee ? '税费' : '') + ')';
+                    g.stock = e.presell_info.presellnum;
+                    g.max_buy = e.presell_info.maxbuy;
+                  });
+                }
+                return e;
               });
-          });
+
+              this.isreceivegoodscodeused = $this.items;
+
+              // 是否开启积分抵扣
+              $this.isPointDeduct = parseInt(data.is_point_deduction)
+                ? true
+                : false;
+              $this.pointInfo = data.deduction_point;
+              // 是否开启购物返积分
+              $this.isGivePoint = parseInt(data.is_point) ? true : false;
+              $this.givePoint = data.total_give_point;
+
+              if ($this.orderType === 'buy_now') {
+                $this.disabledStepper = false;
+              }
+              $this.formList = !isEmpty(data.customform) ? data.customform : [];
+
+              resolve(data);
+            })
+            .catch(({ code, message }) => {
+              $this.$Prompt
+                .modal({ content: message, showCancel: false })
+                .then(() => {
+                  if (code == -1) {
+                    $this.$Navigate.back();
+                  }
+                  if (code == -2) {
+                    $this.$Navigate.replace('/pages/mall/cart');
+                  }
+                });
+            });
+        });
       });
     },
     // 选择门店
