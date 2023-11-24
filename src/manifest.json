@@ -21,7 +21,7 @@
     "publicPath": "/wap/",
     "devServer": {
       "https": false,
-      "port": 3000,
+      "port": 3013,
       "proxy": {
         "/api": {
           "target": "https://hzlmys.sandyp.cn/wapapi",
