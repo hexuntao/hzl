@@ -5,6 +5,7 @@
       <text class="search__label" v-if="label">{{ label }}</text>
       <view class="search__field">
         <lk-icon name="search" v-if="showSearchIcon" class="search__icon" />
+        <view class="disabled" v-if="disabled" @click="onClick"></view>
         <input
           class="search__input"
           :value="value"
@@ -29,17 +30,17 @@
 </template>
 
 <script>
-import { basic } from "../../mixin";
-import create from "@/common/utils/create";
-import { formatClass, formatStyle } from "@/common/utils/stringify";
-import { pxTorpx, isDef } from "@/common/utils";
+import { basic } from '../../mixin';
+import create from '@/common/utils/create';
+import { formatClass, formatStyle } from '@/common/utils/stringify';
+import { pxTorpx, isDef } from '@/common/utils';
 
-const bem = create("search");
+const bem = create('search');
 
 export default {
   data() {
     return {
-      cname: "search"
+      cname: 'search',
     };
   },
   props: {
@@ -48,66 +49,66 @@ export default {
     placeholder: [String, Number],
     confirmType: {
       type: String,
-      default: "search"
+      default: 'search',
     },
     action: String,
     adjustPosition: {
       type: Boolean,
-      default: false
+      default: false,
     },
     disabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     focus: {
       type: Boolean,
-      default: false
+      default: false,
     },
     showSearchIcon: {
       type: Boolean,
-      default: true
+      default: true,
     },
     background: String,
     contentStyle: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   mixins: [basic],
   computed: {
     searchClasses() {
-      return formatClass([this.action ? "search--show-action" : ""]);
+      return formatClass([this.action ? 'search--show-action' : '']);
     },
     searchStyles() {
       return formatStyle({ background: this.background, ...this.customStyle });
     },
     contentStyles() {
       return formatStyle(this.contentStyle);
-    }
+    },
   },
   methods: {
     onInput(e) {
-      this.$emit("input", e.detail.value);
+      this.$emit('input', e.detail.value);
     },
     onSearch() {
-      this.$emit("search", this.value);
+      this.$emit('search', this.value);
     },
     onFocus() {
-      this.$emit("focus", this.value);
+      this.$emit('focus', this.value);
     },
     onBlur() {
-      this.$emit("blur", this.value);
+      this.$emit('blur', this.value);
     },
     onConfirm() {
-      this.$emit("confirm", this.value);
-      this.$emit("search", this.value);
+      this.$emit('confirm', this.value);
+      this.$emit('search', this.value);
     },
     onClick() {
       if (this.disabled) {
-        this.$emit("click");
+        this.$emit('click');
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -189,5 +190,13 @@ export default {
 }
 .search--show-action {
   padding-right: 0;
+}
+.disabled {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
 }
 </style>

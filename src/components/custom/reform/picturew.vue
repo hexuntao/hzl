@@ -123,19 +123,19 @@
 </template>
 
 <script>
-import mixin from "../../mixin/reform";
-import { formatStyle } from "@/common/utils/stringify";
+import mixin from '../../mixin/reform';
+import { formatStyle } from '@/common/utils/stringify';
 import {
   pxTorpx,
   addImgSrcDomain,
   countForViewImgHeight,
-  randomRgbaColor
-} from "@/common/utils";
+  randomRgbaColor,
+} from '@/common/utils';
 
 export default {
   data() {
     return {
-      list: []
+      list: [],
     };
   },
   mixins: [mixin],
@@ -144,15 +144,15 @@ export default {
       return formatStyle({
         padding:
           pxTorpx(this.items.style.paddingtop) +
-          " " +
-          pxTorpx(this.items.style.paddingleft)
+          ' ' +
+          pxTorpx(this.items.style.paddingleft),
       });
     },
     itemBackground() {
       return formatStyle({
-        background: this.items.style.background
+        background: this.items.style.background,
       });
-    }
+    },
   },
   created() {
     let arr = [];
@@ -164,15 +164,15 @@ export default {
       for (let i in this.items.data) {
         const item = this.items.data[i];
         item.show = false;
-        item.src = "";
-        item.vh = "";
-        item.bg = "#f5f9ff";
+        item.src = '';
+        item.vh = '';
+        item.bg = '#f5f9ff';
         // item.bg = randomRgbaColor();
         if (this.items.params.row > 1) {
           // 根据图片高度自适应
           if (item.width) {
             item.vh =
-              countForViewImgHeight(item.width, item.height, this.dw) + "px";
+              countForViewImgHeight(item.width, item.height, this.dw) + 'px';
           }
         }
         arr.push({ ...item });
@@ -185,7 +185,7 @@ export default {
       const res = await this.getImageInfo(this.list[0].imgurl);
       if (res.width) {
         this.list.forEach(e => {
-          e.vh = countForViewImgHeight(res.width, res.height, this.dw) + "px";
+          e.vh = countForViewImgHeight(res.width, res.height, this.dw) + 'px';
         });
       }
     }
@@ -193,7 +193,7 @@ export default {
       this.list.forEach(e => {
         e.show = true;
         e.src = addImgSrcDomain(e.imgurl);
-        e.bg = "";
+        e.bg = '';
       });
     });
   },
@@ -204,7 +204,7 @@ export default {
           src: imgurl,
           complete: res => {
             resovle(res);
-          }
+          },
         });
       });
     },
@@ -212,12 +212,12 @@ export default {
       if (item.appid) {
         return this.toLink({
           appid: item.appid,
-          mpath: item.mpath
+          mpath: item.mpath,
         });
       }
       this.toLink(item.linkurl);
-    }
-  }
+    },
+  },
 };
 </script>
 

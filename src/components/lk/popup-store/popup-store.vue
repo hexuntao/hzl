@@ -1,10 +1,11 @@
 <template>
   <lk-popup v-model="show" position="bottom" round closeable title="选择门店">
+    <lk-search v-model="search_text" placeholder="请输入" />
     <lk-radio-group v-model="active">
       <view class="items">
         <lk-cell
           clickable
-          v-for="(item, index) in list"
+          v-for="(item, index) in filterList"
           :key="index"
           @click="select(item)"
         >
@@ -22,9 +23,9 @@
                 <view>
                   {{
                     item.province_name +
-                      item.city_name +
-                      item.dictrict_name +
-                      item.address
+                    item.city_name +
+                    item.dictrict_name +
+                    item.address
                   }}
                 </view>
               </view>
@@ -44,23 +45,25 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      search_text: '',
+    };
   },
   props: {
     value: {
       type: Boolean,
-      default: false
+      default: false,
     },
     store_id: [String, Number],
     list: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
   filters: {
     distance(value) {
-      return value + "km";
-    }
+      return value + 'km';
+    },
   },
   computed: {
     show: {
@@ -68,26 +71,46 @@ export default {
         return this.value;
       },
       set(e) {
-        this.$emit("input", e);
-      }
+        this.$emit('input', e);
+      },
     },
     active: {
       get() {
         return this.store_id && Number(this.store_id);
       },
-      set(e) {}
-    }
+      set(e) {},
+    },
+    filterList() {
+      return this.list.filter(e => {
+        if (e.store_name.indexOf(this.search_text) != -1) {
+          return true;
+        }
+        if (e.province_name.indexOf(this.search_text) != -1) {
+          return true;
+        }
+        if (e.city_name.indexOf(this.search_text) != -1) {
+          return true;
+        }
+        if (e.dictrict_name.indexOf(this.search_text) != -1) {
+          return true;
+        }
+        if (e.address.indexOf(this.search_text) != -1) {
+          return true;
+        }
+        return false;
+      });
+    },
   },
   methods: {
     close() {
-      this.$emit("input", false);
+      this.$emit('input', false);
     },
     select(item) {
-      this.$emit("select", item);
+      this.$emit('select', item);
       this.close();
-    }
+    },
   },
-  components: {}
+  components: {},
 };
 </script>
 
