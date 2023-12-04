@@ -33,11 +33,11 @@
 </template>
 
 <script>
-import { GET_COMMISSIONRANKING } from "@/common/interface/distribute";
-import rankingGroup from "./component/ranking-group";
-import { mapState } from "vuex";
+import { GET_COMMISSIONRANKING } from '@/common/interface/distribute';
+import rankingGroup from './component/ranking-group';
+import { mapState } from 'vuex';
 export default {
-  name: "packages-distribute-ranking",
+  name: 'packages-distribute-ranking',
   data() {
     return {
       active: 0,
@@ -45,56 +45,56 @@ export default {
       info: {},
       params: {
         types: 1,
-        times: "month",
-        psize: 10
-      }
+        times: 'month',
+        psize: 10,
+      },
     };
   },
   computed: {
     ...mapState({
       memberTexts: ({ member }) => member.texts,
-      distributeTexts: ({ distribute }) => distribute.texts
+      distributeTexts: ({ distribute }) => distribute.texts,
     }),
     tabs() {
       const { point_style } = this.memberTexts;
       const { commission } = this.distributeTexts;
       return [
         {
-          name: "推荐榜",
+          name: '推荐榜',
           types: 1,
-          unit: "人",
-          number: "total"
+          unit: '人',
+          number: 'total',
         },
         {
           name: `${commission}榜`,
           types: 2,
-          unit: `${commission}`,
-          number: "commissions"
+          // unit: `${commission}`,
+          number: 'commissions',
         },
         {
           name: `${point_style}榜`,
           types: 3,
-          unit: `${point_style}`,
-          number: "points"
-        }
+          // unit: `${point_style}`,
+          number: 'points',
+        },
       ];
-    }
+    },
   },
   onLoad() {
     this.getData();
   },
   methods: {
     getData() {
-      GET_COMMISSIONRANKING(this.params, { loadingText: "加载中" })
+      GET_COMMISSIONRANKING(this.params, { loadingText: '加载中' })
         .then(({ data }) => {
           const { number, unit } = this.tabs[this.active];
           this.list = data.rankinglists.map(item => {
             item.number = item[number];
-            item.unit = unit;
+            item.unit = unit || '';
             return item;
           });
           this.info = data.user;
-          this.info.unit = unit;
+          this.info.unit = unit || '';
           this.info.number = data.user[number];
         })
         .catch(() => {});
@@ -108,11 +108,11 @@ export default {
     onRankChange(times) {
       this.params.times = times;
       this.getData();
-    }
+    },
   },
   components: {
-    rankingGroup
-  }
+    rankingGroup,
+  },
 };
 </script>
 

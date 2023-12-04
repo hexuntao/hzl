@@ -59,27 +59,27 @@ export default {
     return {
       tabs: [
         {
-          name: "月榜",
-          times: "month"
+          name: '月榜',
+          times: 'month',
         },
         {
-          name: "年榜",
-          times: "year"
+          name: '年榜',
+          times: 'year',
         },
         {
-          name: "总榜",
-          times: "all"
-        }
-      ]
+          name: '总榜',
+          times: 'all',
+        },
+      ],
     };
   },
   props: {
-    list: Array
+    list: Array,
   },
   methods: {
     onTab(e) {
-      this.$emit("change", this.tabs[e].times);
-    }
+      this.$emit('change', this.tabs[e].times);
+    },
   },
   computed: {
     rankBox() {
@@ -109,8 +109,8 @@ export default {
         }
       });
       return list;
-    }
-  }
+    },
+  },
 };
 </script>
 

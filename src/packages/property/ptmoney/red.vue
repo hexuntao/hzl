@@ -10,60 +10,68 @@
     />
   </page-meta>
   <view class="pages">
-	  <view style="text-align:center;margin:30rpx 0;">
-		  <view style="font-size:70rpx;margin:20rpx 0;">{{info.all_bonus || 0}}</view>
-	  </view>
-	  
-	<lk-tabs
-	  v-model="active"
-	  :active-color="theme.color"
-	  :line-color="theme.color"
-	  slot-title
-	  nav-per-view="2"
-	  @change="onTab"
-	>
-	  <lk-tab>
-	    <text>已结分红</text>
-	  </lk-tab>
-	  <lk-tab >
-	    <text>未结分红</text>
-	  </lk-tab>
-	  
-	</lk-tabs>
-	
-	<lk-load-list
-	  ref="load"
-	  @init="loadInit"
-	  :down="downOption"
-	  @down="downCallback"
-	  :up="upOption"
-	  @up="upCallback"
-	>
+    <view style="text-align: center; margin: 30rpx 0">
+      <view style="font-size: 70rpx; margin: 20rpx 0">{{
+        info.all_bonus || 0
+      }}</view>
+    </view>
 
-    <view class="info-list">
-      <view  v-for="(items, indexs) in info.list" :key="indexs" style="border-bottom:20rpx solid #f1f1f1;">
-        <view style="padding-top:20rpx;margin-left:20rpx;padding-bottom:20rpx;border-bottom:2rpx dotted #f1f1f1;">{{ items.name }}</view>
-        <view class="list" v-for="(item, index) in items.list" :key="index">
-          <view class="list-item">
-            <view class="list-title">等级：{{ item.level_name }} </view>
-            <view class="list-title">我的贡献积分：{{ item.my_total_pv }}</view>
-			<view class="list-title">总共贡献积分：{{ item.total_pv }}</view>
-            <view class="list-title">当月商城业绩：{{ item.month_pv }}</view>
-            <view class="list-tisp">月份：{{ item.add_month }}</view>
-          </view>
-          <view class="list-item">
-            <text class="green-color">{{item.my_bonus_money}}</text>
+    <lk-tabs
+      :active-color="theme.color"
+      :line-color="theme.color"
+      slot-title
+      nav-per-view="2"
+      @change="onTab"
+    >
+      <lk-tab>
+        <text>已结分红</text>
+      </lk-tab>
+      <lk-tab>
+        <text>未结分红</text>
+      </lk-tab>
+    </lk-tabs>
+
+    <lk-load-list
+      ref="load"
+      @init="loadInit"
+      :down="downOption"
+      @down="downCallback"
+      :up="upOption"
+      @up="upCallback"
+    >
+      <view class="info-list">
+        <view
+          v-for="(items, indexs) in info.list"
+          :key="indexs"
+          style="border-bottom: 20rpx solid #f1f1f1"
+        >
+          <view
+            style="
+              padding-top: 20rpx;
+              margin-left: 20rpx;
+              padding-bottom: 20rpx;
+              border-bottom: 2rpx dotted #f1f1f1;
+            "
+            >{{ items.name }}</view
+          >
+          <view class="list" v-for="(item, index) in items.list" :key="index">
+            <view class="list-item">
+              <view class="list-title">等级：{{ item.level_name }} </view>
+              <view class="list-title"
+                >我的贡献积分：{{ item.my_total_pv }}</view
+              >
+              <view class="list-title">总共贡献积分：{{ item.total_pv }}</view>
+              <view class="list-title">当月商城业绩：{{ item.month_pv }}</view>
+              <view class="list-tisp">月份：{{ item.add_month }}</view>
+            </view>
+            <view class="list-item">
+              <text class="green-color">{{ item.my_bonus_money }}</text>
+            </view>
           </view>
         </view>
       </view>
-    </view>
-	  
-	</lk-load-list>
-	
-	
-	
-	
-	
+    </lk-load-list>
+
     <view
       class="popup-poster"
       @touchmove.stop.prevent="e => e.preventDefault()"
@@ -80,52 +88,50 @@
 </template>
 
 <script>
-	import { formatStyle } from "@/common/utils/stringify";
-	import { GET_ASSETACCOUNT } from "@/common/interface/property";
-import { mapActions, mapState, mapGetters } from "vuex";
-import { GET_COMMISSIONREDLOG } from "@/common/interface/distribute";
-import distributeReformGroup from "@/components/custom/distribute-reform-group";
-import reformLoad from "@/mixins/reform-load";
-import sharePoster from "./component/share-poster";
-import navbarStyle from "@/mixins/navbar-style";
-import loadMixin from "@/mixins/load-list";
+import { formatStyle } from '@/common/utils/stringify';
+import { GET_ASSETACCOUNT } from '@/common/interface/property';
+import { mapActions, mapState, mapGetters } from 'vuex';
+import { GET_COMMISSIONREDLOG } from '@/common/interface/distribute';
+import distributeReformGroup from '@/components/custom/distribute-reform-group';
+import reformLoad from '@/mixins/reform-load';
+import sharePoster from './component/share-poster';
+import navbarStyle from '@/mixins/navbar-style';
+import loadMixin from '@/mixins/load-list';
 export default {
-  name: "pages-ptmoney-red",
+  name: 'pages-ptmoney-red',
   data() {
     return {
       show: false,
       pageStyle: {
-        background: "",
-        title: ""
+        background: '',
+        title: '',
       },
-	    showType:1,
-	    params: {
-        status:0
-	    },
+      showType: 1,
+      params: {
+        status: 0,
+      },
       showPoster: false,
-      info:{},
+      info: {},
       tabs: [
-        { name: "已结分红", type: 1 },
-        { name: "未结分红", type: 2 }
+        { name: '已结分红', type: 1 },
+        { name: '未结分红', type: 2 },
       ],
     };
   },
-  mixins: [loadMixin,reformLoad, navbarStyle],
+  mixins: [loadMixin, reformLoad, navbarStyle],
   computed: {
     ...mapState({
-      addons: ({ config }) => config.addons
+      addons: ({ config }) => config.addons,
     }),
-	
-	styles() {
-	  return formatStyle({
-	    background: this.theme.gradient,
-	  })
-	  },
-	
-    ...mapGetters(["token", "static"]),
-    cardItems() {
-      
-    }
+
+    styles() {
+      return formatStyle({
+        background: this.theme.gradient,
+      });
+    },
+
+    ...mapGetters(['token', 'static']),
+    cardItems() {},
   },
 
   onLoad() {},
@@ -134,16 +140,14 @@ export default {
     this.getItems();
   },
   methods: {
-    ...mapActions(["getCustom", "getDistributeInfo"]),
+    ...mapActions(['getCustom', 'getDistributeInfo']),
     getItems() {
-      GET_COMMISSIONREDLOG({type:this.showType})
-          .then(({ data }) => {
-            this.info = data;
-            console.log(data);
-          })
-          .catch(() => {
-
-          });
+      GET_COMMISSIONREDLOG({ type: this.showType })
+        .then(({ data }) => {
+          this.info = data;
+          console.log(data);
+        })
+        .catch(() => {});
     },
 
     onTab(index) {
@@ -153,60 +157,60 @@ export default {
   },
   components: {
     distributeReformGroup,
-    sharePoster
-  }
+    sharePoster,
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-	.header {
-		//background-color:#a32d2a;
-	  padding: 100rpx 30rpx;
-	  min-height: 240rpx;
-	  color: #fff;
-	  margin-bottom:20rpx;
-	}
-	.wrap {
-	  display: flex;
-	  flex-flow: row;
-	  .avatar {
-	    width: 170rpx;
-	    flex: none;
-	    margin-right: 30rpx;
-	  }
-	  .name {
-	    font-size: 26rpx;
-	    line-height: 48rpx;
-	    height: 48rpx;
-	    white-space: nowrap;
-	    text-overflow: ellipsis;
-	    overflow: hidden;
-	    max-width: 340rpx;
-	  }
-	  .name-tag {
-	    display: inline-flex;
-	    border-radius: 40rpx;
-	    height: 32rpx;
-	    min-width: 100rpx;
-	    align-items: center;
-	    justify-content: center;
-	    background: #ffffff;
-	    color: $text-gray;
-	    font-size: $font-size-xs;
-	    margin-left: 16rpx;
-	    vertical-align: text-top;
-	  }
-	  .content {
-	    flex: 1;
-	    display: flex;
-	    flex-flow: column;
-	    color: inherit;
-	  }
-	}
-	.header{
-		padding:0 rpx;
-		margin:0 rpx;
-	}
+.header {
+  //background-color:#a32d2a;
+  padding: 100rpx 30rpx;
+  min-height: 240rpx;
+  color: #fff;
+  margin-bottom: 20rpx;
+}
+.wrap {
+  display: flex;
+  flex-flow: row;
+  .avatar {
+    width: 170rpx;
+    flex: none;
+    margin-right: 30rpx;
+  }
+  .name {
+    font-size: 26rpx;
+    line-height: 48rpx;
+    height: 48rpx;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 340rpx;
+  }
+  .name-tag {
+    display: inline-flex;
+    border-radius: 40rpx;
+    height: 32rpx;
+    min-width: 100rpx;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    color: $text-gray;
+    font-size: $font-size-xs;
+    margin-left: 16rpx;
+    vertical-align: text-top;
+  }
+  .content {
+    flex: 1;
+    display: flex;
+    flex-flow: column;
+    color: inherit;
+  }
+}
+.header {
+  padding: 0 rpx;
+  margin: 0 rpx;
+}
 .info {
   padding-bottom: 40rpx;
   height: 160rpx;

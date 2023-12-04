@@ -162,7 +162,10 @@ export default {
           this.shoparr = data.shoparr;
           this.lnarr = data.lnarr;
           this.dnarr = data.dnarr;
-          this.index = this.lnarr[this.params.shop_id];
+          this.index =
+            this.lnarr && this.lnarr.length
+              ? this.lnarr[this.params.shop_id]
+              : '';
 
           this.params.bonus_id = data.bonus_id;
           this.bonus_type_all = data.bonus_type_all;

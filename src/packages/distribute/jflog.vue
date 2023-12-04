@@ -6,7 +6,6 @@
       :title="pageStyle.title"
     />
   </page-meta>
-  
 
   <view class="pages">
     <lk-load-list
@@ -22,10 +21,7 @@
         :key="index"
         :value="item.add_time"
       >
-        <view
-          slot="title"
-          :class="item.total_pv > 0 ? 'positive' : 'negative'"
-        >
+        <view slot="title" :class="item.total_pv > 0 ? 'positive' : 'negative'">
           {{ item.total_pv }}
         </view>
         <!-- <view slot="label" class="label">{{ item.introduce }}</view> -->
@@ -35,40 +31,39 @@
 </template>
 
 <script>
-import { GET_COMMISSIONJFLOG } from "@/common/interface/distribute";
-import loadMixin from "@/mixins/load-list";
-import { mapState } from "vuex";
+import { GET_COMMISSIONJFLOG } from '@/common/interface/distribute';
+import loadMixin from '@/mixins/load-list';
+import { mapState } from 'vuex';
 export default {
-  name: "packages-distribute-log",
+  name: 'packages-distribute-log',
   data() {
     return {
       pageStyle: {
-        background: "",
-        title: ""
+        background: '',
+        title: '',
       },
-	  bonus_type_all:[],
+      bonus_type_all: [],
       params: {
         page_index: 1,
         page_size: 20,
-		bonus_id:0,
-		status:1
-      }
+        bonus_id: 0,
+        status: 1,
+      },
     };
   },
   mixins: [loadMixin],
   computed: {
     ...mapState({
-      distributeTexts: ({ distribute }) => distribute.texts
-    })
+      distributeTexts: ({ distribute }) => distribute.texts,
+    }),
   },
   onLoad(query) {
-	  this.params.status = query.status;
+    this.params.status = query.status;
   },
   onShow() {
-    this.pageStyle.title = this.params.status==1?'已结积分':'未结积分';//this.distributeTexts.commission_details;
+    this.pageStyle.title = this.params.status == 1 ? '已结积分' : '未结积分'; //this.distributeTexts.commission_details;
   },
   methods: {
-
     upCallback(page) {
       this.params.page_index = page.num;
       GET_COMMISSIONJFLOG(this.params)
@@ -79,8 +74,8 @@ export default {
         .catch(() => {
           this.$load.endErr();
         });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -92,7 +87,7 @@ export default {
   color: $red;
 }
 .navclick {
-	background-color:#f8f8f8;
+  background-color: #f8f8f8;
 }
 .label,
 .time {
