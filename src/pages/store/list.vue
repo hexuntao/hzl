@@ -78,7 +78,7 @@ export default {
       isShopStore: false, //是否店铺的门店
       params: {
         page_index: 1,
-        page_size: 20,
+        page_size: 20000,
         order: 'distance',
         sort: 'ASC',
         lng: '',
