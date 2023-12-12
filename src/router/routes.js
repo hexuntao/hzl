@@ -258,7 +258,6 @@ export default {
     },
     title: '分销中心',
   },
-
   'pages-ptmoney-index': {
     path: '/pages/ptmoney/index',
     name: 'pages-ptmoney-index',
@@ -1115,7 +1114,28 @@ export default {
     },
     title: '转账记录',
   },
-
+  'packages-property-dst': {
+    path: '/packages/property/dst',
+    name: 'packages-property-dst',
+    meta: {
+      name: 'packages-property-dst',
+      isNVue: false,
+      pagePath: 'packages/property/dst',
+      windowTop: 44,
+    },
+    title: 'dst',
+  },
+  'packages-property-dst-log': {
+    path: '/packages/property/dst/log',
+    name: 'packages-property-dst-log',
+    meta: {
+      name: 'packages-property-dst-log',
+      isNVue: false,
+      pagePath: 'packages/property/dst/log',
+      windowTop: 44,
+    },
+    title: 'dst',
+  },
   'packages-property-index2': {
     path: '/packages/property/index2',
     name: 'packages-property-index2',

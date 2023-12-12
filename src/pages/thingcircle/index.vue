@@ -128,7 +128,6 @@ export default {
       this.resetList();
     },
   },
-
   components: {
     headerTab,
     singleColumn,

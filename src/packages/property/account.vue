@@ -7,7 +7,7 @@
     />
   </page-meta>
   <view class="pages">
-    <view class="head">
+    <view class="head" v-if="params.account_type != '9'">
       <view class="info" :style="{ background: infoBg }">
         <text class="text">{{ money_name_show1 }}</text>
         <view class="item">
@@ -16,8 +16,9 @@
         <image class="info-image" :src="infoImageSrc"></image>
       </view>
     </view>
- 
+
     <lk-load-list
+      v-if="params.account_type != '9'"
       ref="load"
       top="372"
       @init="loadInit"
@@ -27,81 +28,89 @@
       @up="upCallback"
     >
       <view class="info-item" v-if="btnGroup.length">
-          <view
-            class="info-list1"
-            v-for="(item, index) in btnGroup"
-            :key="index"
-            @click="goPage(item.route)"
-          >
-            <image class="info-icon" :src="item.iconSrc"></image>
-            <view class="info-text">{{ item.text }}</view>
-          </view>
+        <view
+          class="info-list1"
+          v-for="(item, index) in btnGroup"
+          :key="index"
+          @click="goPage(item.route)"
+        >
+          <image class="info-icon" :src="item.iconSrc"></image>
+          <view class="info-text">{{ item.text }}</view>
+        </view>
       </view>
       <view class="info-list">
-          <view class="info-title">{{ money_name_show }}明细</view>
-          <view class="listall" v-for="(item, index) in list" :key="index">
-			<view class="list">
-				<view class="list-item">
-				  <view class="list-title">类型：{{ item.type_name }}</view>
-				  <view class="list-title" v-if="item.will_order_uid>0">下单人ID：{{ item.will_order_uid }}</view>
-				  <view class="list-title" v-if="item.will_order_uid>0">下单人昵称：{{ item.will_order_nick_name }}</view>
-				  <view class="list-title" v-if="item.shop_name!=''">商户：{{ item.shop_name }}</view>
-				  
-				  <view class="list-tisp">{{ item.create_time }}</view>
-				</view>
-				
-				<view class="list-item">
-				  <text :class="item.sign === 1 ? 'green-color' : 'green-color'">{{
-				    item.number
-				  }}</text>
-				</view>
-			</view>
-            
-			
-			<view class="listintro">
-              备注：{{ item.text }}
+        <view class="info-title">{{ money_name_show }}明细</view>
+        <view class="listall" v-for="(item, index) in list" :key="index">
+          <view class="list">
+            <view class="list-item">
+              <view class="list-title">类型：{{ item.type_name }}</view>
+              <view class="list-title" v-if="item.will_order_uid > 0"
+                >下单人ID：{{ item.will_order_uid }}</view
+              >
+              <view class="list-title" v-if="item.will_order_uid > 0"
+                >下单人昵称：{{ item.will_order_nick_name }}</view
+              >
+              <view class="list-title" v-if="item.shop_name != ''"
+                >商户：{{ item.shop_name }}</view
+              >
+
+              <view class="list-tisp">{{ item.create_time }}</view>
+            </view>
+
+            <view class="list-item">
+              <text :class="item.sign === 1 ? 'green-color' : 'green-color'">{{
+                item.number
+              }}</text>
             </view>
           </view>
+
+          <view class="listintro"> 备注：{{ item.text }} </view>
+        </view>
       </view>
     </lk-load-list>
   </view>
- 
 </template>
 
 <script>
-import { GET_ASSETACCOUNT,GET_ASSETACCOUNTBUT } from "@/common/interface/property";
-import loadMixin from "@/mixins/load-list";
-import { mapState } from "vuex";
+import {
+  GET_ASSETACCOUNT,
+  GET_ASSETACCOUNTBUT,
+} from '@/common/interface/property';
+import loadMixin from '@/mixins/load-list';
+import { mapState } from 'vuex';
 export default {
-  name: "packages-property-points",
+  name: 'packages-property-points',
   data() {
     return {
       pageStyle: {
-        background: "",
-        title: "",
+        background: '',
+        title: '',
       },
       params: {
         page_index: 1,
         page_size: 20,
-        account_type:0,
+        account_type: 0,
       },
-      points: "",
-      money_name_show:'',
-	  money_name_show1:'',
-	  btnGroup:[],
+      points: '',
+      money_name_show: '',
+      money_name_show1: '',
+      btnGroup: [],
     };
   },
   onLoad(query) {
     this.params.account_type = query.account_type;
-    console.log(this.params.account_type);
-	this.btnGroupList();
+    // console.log(this.params.account_type);
+    if (this.params.account_type == '9') {
+      this.$Navigate.replace('/packages/property/dst');
+    } else {
+      this.btnGroupList();
+    }
   },
   mixins: [loadMixin],
   computed: {
     ...mapState({
       config: ({ config }) => config,
     }),
-
 
     basepath() {
       return this.$store.getters.static.baseImgPath;
@@ -112,73 +121,74 @@ export default {
     infoBg() {
       return this.theme.gradient;
     },
-    
   },
   methods: {
-	  btnGroupList() {
+    btnGroupList() {
+      //获取账户信息
+      GET_ASSETACCOUNTBUT({ account_type: this.params.account_type })
+        .then(({ data }) => {
+          //充值
+          let is_recharge = data.data.is_recharge;
+          let is_withdraw = data.data.is_withdraw;
 
-	    //获取账户信息
-	    GET_ASSETACCOUNTBUT({account_type:this.params.account_type})
-	      .then(({ data }) => {
+          let is_transfer = data.data.is_transfer;
+          let is_change = data.data.is_change;
+          let arr = [];
+          if (is_recharge == 1) {
+            arr.push({
+              text: '充值',
+              route:
+                '/packages/property/recharge?account_type=' +
+                this.params.account_type,
+              disabled: false,
+              isPlain: false,
+              iconSrc: `${this.$store.getters.static.baseImgPath}balance.png`,
+            });
+          }
+          if (is_withdraw == 1) {
+            arr.push({
+              text: '提现',
+              route:
+                '/packages/property/withdraw?account_type=' +
+                this.params.account_type,
+              isPlain: false,
+              iconSrc: `${this.$store.getters.static.baseImgPath}transfer_accounts.png`,
+            });
+          }
 
-	  		//充值
-	  		let is_recharge = data.data.is_recharge;
-	  		let is_withdraw = data.data.is_withdraw;
+          if (is_transfer == 1) {
+            arr.push({
+              text: '转账',
+              route:
+                '/packages/property/transfer?account_type=' +
+                this.params.account_type,
+              disabled: false,
+              isPlain: false,
+              iconSrc: `${this.$store.getters.static.baseImgPath}withdraw.png`,
+            });
+          }
 
-	  		let is_transfer = data.data.is_transfer;
-	  		let is_change = data.data.is_change;
-			let arr = [];
-	  		if (is_recharge==1) {
-	  			  arr.push({
-	  				text: "充值",
-	  				route: "/packages/property/recharge?account_type="+this.params.account_type,
-	  				disabled: false,
-	  				isPlain: false,
-	  				iconSrc: `${this.$store.getters.static.baseImgPath}balance.png`
-	  			  });
-	  		}
-	  		if (is_withdraw==1) {
-	  			  arr.push({
-	  			    text: "提现",
-	  			    route: "/packages/property/withdraw?account_type="+this.params.account_type,
-	  			    isPlain: false,
-	  			    iconSrc: `${this.$store.getters.static.baseImgPath}transfer_accounts.png`
-	  			  });
-	  		}
-	  		
-	  		if (is_transfer == 1) {
-	  		  arr.push({
-	  		    text: "转账",
-	  		    route: "/packages/property/transfer?account_type="+this.params.account_type,
-	  		    disabled: false,
-	  		    isPlain: false,
-	  		    iconSrc: `${this.$store.getters.static.baseImgPath}withdraw.png`
-	  		  });
-	  		}
-	  		
-	  		if (is_change == 1) {
-	  		  arr.push({
-	  		    text: "兑换",
-	  		    route: "/packages/property/change?account_type="+this.params.account_type,
-	  		    disabled: false,
-	  		    isPlain: false,
-	  		    iconSrc: `${this.$store.getters.static.baseImgPath}conversion.png`
-	  		  });
-	  		}
-	  		
-	  		
+          if (is_change == 1) {
+            arr.push({
+              text: '兑换',
+              route:
+                '/packages/property/change?account_type=' +
+                this.params.account_type,
+              disabled: false,
+              isPlain: false,
+              iconSrc: `${this.$store.getters.static.baseImgPath}conversion.png`,
+            });
+          }
 
-			
-			console.log(arr);
-			
-	  		this.btnGroup =  arr;
-	      })
-	      .catch(() => {
-	        this.$load.endErr();
-	      });
-	    	
-	  	
-	  		  /* const { is_point_transfer, is_transfer, withdraw_conf } = this.config;
+          // console.log(arr);
+
+          this.btnGroup = arr;
+        })
+        .catch(() => {
+          this.$load.endErr();
+        });
+
+      /* const { is_point_transfer, is_transfer, withdraw_conf } = this.config;
 	  		  
 	  		  
 	  
@@ -230,17 +240,16 @@ export default {
 	  		  arr.forEach((e, i) => (e.isPlain = i + 1 > 2));
 	  		  arr.length == 2 && (arr[arr.length - 1].isPlain = true);
 	  		  return arr; */
-	  },
+    },
     upCallback(page) {
       this.params.page_index = page.num;
 
       GET_ASSETACCOUNT(this.params)
         .then(({ data }) => {
-
           let list = data.account_detail.data || [];
           this.points = data.money_num_show;
           this.money_name_show = data.money_name_show;
-		  this.money_name_show1 = data.money_name_show1;
+          this.money_name_show1 = data.money_name_show1;
           this.pageStyle.title = data.money_name_show1;
           this.concatList(list, data.account_detail.total_count);
         })
@@ -248,11 +257,10 @@ export default {
           this.$load.endErr();
         });
     },
-    
+
     goPage(url) {
       this.$Navigate.push(url);
-    }
-  
+    },
   },
 };
 </script>
@@ -311,19 +319,19 @@ export default {
     color: #333333;
     border-bottom: 2rpx solid #eeeeee;
   }
-  .listall{
-	  border-bottom: 2rpx solid #eeeeee;
-	  padding: 30rpx 20rpx;
-	   margin-bottom: 22rpx;
+  .listall {
+    border-bottom: 2rpx solid #eeeeee;
+    padding: 30rpx 20rpx;
+    margin-bottom: 22rpx;
   }
   .listintro {
-	 margin-top:10rpx;  
+    margin-top: 10rpx;
   }
   .list {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    
+
     &:last-of-type {
       border-bottom: 0;
     }
@@ -370,5 +378,4 @@ export default {
     }
   }
 }
-
 </style>

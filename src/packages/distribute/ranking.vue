@@ -68,13 +68,13 @@ export default {
         {
           name: `${commission}榜`,
           types: 2,
-          // unit: `${commission}`,
+          unit: `${commission}`,
           number: 'commissions',
         },
         {
           name: `${point_style}榜`,
           types: 3,
-          // unit: `${point_style}`,
+          unit: `${point_style}`,
           number: 'points',
         },
       ];
@@ -90,11 +90,11 @@ export default {
           const { number, unit } = this.tabs[this.active];
           this.list = data.rankinglists.map(item => {
             item.number = item[number];
-            item.unit = unit || '';
+            item.unit = unit;
             return item;
           });
           this.info = data.user;
-          this.info.unit = unit || '';
+          this.info.unit = unit;
           this.info.number = data.user[number];
         })
         .catch(() => {});

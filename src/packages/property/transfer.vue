@@ -1,28 +1,25 @@
 <template>
   <view class="pages">
     <view>
-		
-		<!-- <lk-cell field :title="'余额'">
+      <!-- <lk-cell field :title="'余额'">
 		  <view class="price-color ">{{ can_use_money }}</view>
 		</lk-cell> -->
-		
-	  
-	  <lk-cell-account
-	    :accounttype="params.account_type"
-	    @select="onAccount"
-	  		handletype="is_transfer"
-	  		ref="popup"
-	  />
-	  
-	  
+
+      <lk-cell-account
+        :accounttype="params.account_type"
+        @select="onAccount"
+        handletype="is_transfer"
+        ref="popup"
+      />
+
       <lk-cell :title="paramText.typeText" field>
         <lk-radio-group
           v-model="type"
           :active-color="theme.color"
           @change="change"
         >
-          <lk-radio :name="1">{{ paramText["1"].user }}</lk-radio>
-          <lk-radio :name="2">{{ paramText["2"].user }}</lk-radio>
+          <lk-radio :name="1">{{ paramText['1'].user }}</lk-radio>
+          <lk-radio :name="2">{{ paramText['2'].user }}</lk-radio>
         </lk-radio-group>
       </lk-cell>
       <lk-field
@@ -46,7 +43,7 @@
         v-model="params.remark"
       />
     </view>
-	
+
     <lk-modal-pay-password
       ref="modalPayPassword"
       v-model="isShowModalPayPassword"
@@ -55,11 +52,11 @@
       @confirm="onPayPassword"
       @cancel="isLoading = false"
     />
-	
-	<view class="cell-group" style="margin-top:20rpx;">
-	  <lk-cell title="转账明细" to="/packages/property/transferlog" is-link />
-	</view>
-	
+
+    <view class="cell-group" style="margin-top: 20rpx">
+      <lk-cell title="转账明细" to="/packages/property/transferlog" is-link />
+    </view>
+
     <view class="foot-btn-group">
       <lk-button
         block
@@ -77,13 +74,13 @@
 </template>
 
 <script>
-import { TRANSFER_BALANCE } from "@/common/interface/property";
-import { validMobile } from "@/common/utils/validator";
-import { mapState, mapActions } from "vuex";
-import { yuan } from "@/common/utils";
-import mixinPayPassword from "@/mixins/valid-pay-password";
+import { TRANSFER_BALANCE } from '@/common/interface/property';
+import { validMobile } from '@/common/utils/validator';
+import { mapState, mapActions } from 'vuex';
+import { yuan } from '@/common/utils';
+import mixinPayPassword from '@/mixins/valid-pay-password';
 export default {
-  name: "packages-property-transfer",
+  name: 'packages-property-transfer',
   data() {
     return {
       type: 1,
@@ -92,58 +89,57 @@ export default {
         mobile: null,
         money: null,
         remark: null,
-		account_type:"",
+        account_type: '',
       },
-	  can_use_money: 0,
-	  transfer_cash_min: 0,
+      can_use_money: 0,
+      transfer_cash_min: 0,
       isLoading: false,
-      pageTypeText: "转账",
+      pageTypeText: '转账',
     };
   },
   mixins: [mixinPayPassword],
   computed: {
     ...mapState({
       memberInfo: ({ member }) => member.info,
-      memberTexts: ({ member }) => member.texts
+      memberTexts: ({ member }) => member.texts,
     }),
     isDisabled() {
       return !parseFloat(this.can_use_money);
     },
     paramText() {
       return {
-        typeText: this.pageTypeText + "方式",
-        usable: "可用" ,
+        typeText: this.pageTypeText + '方式',
+        usable: '可用',
         number: this.can_use_money,
         1: {
-          name: "user_id",
-          user: "会员ID",
-          userPlaceholder: "请输入收款人ID"
+          name: 'user_id',
+          user: '会员ID',
+          userPlaceholder: '请输入收款人ID',
         },
         2: {
-          name: "mobile",
-          user: "手机号码",
-          userPlaceholder: "请输入会员手机号码"
+          name: 'mobile',
+          user: '手机号码',
+          userPlaceholder: '请输入会员手机号码',
         },
-        input: this.pageTypeText ,
-        inputPlaceholder:
-          "请输入" + this.pageTypeText ,
-        remark: "备注",
-        remarkPlaceholder: "选填"
+        input: this.pageTypeText,
+        inputPlaceholder: '请输入' + this.pageTypeText,
+        remark: '备注',
+        remarkPlaceholder: '选填',
       };
-    }
+    },
   },
   onLoad(query) {
-	  this.params.account_type = query.account_type;
-	  this.$refs.popup.getAccountList();
+    this.params.account_type = query.account_type;
+    this.$refs.popup.getAccountList();
   },
   methods: {
-    ...mapActions(["setSubscribe"]),
-	
-	onAccount(item) {
-	  this.params.account_type = item.id;
-	  this.transfer_cash_min = parseFloat(item.transfer_min);
-	  this.can_use_money = item.can_use_money; 
-	},
+    ...mapActions(['setSubscribe']),
+
+    onAccount(item) {
+      this.params.account_type = item.id;
+      this.transfer_cash_min = parseFloat(item.transfer_min);
+      this.can_use_money = item.can_use_money;
+    },
     change(e) {
       if (e == 1) {
         this.params.mobile && delete this.params.mobile;
@@ -180,13 +176,11 @@ export default {
               .then(() => {
                 this.$Prompt
                   .toast({
-                    title: this.pageTypeText + "成功",
-                    icon: "success"
+                    title: this.pageTypeText + '成功',
+                    icon: 'success',
                   })
                   .then(() => {
-					  
-					  this.$Navigate.push('/packages/property/transferlog')
-
+                    this.$Navigate.push('/packages/property/transferlog');
                   });
               })
               .catch(() => {
@@ -194,12 +188,12 @@ export default {
               });
           })
           .catch(() => {
-            this.password = "";
+            this.password = '';
             this.isLoading = false;
           });
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

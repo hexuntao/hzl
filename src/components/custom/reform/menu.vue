@@ -92,7 +92,6 @@ export default {
             mpath: item.mpath,
           });
         }
-        console.log(item.linkurl);
         this.toLink(item.linkurl);
       }
     },

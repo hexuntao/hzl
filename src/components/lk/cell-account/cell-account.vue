@@ -7,7 +7,7 @@
       is-link
       @click="onActionSheet"
     />
-	
+
     <lk-popup
       v-model="isShowSheet"
       title="账户类型"
@@ -15,7 +15,11 @@
       round
       closeable
     >
-      <lk-radio-group v-model="accountId" :active-color="theme.color">
+      <lk-radio-group
+        v-model="accountId"
+        :active-color="theme.color"
+        @change="onChange"
+      >
         <view class="list">
           <lk-cell-account-item
             v-for="(item, index) in accountList"
@@ -33,27 +37,26 @@
           </lk-cell-account-item>
         </view>
       </lk-radio-group>
-      
     </lk-popup>
   </view>
 </template>
 
 <script>
-import { GET_ACCOUNTHANG } from "@/common/interface/property";
-import property from "@/mixins/property";
+import { GET_ACCOUNTHANG } from '@/common/interface/property';
+import property from '@/mixins/property';
 export default {
   data() {
     return {
-      onbackevent: "on-back-addbank",
+      onbackevent: 'on-back-addbank',
       isShowSheet: false,
-      accountInfo: "",
-      accountList: []
+      accountInfo: '',
+      accountList: [],
+      accountId: '',
     };
   },
   props: {
     accounttype: [Number, String],
-	handletype: [Number, String],
-
+    handletype: [Number, String],
   },
   mixins: [property],
 
@@ -72,26 +75,35 @@ export default {
       this.isShowSheet = true;
     },
     getAccountList() {
-      GET_ACCOUNTHANG({accounttype:this.accounttype,handletype:this.handletype}).then(({ code, data }) => {
-        for(var i in data){
-			data[i].logo = `${this.$store.getters.static.baseImgPath}withdraw.png`;
-			if(this.accounttype==data[i].id){
-				this.onSelect(data[i]);
-			}
-		}
-		this.accountList = data;
+      GET_ACCOUNTHANG({
+        accounttype: this.accounttype,
+        handletype: this.handletype,
+      }).then(({ code, data }) => {
+        for (var i in data) {
+          data[
+            i
+          ].logo = `${this.$store.getters.static.baseImgPath}withdraw.png`;
+          if (this.accounttype == data[i].id) {
+            this.onSelect(data[i]);
+          }
+        }
+        this.accountList = data;
       });
     },
     onSelect(item) {
       if (item.disabled) return;
       this.accountInfo = item.title;
-      this.$emit("select", item);
+      this.accountId = item.id;
+      this.$emit('select', item);
       this.isShowSheet = false;
+    },
+    onChange(e) {
+      // console.log(e);
     },
     onClose() {
       this.isShowSheet = false;
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -5,154 +5,159 @@
     </slot>
     <swiper class="swiper" indicator-dots :style="swiperStyle" v-if="swiper">
       <swiper-item
-          class="swiper-item"
-          v-for="(items, s) in swiperList"
-          :key="s"
+        class="swiper-item"
+        v-for="(items, s) in swiperList"
+        :key="s"
       >
         <view
-            class="grid-panel-group"
-            ref="grid-panel-group"
-            :class="colsClass"
+          class="grid-panel-group"
+          ref="grid-panel-group"
+          :class="colsClass"
         >
-          <view
-              class="item"
-              v-for="(item, index) in items"
-              :key="index"
-
-          >
-            <button  open-type="contact" class="box " style="border:0px;background-color:#fff;"  v-if="item.linkurl=='pages/service/index' || item.linkurl=='/pages/service/index'">
-
-
+          <view class="item" v-for="(item, index) in items" :key="index">
+            <button
+              open-type="contact"
+              class="box"
+              style="border: 0px; background-color: #fff"
+              v-if="
+                item.linkurl == 'pages/service/index' ||
+                item.linkurl == '/pages/service/index'
+              "
+            >
               <view class="icon" :style="item.iconStyle">
                 <lk-icon
-                    v-if="item.icon"
-                    :name="item.icon"
-                    :class-prefix="item.iconPrefix || iconPrefix"
-                    :color="item.iconColor || iconColor"
-                    :size="item.iconSize || iconSize"
-                    :info="item.iconInfo"
-                    square
+                  v-if="item.icon"
+                  :name="item.icon"
+                  :class-prefix="item.iconPrefix || iconPrefix"
+                  :color="item.iconColor || iconColor"
+                  :size="item.iconSize || iconSize"
+                  :info="item.iconInfo"
+                  square
                 />
               </view>
               <view
-                  class="title"
-                  :style="item.titleColor ? { color: item.titleColor } : ''"
+                class="title"
+                :style="item.titleColor ? { color: item.titleColor } : ''"
               >
-
                 {{ item.title }}
               </view>
               <view
-                  class="text"
-                  v-if="item.text"
-                  :style="item.textColor ? { color: item.textColor } : ''"
+                class="text"
+                v-if="item.text"
+                :style="item.textColor ? { color: item.textColor } : ''"
               >
-
                 {{ item.text }}
               </view>
-
-
             </button>
 
-            <view class="box" @click="click(item, index)" v-if="item.linkurl!='pages/service/index' && item.linkurl!='/pages/service/index'">
-
-
+            <view
+              class="box"
+              @click="click(item, index)"
+              v-if="
+                item.linkurl != 'pages/service/index' &&
+                item.linkurl != '/pages/service/index'
+              "
+            >
               <view class="icon" :style="item.iconStyle">
                 <lk-icon
-                    v-if="item.icon"
-                    :name="item.icon"
-                    :class-prefix="item.iconPrefix || iconPrefix"
-                    :color="item.iconColor || iconColor"
-                    :size="item.iconSize || iconSize"
-                    :info="item.iconInfo"
-                    square
+                  v-if="item.icon"
+                  :name="item.icon"
+                  :class-prefix="item.iconPrefix || iconPrefix"
+                  :color="item.iconColor || iconColor"
+                  :size="item.iconSize || iconSize"
+                  :info="item.iconInfo"
+                  square
                 />
               </view>
               <view
-                  class="title"
-                  :style="item.titleColor ? { color: item.titleColor } : ''"
+                class="title"
+                :style="item.titleColor ? { color: item.titleColor } : ''"
               >
-
                 {{ item.title }}
               </view>
               <view
-                  class="text"
-                  v-if="item.text"
-                  :style="item.textColor ? { color: item.textColor } : ''"
+                class="text"
+                v-if="item.text"
+                :style="item.textColor ? { color: item.textColor } : ''"
               >
-
                 {{ item.text }}
               </view>
-
-
             </view>
           </view>
         </view>
       </swiper-item>
     </swiper>
     <view
-        class="grid-panel-group"
-        :class="colsClass"
-        v-if="!swiper && items.length"
+      class="grid-panel-group"
+      :class="colsClass"
+      v-if="!swiper && items.length"
     >
-      <view
-          class="item"
-          v-for="(item, index) in items"
-          :key="index"
-
-      >
-        <button class="box" open-type="contact" style="border:0px;background-color:#fff;" @click="click(item, index)" v-if="item.linkurl=='pages/service/index' || item.linkurl=='/pages/service/index'">
+      <view class="item" v-for="(item, index) in items" :key="index">
+        <button
+          class="box"
+          open-type="contact"
+          style="border: 0px; background-color: #fff"
+          @click="click(item, index)"
+          v-if="
+            item.linkurl == 'pages/service/index' ||
+            item.linkurl == '/pages/service/index'
+          "
+        >
           <view class="icon" :style="item.iconStyle">
             <lk-icon
-                v-if="item.icon"
-                :name="item.icon"
-                :class-prefix="item.iconPrefix || iconPrefix"
-                :color="item.iconColor || iconColor"
-                :size="item.iconSize || iconSize"
-                :info="item.iconInfo"
-                square
+              v-if="item.icon"
+              :name="item.icon"
+              :class-prefix="item.iconPrefix || iconPrefix"
+              :color="item.iconColor || iconColor"
+              :size="item.iconSize || iconSize"
+              :info="item.iconInfo"
+              square
             />
           </view>
           <view
-              class="title"
-              :style="item.titleColor ? { color: item.titleColor } : ''"
+            class="title"
+            :style="item.titleColor ? { color: item.titleColor } : ''"
           >
-
             {{ item.title }}
           </view>
           <view
-              class="text"
-              v-if="item.text"
-              :style="item.textColor ? { color: item.textColor } : ''"
+            class="text"
+            v-if="item.text"
+            :style="item.textColor ? { color: item.textColor } : ''"
           >
-
             {{ item.text }}
           </view>
         </button>
-        <view class="box" @click="click(item, index)" v-if="item.linkurl!='pages/service/index' && item.linkurl!='/pages/service/index'">
+        <view
+          class="box"
+          @click="click(item, index)"
+          v-if="
+            item.linkurl != 'pages/service/index' &&
+            item.linkurl != '/pages/service/index'
+          "
+        >
           <view class="icon" :style="item.iconStyle">
             <lk-icon
-                v-if="item.icon"
-                :name="item.icon"
-                :class-prefix="item.iconPrefix || iconPrefix"
-                :color="item.iconColor || iconColor"
-                :size="item.iconSize || iconSize"
-                :info="item.iconInfo"
-                square
+              v-if="item.icon"
+              :name="item.icon"
+              :class-prefix="item.iconPrefix || iconPrefix"
+              :color="item.iconColor || iconColor"
+              :size="item.iconSize || iconSize"
+              :info="item.iconInfo"
+              square
             />
           </view>
           <view
-              class="title"
-              :style="item.titleColor ? { color: item.titleColor } : ''"
+            class="title"
+            :style="item.titleColor ? { color: item.titleColor } : ''"
           >
-
             {{ item.title }}
           </view>
           <view
-              class="text"
-              v-if="item.text"
-              :style="item.textColor ? { color: item.textColor } : ''"
+            class="text"
+            v-if="item.text"
+            :style="item.textColor ? { color: item.textColor } : ''"
           >
-
             {{ item.text }}
           </view>
         </view>
@@ -163,68 +168,68 @@
 </template>
 
 <script>
-import { formatStyle, formatClass } from "@/common/utils/stringify";
-import { pxTorpx } from "@/common/utils";
+import { formatStyle, formatClass } from '@/common/utils/stringify';
+import { pxTorpx } from '@/common/utils';
 export default {
   data() {
     return {
-      cname: "grid-panel",
-      swiperHeight: ""
+      cname: 'grid-panel',
+      swiperHeight: '',
     };
   },
   props: {
     title: String,
     items: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     cols: {
       type: [String, Number],
-      default: 0
+      default: 0,
     },
     iconPrefix: String,
     iconColor: String,
     iconSize: {
       type: [Number, String],
-      default: 32
+      default: 32,
     },
     center: {
       type: Boolean,
-      default: true
+      default: true,
     },
     background: {
-      type: String
+      type: String,
     },
     // 尺寸大小  sm 小
     size: {
       type: String,
-      default: ""
+      default: '',
     },
     // 是否卡片式
     card: {
       type: Boolean,
-      default: false
+      default: false,
     },
     // 是否分页滑动
     swiper: {
       type: Boolean,
-      default: false
+      default: false,
     },
     // 行数（swiper开启情况才生效）
     row: {
       type: [Number, String],
-      default: 1
-    }
+      default: 1,
+    },
   },
   computed: {
     colsClass() {
       return formatClass([
-        this.cols ? "cols-" + this.cols : "",
-        this.size == "sm" ? "size-sm" : ""
+        this.cols ? 'cols-' + this.cols : '',
+        this.size == 'sm' ? 'size-sm' : '',
       ]);
     },
     cardClasses() {
-      return this.card ? "card-group-box" : "";
+      return this.card ? 'card-group-box' : '';
     },
     panelStyle() {
       let styles = {};
@@ -234,18 +239,18 @@ export default {
       return formatStyle(styles);
     },
     swiperStyle() {
-      let pH = this.size == "sm" ? 20 : 40;
-      let itH = this.size == "sm" ? 52 : 80;
+      let pH = this.size == 'sm' ? 20 : 40;
+      let itH = this.size == 'sm' ? 52 : 80;
       let textH = this.items.some(({ text }) => text)
-          ? this.size == "sm"
-              ? 18
-              : 20
-          : 0;
+        ? this.size == 'sm'
+          ? 18
+          : 20
+        : 0;
       let iconH = (parseInt(this.iconSize) + 10) * 2;
       let height = (itH + textH + iconH) * parseInt(this.row) + pH;
-      height = this.size == "sm" ? height + 30 : height + 10;
+      height = this.size == 'sm' ? height + 30 : height + 10;
       return formatStyle({
-        height: height + "rpx"
+        height: height + 'rpx',
       });
     },
     swiperList() {
@@ -256,17 +261,17 @@ export default {
         list.push(this.items.slice(i, i + total));
       }
       return list;
-    }
+    },
   },
   methods: {
     click(item, index) {
-      console.log(item, index)
+      console.log(item, index);
       if (item.to) {
         return this.$Navigate.push(item.to);
       }
-      this.$emit("item-click", item, index);
-    }
-  }
+      this.$emit('item-click', item, index);
+    },
+  },
 };
 </script>
 
@@ -275,7 +280,7 @@ export default {
   background-color: #fff;
 }
 button::after {
-  border:0px;
+  border: 0px;
 }
 .grid-panel-group {
   display: flex;
@@ -325,10 +330,10 @@ button::after {
     left: 0;
     right: 0;
   }
-  &[class*="cols-"] {
+  &[class*='cols-'] {
     flex-flow: row wrap;
   }
-  &[class*="cols-"] .item {
+  &[class*='cols-'] .item {
     flex: none;
   }
   &.cols-1 .item {

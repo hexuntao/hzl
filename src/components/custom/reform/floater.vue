@@ -17,7 +17,7 @@
       <view class="item" v-if="backtopImage">
         <lk-back-top
           :custom-style="{
-            position: 'initial'
+            position: 'initial',
           }"
           :scroll-top="scrollTop"
         >
@@ -29,15 +29,15 @@
 </template>
 
 <script>
-import mixin from "../../mixin/reform";
-import { formatStyle } from "@/common/utils/stringify";
-import { addImgSrcDomain } from "@/common/utils";
+import mixin from '../../mixin/reform';
+import { formatStyle } from '@/common/utils/stringify';
+import { addImgSrcDomain } from '@/common/utils';
 export default {
   data() {
     return {
-      wxKefuImage: "",
-      backtopImage: "",
-      btnList: []
+      wxKefuImage: '',
+      backtopImage: '',
+      btnList: [],
     };
   },
   mixins: [mixin],
@@ -45,7 +45,7 @@ export default {
   computed: {
     scrollTop() {
       return this.items.scrollTop || 0;
-    }
+    },
   },
   created() {
     console.log(111222);
@@ -82,15 +82,15 @@ export default {
       if (item.appid) {
         return this.toLink({
           appid: item.appid,
-          mpath: item.mpath
+          mpath: item.mpath,
         });
       }
       this.toLink(item.linkurl);
     },
     close(index) {
       this.btnList.splice(index, 1);
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -102,8 +102,8 @@ export default {
   z-index: 99;
   .item {
     position: relative;
-    width: 80rpx;
-    height: 80rpx;
+    width: 65rpx;
+    height: 65rpx;
     display: flex;
     align-items: center;
     justify-content: center;

@@ -44,11 +44,11 @@
             </block>
             <view :class="activeInfo.firstLetterClass" v-else>
               {{ activeInfo.goodsPriceText }}
-			  <text v-if="activeInfo.ptmoney!=0 && activeInfo.ptmoney!=null">
-				  +{{ activeInfo.ptmoney }}积分
-			  </text>
-			  
-			  
+              <text
+                v-if="activeInfo.ptmoney != 0 && activeInfo.ptmoney != null"
+              >
+                +{{ activeInfo.ptmoney }}积分
+              </text>
             </view>
           </view>
         </sku-header>
@@ -101,7 +101,7 @@
       </view>
       <slot name="skuForm">
         <form-group :items="formList" ref="formGroup" v-if="isForm" />
-        <view style="height:110rpx" v-if="isForm"></view>
+        <view style="height: 110rpx" v-if="isForm"></view>
       </slot>
       <slot name="skuAction">
         <view class="sku-foot">
@@ -119,23 +119,23 @@
 </template>
 
 <script>
-import skuHeader from "./component/sku-header";
-import skuRow from "./component/sku-row";
-import skuRowItem from "./component/sku-row-item";
-import skuStepper from "./component/sku-stepper";
-import formGroup from "@/components/custom/form-group";
+import skuHeader from './component/sku-header';
+import skuRow from './component/sku-row';
+import skuRowItem from './component/sku-row-item';
+import skuStepper from './component/sku-stepper';
+import formGroup from '@/components/custom/form-group';
 import {
   isAllSelected,
   isSkuChoosable,
   getSkuComb,
-  getSelectedSkuValues
-} from "./utils/skuHelper";
-import { LIMIT_TYPE, UNSELECTED_SKU_VALUE_ID } from "./constants";
-import { defaultGoodsData, defaultSkuInfo, defaultActiveInfo } from "./data";
-import { isDef, yuan, isEmpty } from "@/common/utils";
-import { formatClass } from "@/common/utils/stringify";
-import mixinPriceText from "@/mixins/price-text";
-import { mapState } from "vuex";
+  getSelectedSkuValues,
+} from './utils/skuHelper';
+import { LIMIT_TYPE, UNSELECTED_SKU_VALUE_ID } from './constants';
+import { defaultGoodsData, defaultSkuInfo, defaultActiveInfo } from './data';
+import { isDef, yuan, isEmpty } from '@/common/utils';
+import { formatClass } from '@/common/utils/stringify';
+import mixinPriceText from '@/mixins/price-text';
+import { mapState } from 'vuex';
 
 const { QUOTA_LIMIT } = LIMIT_TYPE;
 
@@ -175,7 +175,7 @@ function goodsState(goods, stock, maxBuy) {
   if (!goods.state) {
     return 0;
   }
-  if (typeof goods.is_allow_buy === "boolean" && !goods.is_allow_buy) {
+  if (typeof goods.is_allow_buy === 'boolean' && !goods.is_allow_buy) {
     return -2;
   }
   if (maxBuy === -1) {
@@ -193,28 +193,28 @@ function goodsState(goods, stock, maxBuy) {
 export default {
   data() {
     return {
-      cname: "sku",
+      cname: 'sku',
       selectedSku: {},
       selectedNum: 1,
-      show: this.value
+      show: this.value,
     };
   },
   props: {
     info: {
       type: [String, Object],
-      default: defaultGoodsData
+      default: defaultGoodsData,
     },
     formList: {
       type: Array,
-      default: () =>([])
+      default: () => [],
     },
     promoteType: {
       type: String,
-      default: "normal"
+      default: 'normal',
     },
     promoteParams: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
     action: String,
     value: Boolean,
@@ -240,11 +240,11 @@ export default {
      */
     initialSku: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
     showSoldoutSku: {
       type: Boolean,
-      default: true
+      default: true,
     },
     // showAddCartBtn: {
     //   type: Boolean,
@@ -260,15 +260,15 @@ export default {
     // },
     customStepperConfig: {
       type: Object,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
   watch: {
     value(val) {
       this.show = val;
     },
     show(val) {
-      this.$emit("input", val);
+      this.$emit('input', val);
       if (!val) {
         const selectedSkuValues = getSelectedSkuValues(
           this.sku.tree,
@@ -281,20 +281,20 @@ export default {
         //   selectedSkuComb: this.selectedSkuComb
         // });
 
-        this.$emit("close", this.action, this.activeInfo);
+        this.$emit('close', this.action, this.activeInfo);
         // 砍价活动跟拼团活动隐藏时重置sku
         if (
           this.resetStepperOnHide ||
-          this.promoteType == "bargain" ||
-          this.promoteType == "group"
+          this.promoteType == 'bargain' ||
+          this.promoteType == 'group'
         ) {
           this.resetStepper();
         }
 
         if (
           this.resetSelectedSkuOnHide ||
-          this.promoteType == "bargain" ||
-          this.promoteType == "group"
+          this.promoteType == 'bargain' ||
+          this.promoteType == 'group'
         ) {
           this.resetSelectedSku(this.skuTree);
         }
@@ -302,7 +302,7 @@ export default {
     },
     skuTree(val) {
       // this.resetSelectedSku(val);// 暂且取消skutree发生变化时重置选中sku
-    }
+    },
   },
   mixins: [mixinPriceText],
   beforeDestroy() {
@@ -310,14 +310,14 @@ export default {
   },
   computed: {
     ...mapState({
-      memberText: ({ member }) => member.texts
+      memberText: ({ member }) => member.texts,
     }),
     skuGroupClass() {
       return formatClass([
-        "sku-group-container",
+        'sku-group-container',
         {
-          "sku-group-container--hide-soldout": !this.showSoldoutSku
-        }
+          'sku-group-container--hide-soldout': !this.showSoldoutSku,
+        },
       ]);
     },
     isSkuCombSelected() {
@@ -349,7 +349,7 @@ export default {
       const imageList = [this.activeInfo.picture];
       if (this.skuTree.length > 0) {
         const treeItem =
-          this.skuTree.filter(item => item.k_s === "s1")[0] || {};
+          this.skuTree.filter(item => item.k_s === 's1')[0] || {};
         if (!treeItem.v) {
           return;
         }
@@ -366,7 +366,7 @@ export default {
     stock() {
       let num = this.activeInfo.stock || 0;
       //单个显示砍价sku时，取砍价库存
-      if (this.action == "bargain") {
+      if (this.action == 'bargain') {
         num = this.activeInfo.bargainStock;
       }
       return num;
@@ -375,10 +375,10 @@ export default {
     quota() {
       let quota = this.activeInfo.maxBuy || 0;
       //单个显示拼团sku时，限购取拼团限购量
-      if (this.action == "group") {
+      if (this.action == 'group') {
         quota = this.activeInfo.groupMaxBuy;
       }
-      if (this.action == "bargain") {
+      if (this.action == 'bargain') {
         quota = this.activeInfo.bargainMaxBuy;
       }
       return quota;
@@ -390,11 +390,11 @@ export default {
     //起购
     least() {
       let least = this.activeInfo.minBuy || 1;
-      if (this.promoteType == "group" && this.action == "group") {
+      if (this.promoteType == 'group' && this.action == 'group') {
         // 拼团活动 ,触发拼团sku弹窗，起购为拼团的起购量
         least = this.activeInfo.groupMinBuy;
       }
-      if (this.promoteType == "bargain" && this.action == "bargain") {
+      if (this.promoteType == 'bargain' && this.action == 'bargain') {
         // 砍价活动，触发拼团砍价sku弹窗，起购数量为1
         least = 1;
       }
@@ -410,7 +410,7 @@ export default {
       sku.list = sku.list || [];
       sku.price = info.min_price;
       sku.market_price = info.min_market_price;
-      if (this.promoteType == "group" || this.promoteType == "luckyspell") {
+      if (this.promoteType == 'group' || this.promoteType == 'luckyspell') {
         //拼团商品价格及限购
         sku.group_price = sku.list.length > 0 ? sku.list[0].group_price : 0;
         sku.group_limit_buy =
@@ -424,9 +424,9 @@ export default {
       sku.none_sku = !sku.tree.length;
       sku.hide_stock = false;
       sku.stock =
-        this.action == "bargain" ? sku.bargain_stock_num : sku.stock_num;
+        this.action == 'bargain' ? sku.bargain_stock_num : sku.stock_num;
       sku.list.forEach(e => {
-        e.stock = this.action == "bargain" ? e.bargain_stock_num : e.stock_num;
+        e.stock = this.action == 'bargain' ? e.bargain_stock_num : e.stock_num;
       });
       // console.log("sku", sku);
       return sku;
@@ -472,7 +472,7 @@ export default {
       goods.point = info.point;
 
       goods.ptmoney = info.ptmoney;
-      console.log('aabb11223344aabb');
+
       console.log(info);
 
       goods.promoteType = this.promoteType;
@@ -486,9 +486,9 @@ export default {
       if (goods.isHasSku) {
         goods.specText = selectedSkuComb
           ? selectedSkuComb.sku_name
-          : "请选择规格";
+          : '请选择规格';
       } else {
-        goods.specText = "已选：" + selectedNum + "件";
+        goods.specText = '已选：' + selectedNum + '盒';
       }
       goods.minBuy = goods.noEditNum
         ? 1
@@ -506,7 +506,7 @@ export default {
         goods.point
       );
       goods.marketPrice = this.currentMarketPrice(selectedSkuComb);
-      if (this.promoteType == "group") {
+      if (this.promoteType == 'group') {
         //拼团商品价格
         goods.groupGoodsPrice = this.currentGroupPrice(selectedSkuComb);
         goods.groupGoodsPriceText = yuan(goods.groupGoodsPrice);
@@ -517,23 +517,23 @@ export default {
           ? 1
           : this.currentGroupSkuMinBuy(selectedSkuComb);
       }
-      if (this.promoteType == "luckyspell") {
+      if (this.promoteType == 'luckyspell') {
         // 幸运拼团
         goods.groupGoodsPrice = this.currentGroupPrice(selectedSkuComb);
         goods.groupGoodsPriceText = yuan(goods.groupGoodsPrice);
         goods.noEditNum = true;
       }
-      if (this.promoteType == "presell") {
+      if (this.promoteType == 'presell') {
         //预售定金和尾款
         goods.frontMoney = this.presellInfo(selectedSkuComb).frontMoney;
         goods.frontMoneyPrice = yuan(goods.frontMoney);
         goods.tailMoney = this.presellInfo(selectedSkuComb).tailMoney;
         goods.allMoney = this.presellInfo(selectedSkuComb).allMoney;
         goods.allMoneyPrice = yuan(goods.allMoney);
-        goods.frontMoneyText = "定金：";
-        goods.allMoneyText = "预售价：";
+        goods.frontMoneyText = '定金：';
+        goods.allMoneyText = '预售价：';
       }
-      if (this.promoteType == "bargain") {
+      if (this.promoteType == 'bargain') {
         goods.bargainMaxBuy = goods.noEditNum
           ? 1
           : this.currentBargainSkuMaxBuy(selectedSkuComb);
@@ -553,17 +553,17 @@ export default {
         goods.isPaid = !!this.info.is_buy;
       }
       if (info.goods_type == 10) {
-        goods.buyBtnText = "立即兑换";
+        goods.buyBtnText = '立即兑换';
       }
       if (info.goods_type == 6) {
-        goods.buyBtnText = "立即预约";
+        goods.buyBtnText = '立即预约';
       }
-      this.$emit("get-active-info", goods);
+      this.$emit('get-active-info', goods);
       return goods;
     },
     isForm() {
       return !isEmpty(this.formList);
-    }
+    },
   },
   created() {
     // const skuEventBus = this.$Events;
@@ -585,7 +585,7 @@ export default {
   },
   methods: {
     stepperChange(event) {
-      this.$emit("stepper-change", event);
+      this.$emit('stepper-change', event);
     },
     resetStepper() {
       const { skuStepper } = this.$refs;
@@ -639,13 +639,13 @@ export default {
         this.selectedSku[skuValue.skuKeyStr] === skuValue.id
           ? {
               ...this.selectedSku,
-              [skuValue.skuKeyStr]: UNSELECTED_SKU_VALUE_ID
+              [skuValue.skuKeyStr]: UNSELECTED_SKU_VALUE_ID,
             }
           : { ...this.selectedSku, [skuValue.skuKeyStr]: skuValue.id };
-      this.$emit("sku-selected", {
+      this.$emit('sku-selected', {
         skuValue,
         selectedSku: this.selectedSku,
-        selectedSkuComb: this.selectedSkuComb
+        selectedSkuComb: this.selectedSkuComb,
       });
     },
     onPreviewImage(indexImage) {
@@ -653,9 +653,9 @@ export default {
       const cbParams = {
         index,
         imageList: this.imageList,
-        indexImage
+        indexImage,
       };
-      this.$emit("preview-on", cbParams);
+      this.$emit('preview-on', cbParams);
     },
     onOverLimit(data) {
       const { action, limitType, quota, quotaUsed, least } = data;
@@ -664,21 +664,21 @@ export default {
         handleOverLimit(data);
         return;
       }
-      if (action === "minus") {
+      if (action === 'minus') {
         this.$Prompt.toast(`起购${this.least}件`);
-      } else if (action === "plus") {
+      } else if (action === 'plus') {
         if (limitType === QUOTA_LIMIT) {
           let msg = `限购${quota}件`;
           if (quotaUsed > 0) msg += `，${`你已购买${quotaUsed}件`}`;
           this.$Prompt.toast(msg);
         } else {
-          this.$Prompt.toast("库存不足");
+          this.$Prompt.toast('库存不足');
         }
       }
     },
     validateSku() {
       if (this.selectedNum === 0) {
-        return "商品已经无法购买啦";
+        return '商品已经无法购买啦';
       }
       // if (this.isSkuCombSelected) {
       //   return this.validateSkuMessages();
@@ -688,13 +688,13 @@ export default {
         const err = this.customSkuValidator(this);
         if (err) return err;
       }
-      return "请先选择商品规格";
+      return '请先选择商品规格';
     },
     onAddCart() {
-      this.onBuyOrAddCart("add-cart");
+      this.onBuyOrAddCart('add-cart');
     },
     onBuy() {
-      this.onBuyOrAddCart("buy-clicked");
+      this.onBuyOrAddCart('buy-clicked');
     },
     onBuyOrAddCart(type) {
       const error = this.validateSku();
@@ -818,17 +818,17 @@ export default {
     },
     // 商品状态名称
     goodsStateText(state) {
-      let text = "";
+      let text = '';
       if (state == 0) {
-        text = "商品已下架";
+        text = '商品已下架';
       } else if (state == -2) {
-        text = "无购买权限";
+        text = '无购买权限';
       } else if (state == -3) {
-        text = "已超出最大限购量";
+        text = '已超出最大限购量';
       } else if (state == -1) {
-        text = "商品已售罄";
+        text = '商品已售罄';
       } else if (state == -4) {
-        text = this.memberText.point_style + "不足";
+        text = this.memberText.point_style + '不足';
       }
       return text;
     },
@@ -846,22 +846,22 @@ export default {
        * seckill  =>  秒杀
        */
       if (this.isForm) {
-        let form_data = this.$refs["formGroup"]
-          ? this.$refs["formGroup"].getFormData()
-          : "";
+        let form_data = this.$refs['formGroup']
+          ? this.$refs['formGroup'].getFormData()
+          : '';
         if (!form_data) return false;
         data.form_data = JSON.stringify(form_data);
       }
-      this.$emit("action", action, data);
-    }
+      this.$emit('action', action, data);
+    },
   },
   components: {
     skuHeader,
     skuRow,
     skuRowItem,
     skuStepper,
-    formGroup
-  }
+    formGroup,
+  },
 };
 </script>
 

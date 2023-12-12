@@ -11,7 +11,9 @@
                 :style="{ color: priceColor }"
               >
                 {{ priceText }}
-				<text v-if="ptmoney!=0 && ptmoney!=null">+{{ptmoney}}积分</text>
+                <text v-if="ptmoney != 0 && ptmoney != null">
+                  +{{ ptmoney }}积分
+                </text>
               </view>
               <lk-tag
                 custom-class="price-tag"
@@ -91,40 +93,38 @@
 </template>
 
 <script>
-import { formatClass } from "@/common/utils/stringify";
-import { yuan, isDef,bi } from "@/common/utils";
-import { mapState } from "vuex";
+import { formatClass } from '@/common/utils/stringify';
+import { yuan, isDef, bi } from '@/common/utils';
+import { mapState } from 'vuex';
 const defaultInfo = {
-  name: "", //商品名称
-  nameTag: "", //商品名称标签
-  price: "", //商品价格
-  
-  
-  
-  originPrice: "", //商品原价
-  priceTag: "", //商品价格标签
+  name: '', //商品名称
+  nameTag: '', //商品名称标签
+  price: '', //商品价格
+
+  originPrice: '', //商品原价
+  priceTag: '', //商品价格标签
   showPrice: true, //显示价格（默认显示）
-  promoteText: "", //活动额外文案
-  subName: "", //副标题
-  rebateCommission: "", //反返佣金
-  rebatePoint: "", //反返积分
+  promoteText: '', //活动额外文案
+  subName: '', //副标题
+  rebateCommission: '', //反返佣金
+  rebatePoint: '', //反返积分
   footInfo: [
     {
-      name: "运费",
-      value: ""
+      name: '运费',
+      value: '',
     },
     {
-      name: "销量",
-      value: ""
-    }
-  ] //商品底部信息
+      name: '销量',
+      value: '',
+    },
+  ], //商品底部信息
 };
 export default {
   data() {
     return {};
   },
   props: {
-	  ptmoney:[String, Number],
+    ptmoney: [String, Number],
     name: [String, Number],
     nameTag: [String, Number],
     subName: [String, Number],
@@ -134,7 +134,7 @@ export default {
     priceTag: [String, Number],
     showPrice: {
       type: Boolean,
-      default: true
+      default: true,
     },
     promoteText: [String, Number],
     footInfo: [Array, String],
@@ -143,25 +143,24 @@ export default {
     nameColor: String,
     subNameColor: String,
     rebateCommission: [String, Number],
-    rebatePoint: [String, Number]
+    rebatePoint: [String, Number],
   },
   computed: {
     ...mapState({
       memberText: ({ member }) => member.texts,
-      distributeText: ({ distribute }) => distribute.texts
+      distributeText: ({ distribute }) => distribute.texts,
     }),
     headerClasses() {
-      return formatClass({ "header-block": !this.showPrice });
+      return formatClass({ 'header-block': !this.showPrice });
     },
     priceClass() {
       return formatClass([
         parseFloat(this.point) > 0 && parseFloat(this.price) <= 0
-          ? ""
-          : "first-letter"
+          ? ''
+          : 'first-letter',
       ]);
     },
     priceText() {
-
       let arr = [];
       if (parseFloat(this.point) > 0) {
         if (parseFloat(this.price) > 0) {
@@ -173,11 +172,14 @@ export default {
           arr.push(yuan(this.price));
         }
       }
-      return arr.join("+");
+      return arr.join('+');
     },
     originPriceText() {
-      let text = "";
-      if (isDef(this.originPrice)&&parseFloat(this.price)<parseFloat(this.originPrice)) {
+      let text = '';
+      if (
+        isDef(this.originPrice) &&
+        parseFloat(this.price) < parseFloat(this.originPrice)
+      ) {
         text = yuan(this.originPrice);
       }
       return text;
@@ -185,14 +187,12 @@ export default {
     rebatePointText() {
       return this.rebatePoint
         ? `${this.rebatePoint}${this.memberText.point_style}`
-        : "";
+        : '';
     },
     rebateCommissionText() {
-      return this.rebateCommission
-        ? `${this.rebateCommission}`+'积分'
-        : "";
-    }
-  }
+      return this.rebateCommission ? `${this.rebateCommission}` + '积分' : '';
+    },
+  },
 };
 </script>
 
@@ -234,7 +234,8 @@ export default {
       align-items: center;
     }
     .rebate-group {
-      display: flex;
+      //display: flex;
+      display: none;
       .item {
         display: flex;
         align-items: center;

@@ -10,10 +10,6 @@
     />
   </page-meta>
   <view class="pages">
-    <!-- #ifndef H5 -->
-
-    <!-- #endif -->
-
     <view
       class="card-panel card-group-box"
       style="margin-bottom: 0; width: 710rpx"
@@ -127,7 +123,6 @@ export default {
     }
   },
   onLoad() {},
-
   onShow() {
     if (this.token) {
       this.getDistributeInfo({ update: true })

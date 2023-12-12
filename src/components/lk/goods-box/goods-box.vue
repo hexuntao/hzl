@@ -11,7 +11,7 @@
           :src="image"
           :style="imageStyles"
           class="image"
-          :mode="showWaterfall?'widthFix':'aspectFill'"
+          :mode="showWaterfall ? 'widthFix' : 'aspectFill'"
         />
         <slot name="imageTags" />
       </view>
@@ -22,11 +22,16 @@
           <text class="title-tag" v-if="tag">{{ tag }}</text>
           {{ title }}
         </view>
-		
-		<view class="title-cell" style="color:#999;font-size:22rpx;" v-if="mintitle" @click="click">
-		  {{ mintitle }}
-		</view>
-		
+
+        <view
+          class="title-cell"
+          style="color: #999; font-size: 22rpx"
+          v-if="mintitle"
+          @click="click"
+        >
+          {{ mintitle }}
+        </view>
+
         <view class="label-cell" @click="click">
           <slot name="label" />
         </view>
@@ -35,66 +40,76 @@
             <view class="price-cell">
               <slot name="price">
                 <view class="cell-item-l" v-if="priceText">
-                  <view class="price-text" :class="priceClass" style="border:0rpx;font-size:30rpx;">
-					  <view>
-						  {{priceText}}
-					  </view>
-				
-					
-				  </view>
-				  
+                  <view
+                    class="price-text"
+                    :class="priceClass"
+                    style="border: 0rpx; font-size: 30rpx"
+                  >
+                    <view>
+                      {{ priceText }}
+                    </view>
+                  </view>
                 </view>
               </slot>
-			  
-          <slot name="priceRight">
-            <view class="cell-item-r" slot="priceRight">
 
-              <view class=" price-text" style="border:0rpx;font-size:28rpx;" v-if="vipshowprice">
-                <text class="yong" style="font-size:24rpx;">会员价:</text>
-                <text class="yong"><text style="font-size:22rpx;">￥</text>{{vipshowprice}}</text>
-              </view>
-
-
+              <slot name="priceRight">
+                <view class="cell-item-r" slot="priceRight">
+                  <view
+                    class="price-text"
+                    style="border: 0rpx; font-size: 28rpx"
+                    v-if="vipshowprice"
+                  >
+                    <text class="yong" style="font-size: 24rpx">会员价:</text>
+                    <text class="yong"
+                      ><text style="font-size: 22rpx">￥</text
+                      >{{ vipshowprice }}</text
+                    >
+                  </view>
+                </view>
+              </slot>
             </view>
-          </slot>
-			  
-              
-            </view>
-            <view class="price-cell" style="margin:10rpx 0">
+            <view class="price-cell" style="margin: 10rpx 0">
               <slot name="originPrice">
                 <view class="cell-item-l" v-if="originPriceText">
-                  <view class="price-text text-line-through light-text first-letter" style="font-size:28rpx;">{{
-                    originPriceText
-                  }}</view>
+                  <view
+                    class="price-text text-line-through light-text first-letter"
+                    style="font-size: 28rpx"
+                    >{{ originPriceText }}</view
+                  >
                 </view>
               </slot>
 
-			  
-			  <slot name="priceRight">
-			    <view class="cell-item-r" slot="priceRight">
-			  					
-					<view class="price-text" style="border:0rpx;font-size:28rpx;" v-if="commission">
-					  <text class="yong light-text " style="font-size:24rpx;">CC积分:</text>
-					  <text class="yong light-text "  style="font-size:28rpx;">{{commission}}</text>
-					</view>
-					
-					
-				</view>
-			  </slot>
+              <slot name="priceRight">
+                <view class="cell-item-r" slot="priceRight">
+                  <view
+                    class="price-text"
+                    style="border: 0rpx; font-size: 28rpx; display: none"
+                    v-if="commission"
+                  >
+                    <text class="yong light-text" style="font-size: 24rpx"
+                      >CC积分:</text
+                    >
+                    <text class="yong light-text" style="font-size: 28rpx">{{
+                      commission
+                    }}</text>
+                  </view>
+                </view>
+              </slot>
             </view>
-			
-			<view class="price-cell">
 
-			  <slot name="sales">
-			    <view class="cell-item-r">
-			      <view class="light-text price-text" v-if="salesText" style="font-size:28rpx;">
-				  {{salesText}}<text style="font-size:24rpx;">人付款</text>
-				  </view>
-			    </view>
-			  </slot>
-			  
-			  
-			</view>
+            <view class="price-cell">
+              <slot name="sales">
+                <view class="cell-item-r">
+                  <view
+                    class="light-text price-text"
+                    v-if="salesText"
+                    style="font-size: 28rpx"
+                  >
+                    {{ salesText }}<text style="font-size: 24rpx">人付款</text>
+                  </view>
+                </view>
+              </slot>
+            </view>
           </slot>
         </view>
         <slot name="bottom" />
@@ -104,12 +119,12 @@
 </template>
 
 <script>
-import { yuan, isDef, wan } from "@/common/utils";
-import mixinPriceText from "@/mixins/price-text";
-import { formatClass, formatStyle } from "@/common/utils/stringify";
+import { yuan, isDef, wan } from '@/common/utils';
+import mixinPriceText from '@/mixins/price-text';
+import { formatClass, formatStyle } from '@/common/utils/stringify';
 function countSize(size) {
-  var _size = size || "345,345";
-  var a = _size.split(",");
+  var _size = size || '345,345';
+  var a = _size.split(',');
   var w = a[0] || 0;
   var h = a[1] || 0;
   var s = w / 345;
@@ -118,13 +133,13 @@ function countSize(size) {
 export default {
   data() {
     return {
-      cname: "goods-box"
+      cname: 'goods-box',
     };
   },
   mixins: [mixinPriceText],
   props: {
     to: {
-      type: [String, Object]
+      type: [String, Object],
     },
     goodsId: [String, Number],
     // 是否积分商品
@@ -133,25 +148,25 @@ export default {
     // 图片形状，矩形=rectangle，正方形=square
     imageShape: {
       type: String,
-      default: "square"
+      default: 'square',
     },
     imageHeight: {
-      type: [Number, String]
+      type: [Number, String],
     },
-	commission:{
-		type:[Number, String]
-	},
-	vipshowprice:{
-		type:[Number, String]
-	},
+    commission: {
+      type: [Number, String],
+    },
+    vipshowprice: {
+      type: [Number, String],
+    },
     // 排版
     flexDirection: {
       type: String,
-      default: "column"
+      default: 'column',
     },
-    picSize:[String],
+    picSize: [String],
     title: [String, Number],
-	mintitle: [String, Number],
+    mintitle: [String, Number],
     tag: [String, Number],
     price: [String, Number],
     originPrice: [String, Number],
@@ -159,52 +174,54 @@ export default {
     sales: [String, Number],
     imageStyle: {
       type: [Object],
-      default: () => {}
+      default: () => {},
     },
-    showWaterfall:{
-      type:Boolean,
-      default:false
-    }
+    showWaterfall: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     priceClass() {
       return formatClass([
         this.firstLetterClass(this.price, this.point),
-        this.isPointGoods ? "is-point" : ""
+        this.isPointGoods ? 'is-point' : '',
       ]);
     },
     priceText() {
       return this.formatPriceText(this.price, this.point);
     },
     originPriceText() {
-      return parseFloat(this.price)>=parseFloat(this.originPrice)?false:this.formatPriceText(this.originPrice)
+      return parseFloat(this.price) >= parseFloat(this.originPrice)
+        ? false
+        : this.formatPriceText(this.originPrice);
     },
     salesText() {
-      return this.sales ? wan(this.sales) : "";
+      return this.sales ? wan(this.sales) : '';
     },
-    imageShapeClass() { 
+    imageShapeClass() {
       return `image-box-${this.imageShape} ${
-        this.imageHeight ? "custom-heihgt" : ""
+        this.imageHeight ? 'custom-heihgt' : ''
       }`;
     },
     flexDirectionClass() {
       if (this.showWaterfall) {
-        return "goods-box-Waterfall goods-box-" + this.flexDirection;
-      }else{
-          return "goods-box goods-box-" + this.flexDirection;
+        return 'goods-box-Waterfall goods-box-' + this.flexDirection;
+      } else {
+        return 'goods-box goods-box-' + this.flexDirection;
       }
     },
     imageStyles() {
       let style = {
-        ...this.imageStyle
+        ...this.imageStyle,
       };
       if (this.imageHeight) {
-        style.height = this.imageHeight
-      }else if(this.picSize){
-        style.height = countSize(this.picSize)+'rpx';
+        style.height = this.imageHeight;
+      } else if (this.picSize) {
+        style.height = countSize(this.picSize) + 'rpx';
       }
       return formatStyle(style);
-    }
+    },
   },
   methods: {
     click() {
@@ -214,17 +231,17 @@ export default {
       if (this.goodsId) {
         let to = {
           path: this.isPointGoods
-            ? "/packages/integral/goods/detail"
-            : "/packages/goods/detail",
+            ? '/packages/integral/goods/detail'
+            : '/packages/goods/detail',
           query: {
-            goods_id: this.goodsId
-          }
+            goods_id: this.goodsId,
+          },
         };
         return this.$Navigate.push(to);
       }
-      this.$emit("click");
-    }
-  }
+      this.$emit('click');
+    },
+  },
 };
 </script>
 

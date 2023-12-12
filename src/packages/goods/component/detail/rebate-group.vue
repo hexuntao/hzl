@@ -5,18 +5,17 @@
         {{ items.text }}
       </view>
       <view class="value">
-        <text class="tag" :style="tagStyles" v-for="(value, t) in cellValue" :key="t">
+        <text
+          class="tag"
+          :style="tagStyles"
+          v-for="(value, t) in cellValue"
+          :key="t"
+        >
           {{ value }}
         </text>
       </view>
     </lk-cell>
-    <lk-popup
-      v-model="show"
-      position="bottom"
-      round
-      closeable
-      title="商品返利"
-    >
+    <lk-popup v-model="show" position="bottom" round closeable title="商品返利">
       <view>
         <lk-cell class="item" v-for="(item, index) in list" :key="index">
           <view class="title">{{ item.title }}</view>
@@ -32,25 +31,25 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { formatStyle, formatClass } from "@/common/utils/stringify";
+import { mapState } from 'vuex';
+import { formatStyle, formatClass } from '@/common/utils/stringify';
 export default {
   data() {
     return {
-      show: false
+      show: false,
     };
   },
   props: {
     titleColor: {
       type: String,
-      default: "#606266"
+      default: '#606266',
     },
-    items: [Object, Array]
+    items: [Object, Array],
   },
   computed: {
     ...mapState({
       memberTexts: ({ member }) => member.texts,
-      distributeTexts: ({ distribute }) => distribute.texts
+      distributeTexts: ({ distribute }) => distribute.texts,
     }),
     isShow() {
       this.items.show = !!this.list.length;
@@ -74,27 +73,27 @@ export default {
       let point = parseFloat(data.point) || 0;
       if (commission1 || commission2 || commission3) {
         let obj = {};
-        obj.title = "购物返佣";
-        obj.name = "返" + commission;
+        obj.title = '购物返佣';
+        obj.name = '返' + commission;
         obj.value = [];
         if (commission1) {
-          let text = "一级购物可得约 " + commission1 + " " + commission;
+          let text = '一级购物可得约 ' + commission1 + ' ' + commission;
           if (commission_point1) {
-            text += " + " + commission_point1 + " " + point_style;
+            text += ' + ' + commission_point1 + ' ' + point_style;
           }
           obj.value.push(text);
         }
         if (commission2) {
-          let text = "二级购物可得约 " + commission2 + " " + commission;
+          let text = '二级购物可得约 ' + commission2 + ' ' + commission;
           if (commission_point2) {
-            text += " +" + commission_point2 + " " + point_style;
+            text += ' +' + commission_point2 + ' ' + point_style;
           }
           obj.value.push(text);
         }
         if (commission3) {
-          let text = "三级级购物可得约 " + commission3 + " " + commission;
+          let text = '三级级购物可得约 ' + commission3 + ' ' + commission;
           if (commission_point3) {
-            text += " + " + commission_point3 + " " + point_style;
+            text += ' + ' + commission_point3 + ' ' + point_style;
           }
           obj.value.push(text);
         }
@@ -102,9 +101,9 @@ export default {
       }
       if (is_point && point) {
         let obj = {};
-        obj.title = "购物返利";
-        obj.value = ["购买该商品可得约 " + point + point_style];
-        obj.name = "返" + point_style;
+        obj.title = '购物返利';
+        obj.value = ['购买该商品可得约 ' + point + point_style];
+        obj.name = '返' + point_style;
         arr.push(obj);
       }
       return arr;
@@ -112,16 +111,18 @@ export default {
     tagStyles() {
       return formatStyle({
         color: this.theme.color,
-        backgroundColor: this.theme.opacity
+        backgroundColor: this.theme.opacity,
       });
-    }
+    },
   },
-  components: {}
+  components: {},
 };
 </script>
 
 <style scoped lang="scss">
 .rebate-group {
+  //display: flex;
+  display: none;
   .title {
     width: 100rpx;
     color: $text-gray;

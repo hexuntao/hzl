@@ -130,6 +130,7 @@
         "enablePullDownRefresh": true
       }
     },
+
     {
       "path": "pages/integral/index",
       "style": {
@@ -594,6 +595,18 @@
           "path": "transferlog",
           "style": {
             "navigationBarTitleText": "转账记录"
+          }
+        },
+        {
+          "path": "dst",
+          "style": {
+            "navigationBarTitleText": "DST账户"
+          }
+        },
+        {
+          "path": "dst/log",
+          "style": {
+            "navigationBarTitleText": "DST账户明细"
           }
         },
         {

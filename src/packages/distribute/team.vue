@@ -48,9 +48,9 @@
           <view class="box">
             <view class="name">昵称：{{ item.nick_name }}</view>
           </view>
-          <!-- <view class="box">
+          <!--          <view class="box">
             <view class="name">手机：{{ item.mobile }}</view>
-          </view> -->
+          </view>-->
           <view class="box">
             <view class="name">等级：{{ item.distributor_level_name }}</view>
           </view>
@@ -82,7 +82,6 @@ export default {
         background: '',
         title: '',
       },
-
       tabs: [
         {
           name: '一级',

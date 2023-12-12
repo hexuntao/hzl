@@ -13,55 +13,59 @@
         v-for="(item, index) in list"
         :key="index"
       >
-	  <view>
-	    <view slot="title" >
-		
-			<view style="width:50%;float:left;">{{ item.account_type_name }}</view>
-			<view :class="item.number > 0 ? 'positive' : 'negative'" style="width:50%;float:left;text-align:right;">
-			  {{ item.number }}
-			</view>
-		
-		</view>
-        <view slot="title">
-			<view style="width:50%;float:left;">{{ item.type_name }}</view>
-			<view class="time" style="width:50%;float:left;text-align:right;">{{ item.create_time }}</view>
-		</view>
-        <!-- <view
+        <view>
+          <view slot="title">
+            <view style="width: 50%; float: left">
+              {{ item.account_type_name }}
+            </view>
+            <view
+              :class="item.number > 0 ? 'positive' : 'negative'"
+              style="width: 50%; float: left; text-align: right"
+            >
+              {{ item.number }}
+            </view>
+          </view>
+          <view slot="title">
+            <view style="width: 50%; float: left">{{ item.type_name }}</view>
+            <view
+              class="time"
+              style="width: 50%; float: left; text-align: right"
+              >{{ item.create_time }}</view
+            >
+          </view>
+          <!-- <view
           slot="label"
           class="label"
           :class="item.status == 4 || item.status == -1 ? 'text-through' : ''"
           >余额： {{ item.balance }}</view>-->
-        <view> 
-         
-          
+          <view> </view>
         </view>
-		</view>
-		<view style="width:100%;">备注：{{item.text}}</view>
+        <view style="width: 100%">备注：{{ item.text }}</view>
       </lk-cell>
     </lk-load-list>
   </view>
 </template>
 
 <script>
-import { GET_ASSETBALANCELOG } from "@/common/interface/property";
-import loadMixin from "@/mixins/load-list";
-import { mapState } from "vuex";
+import { GET_ASSETBALANCELOG } from '@/common/interface/property';
+import loadMixin from '@/mixins/load-list';
+import { mapState } from 'vuex';
 export default {
-  name: "packages-property-log-list",
+  name: 'packages-property-log-list',
   data() {
     return {
       isProceeds: false,
-      params: {}
+      params: {},
     };
   },
   onLoad(query) {
-    this.isProceeds = query.hash == "proceeds";
+    this.isProceeds = query.hash == 'proceeds';
   },
   mixins: [loadMixin],
   computed: {
     ...mapState({
-      memberTexts: ({ member }) => member.texts
-    })
+      memberTexts: ({ member }) => member.texts,
+    }),
   },
   methods: {
     upCallback(page) {
@@ -73,8 +77,8 @@ export default {
           this.concatList(list, data.total_count);
         });
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -20,7 +20,7 @@
     <picker
       mode="selector"
       :range="shoparr"
-      :range-key="shop_id"
+      :range-key="params.shop_id"
       @change="bindPickerChange"
       style="
         background-color: #fff;
@@ -112,7 +112,7 @@ export default {
         page_size: 20,
         bonus_id: 0,
         status: 1,
-        shop_id: 0,
+        shop_id: '0',
         search_text: '',
       },
     };
@@ -125,7 +125,7 @@ export default {
   },
   onLoad(query) {
     this.params.status = query.status;
-    this.params.shop_id = query.shop_id || 0;
+    this.params.shop_id = query.shop_id || '0';
   },
   onShow() {
     this.pageStyle.title = this.params.status == 1 ? '已结佣金' : '未结佣金'; //this.distributeTexts.commission_details;
@@ -162,10 +162,7 @@ export default {
           this.shoparr = data.shoparr;
           this.lnarr = data.lnarr;
           this.dnarr = data.dnarr;
-          this.index =
-            this.lnarr && this.lnarr.length
-              ? this.lnarr[this.params.shop_id]
-              : '';
+          this.index = this.lnarr[this.params.shop_id];
 
           this.params.bonus_id = data.bonus_id;
           this.bonus_type_all = data.bonus_type_all;
