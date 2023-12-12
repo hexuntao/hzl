@@ -1981,30 +1981,21 @@
       // #ifdef MP-WEIXIN
       {
         "pagePath": "pages/mall/index",
-        "iconPath": "static/images/1-001.png",
-        "selectedIconPath": "static/images/1-002.png",
         "text": ""
       },
       {
         "pagePath": "pages/goods/category",
-        "iconPath": "static/images/2-001.png",
-        "selectedIconPath": "static/images/2-002.png",
         "text": ""
       },
 
       {
         "pagePath": "pages/mall/cart",
-        "iconPath": "static/images/4-001.png",
-        "selectedIconPath": "static/images/4-002.png",
         "text": ""
       },
       {
         "pagePath": "pages/member/index",
-        "iconPath": "static/images/5-001.png",
-        "selectedIconPath": "static/images/5-002.png",
         "text": ""
       }
-
       // #endif
     ]
   },
