@@ -420,6 +420,12 @@
           "style": {
             "navigationBarTitleText": "商品评价"
           }
+        },
+        {
+          "path": "return_hg",
+          "style": {
+            "navigationBarTitleText": "申请回购"
+          }
         }
       ]
     },

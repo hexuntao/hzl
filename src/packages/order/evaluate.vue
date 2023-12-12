@@ -22,7 +22,7 @@
               />
               <view
                 :style="{
-                  color: item.score === child.score ? theme.color : '#999'
+                  color: item.score === child.score ? theme.color : '#999',
                 }"
               >
                 {{ child.text }}
@@ -92,9 +92,9 @@
 </template>
 
 <script>
-import { ADD_ORDEREVALUATE } from "@/common/interface/order";
-import { Base64 } from "@/common/lib/base64";
-import { mapState } from "vuex";
+import { ADD_ORDEREVALUATE } from '@/common/interface/order';
+import { Base64 } from '@/common/lib/base64';
+import { mapState } from 'vuex';
 function getListValue(list = []) {
   let a = [];
   list.forEach(e => {
@@ -105,30 +105,30 @@ function getListValue(list = []) {
   return a;
 }
 export default {
-  name: "packages-order-evaluate",
+  name: 'packages-order-evaluate',
   data() {
     return {
       order_id: null,
       order_info: {},
       praiseArr: [
         {
-          text: "好评",
-          icon: "praise",
+          text: '好评',
+          icon: 'praise',
           score: 5,
-          checked: true
+          checked: true,
         },
         {
-          text: "中评",
-          icon: "review",
+          text: '中评',
+          icon: 'review',
           score: 3,
-          checked: false
+          checked: false,
         },
         {
-          text: "差评",
-          icon: "review",
+          text: '差评',
+          icon: 'review',
           score: 1,
-          checked: false
-        }
+          checked: false,
+        },
       ],
 
       shop_desc: 0,
@@ -140,18 +140,18 @@ export default {
       isAgain: false, //是否再次评价
       isStore: false,
 
-      isLoading: false
+      isLoading: false,
     };
   },
   computed: {
     ...mapState({
-      shop: ({ config }) => config.addons.shop
-    })
+      shop: ({ config }) => config.addons.shop,
+    }),
   },
   onLoad(options) {
     this.order_info = JSON.parse(options.order_info);
     this.order_id = options.order_id;
-    this.isAgain = options.hash == "again";
+    this.isAgain = options.hash == 'again';
     this.isStore = !!this.order_info.store_id;
     if (this.order_info.goods) {
       this.order_info.goods.forEach((e, index) => {
@@ -199,15 +199,15 @@ export default {
       $this.isLoading = true;
       ADD_ORDEREVALUATE(params, { isAgain: $this.isAgain })
         .then(({ message }) => {
-          $this.$Prompt.toast({ title: message, icon: "success" }).then(() => {
-            $this.$Navigate.replace("/pages/order/list");
+          $this.$Prompt.toast({ title: message, icon: 'success' }).then(() => {
+            $this.$Navigate.replace('/pages/order/list');
           });
         })
         .catch(() => {
           $this.isLoading = false;
         });
-    }
-  }
+    },
+  },
 };
 </script>
 
