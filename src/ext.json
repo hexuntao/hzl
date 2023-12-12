@@ -8,7 +8,7 @@
     "website_id": 1
   },
   "requiredPrivateInfos": ["getLocation", "chooseLocation"],
-  "extAppid": "wx1ac0ffa85bb0759b", // wxd15482c55aeff717
+  "extAppid": "wx1ac0ffa85bb0759b",
   "tabBar": {
     "list": [
       {
