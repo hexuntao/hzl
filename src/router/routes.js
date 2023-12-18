@@ -2028,6 +2028,17 @@ export default {
     title: '确认订单',
     paramExplain: 'param:确认订单所需参数object',
   },
+  'packages-message-index': {
+    path: '/packages/message/index',
+    name: 'packages-message-index',
+    meta: {
+      name: 'packages-message-index',
+      isNVue: false,
+      pagePath: 'packages/message/index',
+      windowTop: 44,
+    },
+    title: '消息通知',
+  },
   'packages-message-notice': {
     path: '/packages/message/notice',
     name: 'packages-message-notice',
@@ -2797,6 +2808,19 @@ export default {
       windowTop: 44,
     },
     title: '绑定领货码',
+  },
+  'packages-help-index': {
+    path: '/packages/help/index',
+    name: 'packages-help-index',
+    meta: {
+      name: 'packages-help-index',
+      isNVue: false,
+      pagePath: 'packages/help/index',
+      windowTop: 44,
+      addon: 'helpcenter',
+    },
+    title: '帮助分类列表',
+    paramExplain: '',
   },
   'packages-help-list': {
     path: '/packages/help/list',

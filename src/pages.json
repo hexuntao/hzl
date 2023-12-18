@@ -164,12 +164,6 @@
     },
 
     {
-      "path": "pages/message/index",
-      "style": {
-        "navigationBarTitleText": "消息中心"
-      }
-    },
-    {
       "path": "pages/task/index",
       "style": {
         "navigationBarTitleText": "任务中心"
@@ -181,12 +175,7 @@
         "navigationBarTitleText": "每日签到"
       }
     },
-    {
-      "path": "pages/help/index",
-      "style": {
-        "navigationBarTitleText": "帮助中心"
-      }
-    },
+
     {
       "path": "pages/mplive/index",
       "style": {
@@ -1120,6 +1109,12 @@
       "root": "packages/message",
       "pages": [
         {
+          "path": "index",
+          "style": {
+            "navigationBarTitleText": "消息中心"
+          }
+        },
+        {
           "path": "notice",
           "style": {
             "navigationBarTitleText": "消息通知"
@@ -1539,6 +1534,12 @@
       "root": "packages/help",
       "pages": [
         {
+          "path": "index",
+          "style": {
+            "navigationBarTitleText": "帮助中心"
+          }
+        },
+        {
           "path": "list",
           "style": {
             "navigationBarTitleText": "帮助分类列表"
@@ -1950,21 +1951,12 @@
       "packages": ["packages/thingcircle"],
       "network": "all"
     },
-
-    "pages/message/index": {
-      "packages": ["packages/message"],
-      "network": "all"
-    },
     "pages/task/index": {
       "packages": ["packages/task"],
       "network": "all"
     },
     "pages/signin/index": {
       "packages": ["packages/signin"],
-      "network": "all"
-    },
-    "pages/help/index": {
-      "packages": ["packages/help"],
       "network": "all"
     },
     "pages/live/index": {
