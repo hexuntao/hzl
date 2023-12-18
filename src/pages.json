@@ -204,6 +204,12 @@
       "style": {
         "navigationBarTitleText": "招商中心"
       }
+    },
+    {
+      "path": "pages/videoLive/index",
+      "style": {
+        "navigationBarTitleText": "视频号直播"
+      }
     }
   ],
   "subPackages": [

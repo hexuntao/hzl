@@ -96,13 +96,24 @@ export default {
   },
   methods: {
     click(item) {
-      if (item.appid) {
-        return this.toLink({
-          appid: item.appid,
-          mpath: item.mpath,
-        });
+      var url = item.linkurl;
+      if (url != 'pages/service/index' && url != '/pages/service/index') {
+        if (url.indexOf('http') === 0) {
+          return this.$Navigate.push({
+            path: '/packages/property/webview',
+            query: {
+              linkurl: item.linkurl,
+            },
+          });
+        }
+        if (item.appid) {
+          return this.toLink({
+            appid: item.appid,
+            mpath: item.mpath,
+          });
+        }
+        this.toLink(item.linkurl);
       }
-      this.toLink(item.linkurl);
     },
   },
   components: {},

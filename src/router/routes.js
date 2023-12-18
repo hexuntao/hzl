@@ -455,6 +455,20 @@ export default {
     },
     title: '招商中心',
   },
+  'pages-videoLive-index': {
+    path: '/pages/videoLive/index',
+    name: 'pages-videoLive-index',
+    meta: {
+      name: 'pages-videoLive-index',
+      isNVue: false,
+      pagePath: 'pages/videoLive/index',
+      windowTop: 44,
+      possTabBar: true,
+      shareType: 'current',
+      // addon: 'merchants',
+    },
+    title: '招商中心',
+  },
 
   'packages-mall-search': {
     path: '/packages/mall/search',

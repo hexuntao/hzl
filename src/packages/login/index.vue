@@ -164,11 +164,17 @@
           请上传头像
         </button>
       </view>
-      <!--      <view class="nickname">
+      <view class="nickname">
         <text>昵称：</text>
-        <input type="nickname" class="weui-input" :value="params.nickName" @blur="bindblur"
-               placeholder="请输入昵称" @input="bindinput"/>
-      </view>-->
+        <input
+          type="nickname"
+          class="weui-input"
+          :value="params.nickName"
+          @blur="bindblur"
+          placeholder="请输入昵称"
+          @input="bindinput"
+        />
+      </view>
 
       <view class="btn">
         <lk-button block round theme-color @click="onSubmit"> 保存 </lk-button>
@@ -469,14 +475,13 @@ export default {
     onSubmit() {
       this.params.is_newlogin = 0;
       const $this = this;
-      this.params.nickName = '微信用户';
-      /*if(this.params.nickName === ''){
+      if (this.params.nickName === '') {
         uni.showToast({
-          title: "请输入昵称",
-          duration: 2000
+          title: '请输入昵称',
+          duration: 2000,
         });
         return false;
-      }*/
+      }
       console.log(this.params.avatarUrl);
       if (
         this.params.avatarUrl === '' ||

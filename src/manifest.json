@@ -44,7 +44,7 @@
   },
   "mp-weixin": {
     "appid": "wx1ac0ffa85bb0759b",
-    "libVersion": "2.16.0",
+    "libVersion": "3.1.5",
     "setting": {
       "urlCheck": true,
       "es6": true,
