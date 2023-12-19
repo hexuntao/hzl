@@ -3,7 +3,7 @@
     <receive-header :info="info" @success="onReceiveSuccess" />
     <view class="cell-group">
       <view class="cell-title">适用门店</view>
-      <lk-load-list-view
+      <lk-load-list
         ref="load"
         :fixed="false"
         @init="loadInit"
@@ -26,56 +26,56 @@
             </view>
           </lk-cell>
         </view>
-      </lk-load-list-view>
+      </lk-load-list>
     </view>
     <lk-shortcut-entry />
   </view>
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import loadMixin from "@/mixins/load-list";
+import { mapActions } from 'vuex';
+import loadMixin from '@/mixins/load-list';
 import {
   GET_GIFTVOUCHERDETAILRECEIVE,
-  GET_GIFTVOUCHERSTORE
-} from "@/common/interface/giftvoucher";
-import receiveHeader from "./component/receive-header";
+  GET_GIFTVOUCHERSTORE,
+} from '@/common/interface/giftvoucher';
+import receiveHeader from './component/receive-header';
 export default {
-  name: "packages-giftvoucher-receive",
+  name: 'packages-giftvoucher-receive',
   data() {
     return {
       info: {
-        is_giftvoucher: ""
+        is_giftvoucher: '',
       },
       params: {
         page_index: 1,
-        page_size: 20
+        page_size: 20,
       },
-	  record_id:0,
-	  page_code:'',
-	  coupon_time:'',
+      record_id: 0,
+      page_code: '',
+      coupon_time: '',
       upOption: {
         auto: false,
         empty: {
-          type: "shop",
-          tip: "暂无门店"
-        }
-      }
+          type: 'shop',
+          tip: '暂无门店',
+        },
+      },
     };
   },
   mixins: [loadMixin],
   methods: {
-    ...mapActions(["getLocation"]),
+    ...mapActions(['getLocation']),
     callLoad(query) {
       this.info.gift_voucher_id = query.gift_voucher_id;
-	  
-	  this.record_id = query.record_id ? parseInt(query.record_id) : "";
-	  	  
-	  if (this.record_id) {
-	    this.page_code = query.page_code || "";
-	    this.coupon_time = query.coupon_time || "";
-	  }
-	  
+
+      this.record_id = query.record_id ? parseInt(query.record_id) : '';
+
+      if (this.record_id) {
+        this.page_code = query.page_code || '';
+        this.coupon_time = query.coupon_time || '';
+      }
+
       if (this.$load) {
         this.getData();
       }
@@ -89,43 +89,43 @@ export default {
       this.getLocation().then(res => {
         this.params.lat = res.lat;
         this.params.lng = res.lng;
-		
-		let query = {
-		  gift_voucher_id: this.info.gift_voucher_id
-		};
-		if (this.record_id) {
-		  query.record_id = this.record_id;
-		  query.page_code = this.page_code;
-		  query.coupon_time = this.coupon_time;
-		}
-		console.log('wo');
-		console.log(query);
-		
+
+        let query = {
+          gift_voucher_id: this.info.gift_voucher_id,
+        };
+        if (this.record_id) {
+          query.record_id = this.record_id;
+          query.page_code = this.page_code;
+          query.coupon_time = this.coupon_time;
+        }
+        // console.log('wo');
+        // console.log(query);
+
         GET_GIFTVOUCHERDETAILRECEIVE(query)
           .then(({ data }) => {
             this.info = data || {};
-			
-			if (this.record_id) {
-			  this.info.record_id = this.record_id;
-			}
-			
-			console.log(this.info.record_id);
-			
+
+            if (this.record_id) {
+              this.info.record_id = this.record_id;
+            }
+
+            // console.log(this.info.record_id);
+
             this.params.gift_voucher_id = this.info.gift_voucher_id;
-			
-			let query = {
-			  gift_voucher_id: this.info.gift_voucher_id
-			};
-			query.record_id = 0;
 
-			this.info.page_code_old = this.page_code;
-			this.info.coupon_time_old = this.coupon_time;
+            let query = {
+              gift_voucher_id: this.info.gift_voucher_id,
+            };
+            query.record_id = 0;
 
-			this.setWxShare({
-			  query: query,
-			  imgUrl: this.info.pic_cover_big,
-			});
-			
+            this.info.page_code_old = this.page_code;
+            this.info.coupon_time_old = this.coupon_time;
+
+            this.setWxShare({
+              query: query,
+              imgUrl: this.info.pic_cover_big,
+            });
+
             this.$load.triggerUpScroll();
           })
           .catch(error => {});
@@ -137,13 +137,13 @@ export default {
         .then(({ data }) => {
           let list = data.store_list || [];
           list.forEach(e => {
-            e.distanceText = e.distance + "km";
+            e.distanceText = e.distance + 'km';
             e.addressText = `${e.province_name}${e.city_name}${e.dictrict_name}${e.address}`;
             e.to = {
-              path: "/packages/store/home",
+              path: '/packages/store/home',
               query: {
-                store_id: e.store_id
-              }
+                store_id: e.store_id,
+              },
             };
           });
           this.concatList(list, data.total_count);
@@ -154,11 +154,11 @@ export default {
     },
     onReceiveSuccess() {
       this.getData();
-    }
+    },
   },
   components: {
-    receiveHeader
-  }
+    receiveHeader,
+  },
 };
 </script>
 
