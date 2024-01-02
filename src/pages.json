@@ -1561,6 +1561,12 @@
           "style": {
             "navigationBarTitleText": "直播广场"
           }
+        },
+        {
+          "path": "player",
+          "style": {
+            "navigationBarTitleText": "小程序直播"
+          }
         }
       ]
     },

@@ -2863,6 +2863,20 @@ export default {
     title: '直播广场',
     paramExplain: '',
   },
+  'packages-mplive-player': {
+    path: '/packages/mplive/player',
+    name: 'packages-mplive-player',
+    meta: {
+      name: 'packages-mplive-player',
+      isNVue: false,
+      pagePath: 'packages/mplive/player',
+      windowTop: 44,
+      shareType: 'current',
+      addon: 'mplive',
+    },
+    title: '小程序直播',
+    paramExplain: '',
+  },
   'packages-membercard-index': {
     path: '/packages/membercard/index',
     name: 'packages-membercard-index',
