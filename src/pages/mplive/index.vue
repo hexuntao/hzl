@@ -26,40 +26,41 @@
 </template>
 
 <script>
-import { GET_MPLIVELIST } from "@/common/interface/mplive";
-import loadMixin from "@/mixins/load-list";
-import { mapGetters } from "vuex";
+import { GET_MPLIVELIST } from '@/common/interface/mplive';
+import loadMixin from '@/mixins/load-list';
+import { mapActions, mapGetters } from 'vuex';
 function stateVal(val) {
   let obj = {
-    101: "ing",
-    102: "pre",
-    103: "ed",
-    104: "ed",
-    105: "",
-    106: "",
-    107: "ed"
+    101: 'ing',
+    102: 'pre',
+    103: 'ed',
+    104: 'ed',
+    105: '',
+    106: '',
+    107: 'ed',
   };
-  return obj[val] || "";
+  return obj[val] || '';
 }
 export default {
-  name: "pages-mplive-index",
+  name: 'pages-mplive-index',
   data() {
     return {
       params: {
         page_index: 1,
-        page_size: 20
-      }
+        page_size: 20,
+      },
     };
   },
   mixins: [loadMixin],
   computed: {
     ...mapGetters({
-      extendCode: "extendCode",
-      shareParams: "shareParams"
-    })
+      extendCode: 'extendCode',
+      shareParams: 'shareParams',
+    }),
   },
   onLoad() {},
   methods: {
+    ...mapActions(['getMemberInfo']),
     upCallback(page) {
       this.params.page_index = page.num;
       GET_MPLIVELIST(this.params)
@@ -74,24 +75,25 @@ export default {
           this.$load.endErr();
         });
     },
-    click(index) {
+    async click(index) {
       // #ifdef MP-WEIXIN
       const item = this.list[index];
       let roomid = item.roomid;
+      await this.getMemberInfo();
       let customParams = encodeURIComponent(
         JSON.stringify({
           path: this.shareParams.pagePath,
-          extend_code: this.extendCode
+          extend_code: this.extendCode,
         })
       );
       console.log(roomid, customParams);
       uni.navigateTo({
-        url: `plugin-private://wx2b03c6e691cd7370/pages/live-player-plugin?room_id=${roomid}&custom_params=${customParams}`
+        url: `plugin-private://wx2b03c6e691cd7370/pages/live-player-plugin?room_id=${roomid}&custom_params=${customParams}`,
       });
       // #endif
-    }
+    },
   },
-  components: {}
+  components: {},
 };
 </script>
 

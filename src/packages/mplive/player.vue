@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 export default {
   data() {
     return {};
@@ -15,17 +15,23 @@ export default {
       shareParams: 'shareParams',
     }),
   },
-  onLoad(query) {},
+  onLoad(query) {
+    this.$Prompt.loading();
+  },
   methods: {
-    callLoad(query) {
-      const { room_id } = query;
+    ...mapActions(['getMemberInfo']),
+    async callLoad(query) {
+      const { room_id, extend_code } = query;
+      await this.getMemberInfo();
+
       let customParams = encodeURIComponent(
         JSON.stringify({
           path: this.shareParams.pagePath,
           extend_code: this.extendCode,
         })
       );
-      console.log(room_id, customParams);
+      console.log('extend_code', extend_code, customParams);
+      this.$Prompt.clear();
       uni.navigateTo({
         url: `plugin-private://wx2b03c6e691cd7370/pages/live-player-plugin?room_id=${room_id}&custom_params=${customParams}`,
       });
