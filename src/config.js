@@ -28,8 +28,8 @@ const manifest = require('./manifest.json');
 const production = {
   NAME: 'shopvslai',
   VERSION: manifest.versionName,
-  DOMAIN: 'https://hzlmys.sandyp.cn', //https://lht.dgszwin.com
-  SUBDOMAIN: 'https://hzlmys.sandyp.cn',
+  DOMAIN: 'https://hzlsjc.sandyp.cn', //https://lht.dgszwin.com
+  SUBDOMAIN: 'https://hzlsjc.sandyp.cn',
   WEBSITE_ID: 1,
   STATIC: '/public/app',
   BASE_API: 'wapapi',

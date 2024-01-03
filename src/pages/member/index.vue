@@ -276,8 +276,6 @@ export default {
           this.pageStyle.title = page.title;
 
           this.member_index_list = page.member_index_list;
-          console.log('abcd');
-          console.log(this.member_index_list);
           this.setWxShare({
             title: page.title,
           });

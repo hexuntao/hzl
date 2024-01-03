@@ -2,14 +2,14 @@
   <view class="pages">
     <detail-head :detail="detail" />
     <detail-address :detail="detail" v-if="isShowAddress" />
-	
+
     <detail-logistic
       v-if="isShowLogistic"
       :status="detail.order_status"
       :order_id="detail.order_id"
       :info="logistic_info"
     />
-	
+
     <detail-take-code
       v-if="detail.store_id && detail.order_status == 1"
       :qrcode="detail.verification_qrcode"
@@ -22,51 +22,55 @@
     <detail-card-secret v-if="detail.electroncard_msg" :detail="detail" />
     <detail-goods :detail="detail" />
 
-    <detail-zhihuan :detail="detail" v-if="detail.is_zhihuan==1"/>
+    <detail-zhihuan :detail="detail" v-if="detail.is_zhihuan == 1" />
 
     <detail-message :detail="detail" />
     <detail-invoice
       v-if="detail.invoice && detail.invoice.type"
       :detail="detail"
     />
-	
+
     <detail-info :detail="detail" v-if="detail.order_id" />
-	
+
     <detail-log :detail="detail" />
-	
-	
+
     <view
       v-if="detail.member_operation && detail.member_operation.length"
       class="footer"
     >
-      <foot-operate :info="detail" @init="toList" />
+      <foot-operate
+        isDetail
+        :info="detail"
+        @refresh="onRefresh"
+        @init="toList"
+      />
     </view>
     <lk-shortcut-entry />
   </view>
 </template>
 
 <script>
-import { GET_ORDERDETAIL } from "@/common/interface/order";
-import { isEmpty } from "@/common/utils";
-import detailCardSecret from "./component/detail/card-secret";
-import detailHead from "./component/detail/head";
-import detailZhihuan from "./component/detail/zhihuan";
-import detailAddress from "./component/detail/address";
-import detailLogistic from "./component/detail/logistic";
-import detailTakeCode from "./component/detail/take-code";
-import detailAssemble from "./component/detail/cell-assemble";
-import detailGoods from "./component/detail/goods";
-import detailMessage from "./component/detail/message";
-import detailInvoice from "./component/detail/invoice";
-import detailInfo from "./component/detail/info";
-import detailLog from "./component/detail/log";
-import footOperate from "@/pages/order/component/foot-operate";
+import { GET_ORDERDETAIL } from '@/common/interface/order';
+import { isEmpty } from '@/common/utils';
+import detailCardSecret from './component/detail/card-secret';
+import detailHead from './component/detail/head';
+import detailZhihuan from './component/detail/zhihuan';
+import detailAddress from './component/detail/address';
+import detailLogistic from './component/detail/logistic';
+import detailTakeCode from './component/detail/take-code';
+import detailAssemble from './component/detail/cell-assemble';
+import detailGoods from './component/detail/goods';
+import detailMessage from './component/detail/message';
+import detailInvoice from './component/detail/invoice';
+import detailInfo from './component/detail/info';
+import detailLog from './component/detail/log';
+import footOperate from '@/pages/order/component/foot-operate';
 export default {
-  name: "packages-order-detail",
+  name: 'packages-order-detail',
   data() {
     return {
       detail: {},
-      logistic_info: {}
+      logistic_info: {},
     };
   },
   computed: {
@@ -82,13 +86,8 @@ export default {
       );
     },
     isShowLogistic() {
-      const {
-        card_store_id,
-        store_id,
-        order_type,
-        is_virtual,
-        goods_type
-      } = this.detail;
+      const { card_store_id, store_id, order_type, is_virtual, goods_type } =
+        this.detail;
       return (
         !card_store_id &&
         !store_id &&
@@ -98,7 +97,7 @@ export default {
         goods_type != 5 &&
         goods_type != 6
       );
-    }
+    },
   },
   onLoad(options) {
     this.order_id = options.order_id;
@@ -118,7 +117,7 @@ export default {
               logistic_info.mailNo = shipping_info.mailNo;
               logistic_info.newestInfo = !isEmpty(shipping_info.data)
                 ? shipping_info.data[0]
-                : "";
+                : '';
               this.logistic_info = logistic_info;
             }
           }
@@ -126,8 +125,11 @@ export default {
         .catch(() => {});
     },
     toList() {
-      this.$Navigate.replace("/pages/order/list");
-    }
+      this.$Navigate.replace('/pages/order/list');
+    },
+    onRefresh() {
+      this.getData();
+    },
   },
   components: {
     detailHead,
@@ -142,8 +144,8 @@ export default {
     detailInfo,
     detailLog,
     footOperate,
-    detailCardSecret
-  }
+    detailCardSecret,
+  },
 };
 </script>
 

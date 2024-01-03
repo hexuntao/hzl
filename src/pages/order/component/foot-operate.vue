@@ -17,6 +17,13 @@
       :qrcode="info.verification_qrcode"
       v-if="info.verification_code && info.order_status == 1"
     />
+    <lk-popup-store
+      v-model="storeShow"
+      :store_id="store_id"
+      :list="storelList"
+      @select="selectStore"
+    />
+    <popup-address v-model="addressShow" @select="selectAddress" />
   </view>
 </template>
 
@@ -26,14 +33,16 @@ import {
   CONFIRM_TAKEDELIVERY,
   EDLETE_ORDER,
   ADD_BUYAGAIN,
-  GET_TAILMONEYNO
-} from "@/common/interface/order";
-import { Base64 } from "@/common/lib/base64";
-import popupTakeCode from "./popup-take-code";
-import { mapActions } from "vuex";
+  GET_TAILMONEYNO,
+  GET_SELECTSTORE,
+  GET_UPDATEORDERINFO,
+} from '@/common/interface/order';
+import popupAddress from './popup-address';
+import popupTakeCode from './popup-take-code';
+import { mapActions } from 'vuex';
 const defaultInfo = {
   order_id: null,
-  out_trade_no:null,
+  out_trade_no: null,
   order_status: null,
   promotion_status: null,
   order_refund_status: null,
@@ -41,20 +50,24 @@ const defaultInfo = {
   member_operation: [],
   order_goods: [],
   unrefund: null,
-  unrefund_reason: null
+  unrefund_reason: null,
 };
 function operationText(value, is_evaluate) {
   let name = value.name;
-  if (value.no === "evaluation" && is_evaluate == 1) name = "追加评价";
-  if (value.no === "evaluation" && is_evaluate == 2) name = "已追加评价";
-  if (value.no === "pay") name = "立即付款";
-  if (value.no === "last_money") name = "付尾款";
+  if (value.no === 'evaluation' && is_evaluate == 1) name = '追加评价';
+  if (value.no === 'evaluation' && is_evaluate == 2) name = '已追加评价';
+  if (value.no === 'pay') name = '立即付款';
+  if (value.no === 'last_money') name = '付尾款';
   return name;
 }
 export default {
   data() {
     return {
-      takeCodeShow: false
+      takeCodeShow: false,
+      store_id: '',
+      storeShow: false,
+      storelList: [],
+      addressShow: false,
     };
   },
   props: {
@@ -73,29 +86,33 @@ export default {
     info: {
       type: Object,
       required: true,
-      default: defaultInfo
-    }
+      default: defaultInfo,
+    },
+    isDetail: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     list() {
       const operates = this.info.member_operation;
       let arr = [];
       operates.forEach(e => {
-        if (e.no == "pay" || e.no == "last_money") {
+        if (e.no == 'pay' || e.no == 'last_money') {
           e.color = this.theme.color;
         }
-        if (e.no === "evaluation") {
+        if (e.no === 'evaluation') {
           if (this.info.is_evaluate == 1) {
-            e.name = "追加评价";
+            e.name = '追加评价';
           } else if (this.info.is_evaluate == 2) {
-            e.name = "已追加评价";
+            e.name = '已追加评价';
           }
         }
-        if (e.no === "pay") e.name = "立即付款";
-        if (e.no === "last_money") e.name = "付尾款";
+        if (e.no === 'pay') e.name = '立即付款';
+        if (e.no === 'last_money') e.name = '付尾款';
 
         if (this.info.is_evaluate == 2) {
-          if (e.no != "evaluation") {
+          if (e.no != 'evaluation') {
             arr.push(e);
           }
         } else {
@@ -103,98 +120,102 @@ export default {
         }
       });
       return arr;
-    }
+    },
   },
   methods: {
-    ...mapActions(["setSubscribe"]),
+    ...mapActions(['setSubscribe']),
     onOperation(type) {
       const order_id = this.info.order_id;
       const node_id = this.info.node_id;
-	  const out_trade_no = this.info.out_order_no;
+      const out_trade_no = this.info.out_order_no;
 
-      if (type === "pay") {
+      if (type === 'pay') {
         // 支付
-		this.$Navigate.push({
-          path: "/pay/payment",
-          query: { out_trade_no}
+        this.$Navigate.push({
+          path: '/pay/payment',
+          query: { out_trade_no },
         });
-		
+
         /* this.$Navigate.push({
           path: "/pay/payment",
           query: { order_id, node_id, hash: "order" }
         }); */
-      } else if (type === "getdelivery") {
+      } else if (type === 'getdelivery') {
         // 确认收货
         this.onTakeDelivery(order_id);
-      } else if (type === "logistics") {
+      } else if (type === 'logistics') {
         // 查看物流信息
         this.$Navigate.push({
-          path: "/packages/order/logistics",
-          query: { order_id }
+          path: '/packages/order/logistics',
+          query: { order_id },
         });
-      } else if (type === "close") {
+      } else if (type === 'close') {
         // 关闭订单
         this.onCloseOrder(order_id);
-      } else if (type === "detail") {
+      } else if (type === 'detail') {
         // 订单详情
         this.$Navigate.push({
-          path: "/packages/order/detail",
-          query: { order_id }
+          path: '/packages/order/detail',
+          query: { order_id },
         });
-      } else if (type === "evaluation") {
+      } else if (type === 'evaluation') {
         // 评价
         this.onEvaluation();
-      } else if (type === "delete_order") {
+      } else if (type === 'delete_order') {
         // 删除订单
         this.onDeleteOrder(order_id);
-      } else if (type === "buy_again") {
+      } else if (type === 'buy_again') {
         // 再次购买
         this.onBuyAgain(order_id);
       } else if (
-        type === "refund" ||
-        type === "return" ||
-        type === "refund_detail"
+        type === 'refund' ||
+        type === 'return' ||
+        type === 'refund_detail'
       ) {
         // 退款/退货/售后情况
         const { unrefund, unrefund_reason } = this.info;
         if (unrefund == 1) {
           return this.$Prompt.modal({
             content: unrefund_reason,
-            showCancel: false
+            showCancel: false,
           });
         }
         this.onResult(order_id);
-      } else if (type == "last_money") {
+      } else if (type == 'last_money') {
         // 付尾款
         const { can_presell_pay, can_presell_pay_reason } = this.info;
         if (!can_presell_pay) {
           return this.$Prompt.modal({
             content: can_presell_pay_reason,
-            showCancel: false
+            showCancel: false,
           });
         }
         this.onPayTailMoney(order_id, node_id);
-      } else if (type == "pickup") {
+      } else if (type == 'pickup') {
         this.onTakeCode();
-      } else if (type == "use_card") {
-        this.$Navigate.push("/packages/consumercard/list");
-      } else if (type == "luckyspell_detail") {
+      } else if (type == 'use_card') {
+        this.$Navigate.push('/packages/consumercard/list');
+      } else if (type == 'luckyspell_detail') {
         this.$Navigate.push({
-          path: "/packages/lucklyspell/detail",
-          query: { order_id }
+          path: '/packages/lucklyspell/detail',
+          query: { order_id },
         });
+      } else if (type == 'updateStore') {
+        this.onUpdateStore(order_id);
+      } else if (type == 'updateAddress') {
+        this.onUpdateAddress(order_id);
       } else {
-        this.$Toast("暂无后续逻辑");
+        this.$Prompt.toast('暂无后续逻辑');
       }
     },
     onTakeDelivery(order_id) {
       this.$Prompt
         .modal({
-          content: "确定收货吗？"
+          content: '确定收货吗？',
         })
         .then(() => {
           CONFIRM_TAKEDELIVERY({ order_id }).then(res => {
-            this.$emit("init", res);
+            this.$emit('init', res);
           });
         })
         .catch(() => {});
@@ -202,12 +223,12 @@ export default {
     onCloseOrder(order_id) {
       this.$Prompt
         .modal({
-          content: "确定关闭该订单吗？"
+          content: '确定关闭该订单吗？',
         })
         .then(() => {
           CLOSE_ORDER({ order_id }).then(res => {
             this.setSubscribe({ type: 2 }).then(() => {
-              this.$emit("init", res);
+              this.$emit('init', res);
             });
           });
         })
@@ -216,11 +237,11 @@ export default {
     onDeleteOrder(order_id) {
       this.$Prompt
         .modal({
-          content: "确定删除该订单吗？"
+          content: '确定删除该订单吗？',
         })
         .then(() => {
           EDLETE_ORDER({ order_id }).then(res => {
-            this.$emit("init", res);
+            this.$emit('init', res);
           });
         })
         .catch(() => {});
@@ -229,7 +250,7 @@ export default {
       let obj = {};
       obj.shop = {
         shop_id: this.info.shop_id,
-        shop_name: encodeURIComponent(this.info.shop_name)
+        shop_name: encodeURIComponent(this.info.shop_name),
       };
       obj.goods = [];
       this.info.order_goods.forEach(e => {
@@ -239,7 +260,7 @@ export default {
           goodsObj.img = e.pic_cover;
           goodsObj.name = encodeURIComponent(e.goods_name);
           goodsObj.score = 5;
-          goodsObj.evaluate = "";
+          goodsObj.evaluate = '';
           goodsObj.arrImg = [];
           obj.goods.push(goodsObj);
         }
@@ -248,12 +269,12 @@ export default {
         obj.store_id = this.info.store_id || this.info.card_store_id;
       }
       this.$Navigate.push({
-        path: "/packages/order/evaluate",
+        path: '/packages/order/evaluate',
         query: {
           order_id: this.info.order_id,
           order_info: JSON.stringify(obj),
-          hash: this.info.is_evaluate == 1 ? "again" : ""
-        }
+          hash: this.info.is_evaluate == 1 ? 'again' : '',
+        },
       });
     },
     onBuyAgain(order_id) {
@@ -266,36 +287,88 @@ export default {
       });
       ADD_BUYAGAIN({
         cart,
-        old_order_id:order_id
+        old_order_id: order_id,
       }).then(res => {
-        this.$Prompt.toast("添加成功，请到购物车结算").then(() => {
+        this.$Prompt.toast('添加成功，请到购物车结算').then(() => {
           setTimeout(() => {
-            this.$Navigate.push("/pages/mall/cart");
+            this.$Navigate.push('/pages/mall/cart');
           }, 500);
         });
       });
     },
     onResult(order_id) {
       this.$Navigate.push({
-        path: "/packages/order/post",
-        query: { order_id }
+        path: '/packages/order/post',
+        query: { order_id },
       });
     },
     onPayTailMoney(order_id, node_id) {
       GET_TAILMONEYNO({ order_id }).then(({ data }) => {
         this.$Navigate.push({
-          path: "/pay/payment",
-          query: { out_trade_no: data.out_trade_no, node_id: node_id }
+          path: '/pay/payment',
+          query: { out_trade_no: data.out_trade_no, node_id: node_id },
         });
       });
     },
     onTakeCode() {
       this.takeCodeShow = true;
-    }
+    },
+    onUpdateStore(order_id) {
+      GET_SELECTSTORE({ order_id }, { isShowLoading: true })
+        .then(({ data }) => {
+          this.storeShow = true;
+          this.storelList = data || [];
+        })
+        .catch(() => {
+          this.storeShow = false;
+        });
+    },
+    selectStore(e) {
+      this.storeShow = false;
+      this.store_id = e.store_id;
+      GET_UPDATEORDERINFO(
+        {
+          store_id: e.store_id,
+          order_id: this.info.order_id,
+        },
+        { isShowLoading: true }
+      )
+        .then(res => {
+          if (this.isDetail) {
+            this.$emit('refresh', res);
+          } else {
+            this.$emit('init', res);
+          }
+        })
+        .catch(() => {});
+    },
+    onUpdateAddress(order_id) {
+      this.addressShow = true;
+    },
+    selectAddress(e) {
+      this.addressShow = false;
+      this.address_id = e.id;
+      GET_UPDATEORDERINFO(
+        {
+          address_id: this.address_id,
+          order_id: this.info.order_id,
+        },
+        { isShowLoading: true }
+      )
+        .then(res => {
+          if (this.isDetail) {
+            this.$emit('refresh', res);
+          } else {
+            this.$emit('init', res);
+          }
+        })
+        .catch(() => {});
+    },
   },
   components: {
-    popupTakeCode
-  }
+    popupTakeCode,
+    popupAddress,
+  },
 };
 </script>
 

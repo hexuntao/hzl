@@ -3,12 +3,12 @@
   "ext": {
     "project_name": "花之流",
     "auth_key": "P6l0Gx9p7Qsijklz",
-    "domain": "https://hzlmys.sandyp.cn",
-    "domain_wap": "https://hzlmys.sandyp.cn",
+    "domain": "https://hzlsjc.sandyp.cn",
+    "domain_wap": "https://hzlsjc.sandyp.cn",
     "website_id": 1
   },
   "requiredPrivateInfos": ["getLocation", "chooseLocation"],
-  "extAppid": "wx1ac0ffa85bb0759b",
+  "extAppid": "wx85eb05ad87f754b6",
   "tabBar": {
     "list": [
       {

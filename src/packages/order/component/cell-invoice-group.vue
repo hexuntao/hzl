@@ -289,7 +289,7 @@ export default {
   props: {
     tax_fee: [Object],
     shop_id: [String, Number],
-    price: [Number],
+    price: [Number, String],
   },
   mounted() {
     this.isBillType();

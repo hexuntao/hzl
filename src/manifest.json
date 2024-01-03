@@ -24,7 +24,7 @@
       "port": 3013,
       "proxy": {
         "/api": {
-          "target": "https://hzlmys.sandyp.cn/wapapi",
+          "target": "https://hzlsjc.sandyp.cn/wapapi",
           "changeOrigin": true,
           "secure": false,
           "pathRewrite": {
@@ -43,7 +43,7 @@
     }
   },
   "mp-weixin": {
-    "appid": "wx1ac0ffa85bb0759b",
+    "appid": "wx85eb05ad87f754b6",
     "libVersion": "3.1.5",
     "setting": {
       "urlCheck": true,

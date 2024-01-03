@@ -179,8 +179,6 @@ export default {
         this.lnarr = data.lnarr;
         this.dnarr = data.dnarr;
         //this.sid = this.lnarr[this.shopid];
-
-        console.log('fdfadfaf+' + this.sid);
       });
     },
     toLink(link) {
