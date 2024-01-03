@@ -70,10 +70,6 @@
         </list-item>
       </view>
     </lk-load-list>
-    <lk-shortcut-entry />
-    <!-- #ifndef MP-WEIXIN -->
-    <lk-tabbar />
-    <!--  #endif -->
   </view>
 </template>
 

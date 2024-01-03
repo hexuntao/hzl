@@ -104,12 +104,6 @@
       }
     },
     {
-      "path": "pages/coupon/index",
-      "style": {
-        "navigationBarTitleText": "领券中心"
-      }
-    },
-    {
       "path": "pages/shop/list",
       "style": {
         "navigationBarTitleText": "店铺街",
@@ -163,12 +157,6 @@
       }
     },
 
-    {
-      "path": "pages/task/index",
-      "style": {
-        "navigationBarTitleText": "任务中心"
-      }
-    },
     {
       "path": "pages/signin/index",
       "style": {
@@ -487,6 +475,12 @@
       "root": "packages/property",
       "pages": [
         {
+          "path": "index",
+          "style": {
+            "navigationBarTitleText": "我的资产"
+          }
+        },
+        {
           "path": "account/list",
           "style": {
             "navigationBarTitleText": "账户列表"
@@ -722,6 +716,12 @@
     {
       "root": "packages/coupon",
       "pages": [
+        {
+          "path": "index",
+          "style": {
+            "navigationBarTitleText": "领券中心"
+          }
+        },
         {
           "path": "list",
           "style": {
@@ -1226,6 +1226,12 @@
     {
       "root": "packages/task",
       "pages": [
+        {
+          "path": "index",
+          "style": {
+            "navigationBarTitleText": "任务中心"
+          }
+        },
         {
           "path": "list",
           "style": {
@@ -1928,14 +1934,6 @@
       "packages": ["packages/member"],
       "network": "all"
     },
-    "pages/property/index": {
-      "packages": ["packages/property"],
-      "network": "all"
-    },
-    "pages/coupon/index": {
-      "packages": ["packages/coupon"],
-      "network": "all"
-    },
     "pages/shop/list": {
       "packages": ["packages/shop"],
       "network": "all"
@@ -1955,10 +1953,6 @@
     },
     "pages/thingcircle/index": {
       "packages": ["packages/thingcircle"],
-      "network": "all"
-    },
-    "pages/task/index": {
-      "packages": ["packages/task"],
       "network": "all"
     },
     "pages/signin/index": {
