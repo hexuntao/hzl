@@ -34,6 +34,17 @@
           </lk-radio-group>
         </lk-load-list-view>
       </view>
+      <view class="foot-btn-group fixed">
+        <lk-button
+          block
+          round
+          type="danger"
+          :color="theme.gradient"
+          :to="'/packages/member/address/post?onbackevent=' + onbackevent"
+        >
+          新增地址
+        </lk-button>
+      </view>
     </lk-popup>
   </view>
 </template>
@@ -44,6 +55,7 @@ import loadMixin from '@/mixins/load-list';
 export default {
   data() {
     return {
+      onbackevent: 'on-back-address',
       params: {
         page_index: 1,
         page_size: 12,
@@ -80,6 +92,16 @@ export default {
         this.$load.triggerUpScroll();
       }
     },
+  },
+  mounted() {
+    uni.$on(this.onbackevent, data => {
+      if (data) {
+        this.resetList();
+      }
+    });
+  },
+  beforeDestroy() {
+    uni.$off(this.onbackevent);
   },
   methods: {
     upCallback(page) {
